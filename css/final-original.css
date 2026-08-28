@@ -4556,3 +4556,46 @@ html,body,
   }
 }
 
+
+
+/* ===== PATCH — PROGRAM brand subtitles: larger, contained ===== */
+#software .systems-panel,
+#software .intelligence-panel{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+#software .brand-sub{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  margin:4px auto 16px !important;
+  padding:0 8px !important;
+  box-sizing:border-box !important;
+  color:#e1e8eb !important;
+  text-align:center !important;
+  font-size:clamp(1.45rem,1.75vw,1.9rem) !important;
+  line-height:1.12 !important;
+  font-weight:650 !important;
+  letter-spacing:-.015em !important;
+  white-space:normal !important;
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+}
+
+@media(max-width:900px){
+  #software .brand-sub{
+    font-size:clamp(1.25rem,4.5vw,1.65rem) !important;
+    line-height:1.15 !important;
+  }
+}
+
+
+/* ===== PATCH v2 — PROGRAM brand subtitles: corrected size ===== */
+#software .brand-sub{
+  font-size:clamp(1.05rem,1.15vw,1.28rem) !important;
+  line-height:1.18 !important;
+  font-weight:600 !important;
+  padding-left:10px !important;
+  padding-right:10px !important;
+}
