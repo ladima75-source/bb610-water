@@ -1,0 +1,4558 @@
+
+:root{
+  --bg:#03080b;--panel:#071218;--line:#193845;--cyan:#03bfff;--blue:#0088ff;
+  --green:#72d819;--text:#eef4f6;--muted:#9baab1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:#000;color:var(--text);font-family:Arial,Helvetica,sans-serif}
+body{overflow-x:hidden}
+.stage{width:100vw;height:100vh;min-height:640px;overflow:hidden;background:#000;position:relative}
+.artboard{
+  width:1536px;height:1024px;position:absolute;left:0;top:0;transform-origin:0 0;
+  background:
+   linear-gradient(rgba(3,191,255,.025) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(3,191,255,.025) 1px,transparent 1px),
+   radial-gradient(circle at 58% 32%,#07171d 0,#03090c 44%,#010406 100%);
+  background-size:42px 42px,42px 42px,auto;
+}
+.overlay{position:absolute;inset:0;width:100%;height:100%;z-index:999;opacity:0;pointer-events:none}
+.overlay.show{opacity:.42}
+
+.header{position:absolute;left:30px;right:30px;top:18px;height:82px;border-bottom:1px solid #1c2a30;display:flex;align-items:flex-start}
+.logo{width:190px;height:82px;object-fit:contain;object-position:left top}
+nav{position:absolute;left:350px;top:34px;display:flex;gap:46px;font-size:15px;color:#e4e8ea}
+nav a{color:#e4e8ea;text-decoration:none}
+nav .active{padding-bottom:11px;border-bottom:2px solid var(--cyan)}
+.lang{position:absolute;right:22px;top:20px;border:1px solid #34434a;border-radius:25px;padding:5px;display:flex;gap:12px;align-items:center}
+.lang b{background:var(--cyan);color:#021016;border-radius:20px;padding:10px 14px}.lang span{padding:0 8px;color:#bbb}
+
+.hero-left{position:absolute;left:40px;top:164px;width:500px}
+h1{font-size:50px;line-height:.95;margin:0 0 20px;font-weight:900;letter-spacing:-1px}
+h1 em{color:var(--blue);font-style:normal}
+.lead{font-size:18px;line-height:1.45;color:#d2d8da;width:460px;margin:0 0 26px}
+.benefit{display:flex;gap:16px;margin:17px 0;align-items:flex-start}.benefit i{font-style:normal;color:var(--cyan);font-size:30px;width:38px}
+.benefit b{display:block;color:var(--cyan);font-size:15px;margin-bottom:4px}.benefit small{display:block;color:#c7d0d3;font-size:13px;line-height:1.25}
+
+.cards{position:absolute;left:558px;top:136px;width:920px;height:530px}
+.cards-title{text-align:center;font-size:15px;letter-spacing:1px;margin-bottom:18px}
+.card{position:absolute;top:40px;height:480px;border:1px solid #35505b;border-radius:12px;background:linear-gradient(180deg,rgba(10,24,30,.92),rgba(4,11,14,.92));overflow:hidden}
+.card-head{height:74px;display:grid;grid-template-columns:44px 1fr;gap:8px;padding:17px 15px 0}
+.card-icon{color:var(--cyan);font-size:30px;line-height:36px;text-align:center}
+.card h2{color:var(--cyan);font-size:19px;margin:1px 0 2px}.card .sub{font-size:13px;color:#d7dde0;margin:0}
+.card img{position:absolute;left:10px;right:10px;margin:auto;max-width:calc(100% - 20px);height:260px;top:83px;object-fit:contain}
+.card ul{position:absolute;left:17px;right:14px;bottom:11px;margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.card li{font-size:12px;line-height:1.18;color:#d5dde0;padding-left:18px;position:relative}
+.card li:before{content:'✓';position:absolute;left:0;color:var(--cyan)}
+.control{left:0;width:260px}.hydraulic{left:270px;width:325px}.zones{left:605px;width:315px}
+
+.kpis{position:absolute;left:30px;top:688px;width:495px;height:175px;border-top:1px solid #23424e;display:grid;grid-template-columns:repeat(4,1fr)}
+.kpis div{border-right:1px solid #20313a;padding:19px 8px 0;text-align:center}.kpis div:last-child{border-right:0}
+.kpi-ico{display:block;height:39px;font-size:26px;color:var(--cyan);line-height:36px}
+.kpis strong{display:block;font-size:25px;color:var(--cyan);white-space:nowrap}.kpis .green{color:var(--green)}
+.kpis span:last-child{font-size:12px;color:#c0c9cc;display:block;margin-top:10px;line-height:1.25}
+
+.modes{position:absolute;left:555px;top:687px;width:680px;height:185px}
+.modes h3{text-align:center;font-size:16px;letter-spacing:1px;margin:0 0 18px}
+.mode{width:328px;height:135px;border:1px solid #304a55;border-radius:10px;display:inline-block;vertical-align:top;margin-right:8px;padding:28px 24px 20px 72px;position:relative;background:rgba(7,16,21,.75)}
+.mode:before{content:'◉';position:absolute;left:22px;top:28px;color:var(--cyan);font-size:34px}
+.mode.time:before{content:'◷'}
+.mode b{display:block;color:var(--cyan);font-size:16px;margin-bottom:10px}.mode span{font-size:12px;color:#d1d8da;line-height:1.4}
+
+.phone{position:absolute;left:1245px;top:650px;width:270px;height:358px;object-fit:contain;object-position:center bottom}
+
+.process{position:absolute;left:30px;top:890px;width:1470px;height:90px;border:1px solid #35515d;border-radius:10px;display:flex;align-items:center;justify-content:space-around;padding:0 25px;background:rgba(7,17,22,.85);font-size:14px;overflow:hidden}
+.process b{color:var(--cyan);font-size:26px}.process .green{color:var(--green)}
+.process-item{display:flex;align-items:center;gap:10px;color:#d9e0e3}.process-item em{font-style:normal}.process-item small{display:block;color:#9fb0b7;font-size:11px}
+.process-runner{position:absolute;left:30px;bottom:0;width:90px;height:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:run 8s linear infinite}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(1320px)}}
+
+/* Exact HOW section from the approved animated version */
+#how{padding:92px 0;background:#02070a;border-top:1px solid #17313d}
+.container{width:min(1240px,calc(100% - 42px));margin:0 auto}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:36px}
+.eyebrow{font-size:.72rem;color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;margin-bottom:9px}
+#how h2{margin:0;font-size:clamp(2rem,3vw,3.2rem);line-height:1}
+.plan-v23{position:relative;width:100%;line-height:0;background:#02070a;border:1px solid #17313d;overflow:hidden}
+.plan-v23-image{display:block;width:100%;height:auto;max-width:100%;border:0;margin:0;padding:0;filter:none;transform:none;opacity:1}
+.plan-v23-overlay{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;overflow:hidden;z-index:2}
+.placeholder{min-height:250px;display:grid;place-items:center;color:#657680;border-top:1px solid #15262e;background:#02070a}
+.placeholder strong{font-size:1.05rem;color:#91a3ac;letter-spacing:.04em}
+
+
+
+/* v44 — normal browser zoom + fixed main navigation */
+body{
+  padding-top:86px !important;
+}
+
+.header{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  top:0 !important;
+  height:86px !important;
+  z-index:5000 !important;
+  background:rgba(2,7,10,.96) !important;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid #1c2a30 !important;
+  display:block !important;
+}
+
+/* center the actual header content across the browser window */
+.header .logo{
+  position:absolute !important;
+  left:max(30px, calc((100vw - 1476px)/2)) !important;
+  top:8px !important;
+  width:166px !important;
+  height:68px !important;
+  object-fit:contain !important;
+}
+
+.header nav{
+  position:absolute !important;
+  left:50% !important;
+  top:33px !important;
+  transform:translateX(-50%) !important;
+  display:flex !important;
+  gap:42px !important;
+  white-space:nowrap;
+}
+
+.header .lang{
+  position:absolute !important;
+  right:max(24px, calc((100vw - 1476px)/2)) !important;
+  top:18px !important;
+}
+
+.stage{
+  position:relative !important;
+  width:100% !important;
+  height:auto;
+  min-height:0 !important;
+  overflow:hidden !important;
+  background:#000;
+}
+
+.artboard{
+  position:relative !important;
+  left:0 !important;
+  top:0 !important;
+  margin:0 auto !important;
+  transform-origin:top center !important;
+}
+
+/* the embedded artboard header was moved outside; protect against accidental duplicate */
+.artboard > .header{display:none !important}
+
+#how{
+  scroll-margin-top:92px;
+}
+
+@media(max-width:900px){
+  .header nav{gap:20px !important;font-size:12px !important}
+  .header .logo{width:130px !important}
+}
+
+
+/* SUPPLIED MODULES.CSS */
+
+
+#modules.modules-section{max-width:1480px;margin:0 auto;padding:56px 40px 44px;background:
+linear-gradient(rgba(0,194,255,.035) 1px,transparent 1px),
+linear-gradient(90deg,rgba(0,194,255,.035) 1px,transparent 1px);background-size:48px 48px}
+#modules .eyebrow{color:var(--cyan);font-weight:800;letter-spacing:.08em;margin-bottom:14px}
+#modules h2{font-size:46px;line-height:1;margin:0 0 16px}#modules .intro{color:var(--muted);font-size:18px;max-width:900px;margin:0 0 34px}
+#modules .module-grid{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:24px}#modules .module-card{min-height:520px;background:linear-gradient(#081820,#050c10);border:1px solid var(--border);border-radius:14px;padding:24px;overflow:hidden}
+#modules #modules .module-card h3{color:var(--cyan);font-size:21px;margin:0 0 8px}#modules #modules .module-card strong{font-size:18px}#modules #modules .module-card img{display:block;width:100%;height:245px;object-fit:cover;margin:16px 0 12px;border-radius:9px}
+#modules #modules .module-card ul{list-style:none;padding:0;margin:0}#modules #modules .module-card li{position:relative;padding:8px 0 8px 20px;color:#d8e2e6}#modules #modules #modules .module-card li:before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+#modules .scope{display:grid;grid-template-columns:1fr 2px 1.25fr;gap:34px;align-items:center;margin-top:26px;padding:23px 28px;border:1px solid var(--border);border-radius:14px;background:#050e13}#modules #modules .scope span{display:block;color:var(--muted);font-size:13px;font-weight:800;margin-bottom:9px}#modules #modules .scope .bb{color:var(--green)}#modules #modules .scope b{font-size:20px}#modules .divider{height:72px;background:#315263}
+#modules .footer-line{padding-top:26px;color:#c5d4da;font-weight:700;font-size:17px}
+@media(max-width:900px){#modules .module-grid{grid-template-columns:1fr}#modules #modules .scope{grid-template-columns:1fr}#modules #modules .divider{display:none}#modules #modules h2{font-size:36px}#modules#modules.modules-section{padding:40px 20px}}
+
+
+/* Integration refinements for supplied MODULES block */
+#modules.modules-section{
+  width:min(1480px,calc(100% - 48px));
+  max-width:1480px;
+  margin:0 auto;
+  padding-top:72px;
+  padding-bottom:64px;
+  border-top:1px solid #152830;
+  background-color:#03080b;
+}
+#modules .module-card img{
+  object-fit:contain;
+  background:#03080b;
+}
+#modules .module-card{
+  text-align:left;
+}
+#modules .scope{
+  margin-bottom:0;
+}
+#modules{scroll-margin-top:96px}
+
+
+
+/* ===== v47 UNIFIED TYPOGRAPHY ===== */
+:root{
+  --font-ui:"Segoe UI Variable","Segoe UI","Inter",Arial,sans-serif;
+
+  --type-hero:clamp(3.55rem,5vw,5.9rem);
+  --type-section:clamp(2.35rem,3.4vw,3.7rem);
+  --type-card:1.28rem;
+
+  --type-lead:1.04rem;
+  --type-body:.93rem;
+  --type-small:.78rem;
+  --type-label:.72rem;
+
+  --line-hero:.94;
+  --line-section:1.02;
+  --line-body:1.48;
+
+  --tracking-hero:-.035em;
+  --tracking-section:-.02em;
+  --tracking-label:.11em;
+}
+
+html,body{
+  font-family:var(--font-ui) !important;
+  font-synthesis:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* Navigation */
+header,
+nav,
+.lang,
+.header,
+.navlinks{
+  font-family:var(--font-ui) !important;
+}
+nav,
+.navlinks{
+  font-size:.9rem !important;
+  letter-spacing:.035em !important;
+}
+
+/* Main hero */
+.hero-left h1,
+.hero-title{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-hero) !important;
+  line-height:var(--line-hero) !important;
+  letter-spacing:var(--tracking-hero) !important;
+  font-weight:800 !important;
+}
+.hero-left .lead,
+.hero-sub{
+  font-size:var(--type-lead) !important;
+  line-height:1.52 !important;
+}
+
+/* Global section titles */
+.section-head h2,
+.modules-head h2,
+#how h2,
+#modules h2,
+#versions h2,
+#software h2,
+#status h2,
+#contact h2{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-section) !important;
+  line-height:var(--line-section) !important;
+  letter-spacing:var(--tracking-section) !important;
+  font-weight:750 !important;
+}
+
+/* Eyebrows / small section labels */
+.eyebrow,
+.modules-eyebrow,
+.cards-title,
+.module-code,
+.module-index,
+.module-note > span{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-label) !important;
+  letter-spacing:var(--tracking-label) !important;
+}
+
+/* Card titles */
+.card h2,
+.card h3,
+.module-card h3,
+.module-title-row h3,
+.mode b,
+.module-note b{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-card) !important;
+  line-height:1.18 !important;
+  letter-spacing:.01em !important;
+  font-weight:700 !important;
+}
+
+/* Main text */
+body,
+p,
+.lead,
+.intro,
+.benefit small,
+.benefit span,
+.card .sub,
+.card p,
+.card li,
+.module-card li,
+.module-title-row p,
+.module-facts span,
+.module-note small,
+.mode span,
+.process-item,
+.scope b,
+.footer-line{
+  font-family:var(--font-ui) !important;
+}
+
+/* Unified body copy */
+.intro,
+.modules-head > p,
+.hero-sub,
+.lead{
+  font-size:var(--type-lead) !important;
+  line-height:1.52 !important;
+}
+
+.benefit span,
+.benefit small,
+.card p,
+.card .sub,
+.card li,
+.module-card li,
+.module-title-row p,
+.module-facts span,
+.module-note small,
+.mode span,
+.process-item,
+.footer-line{
+  font-size:var(--type-body) !important;
+  line-height:var(--line-body) !important;
+}
+
+/* Compact secondary text */
+.kpis span,
+.kpi span,
+.scope span,
+.plug-title small,
+.plug-step small,
+.phone-card,
+.module-code,
+.module-index{
+  font-size:var(--type-small) !important;
+  line-height:1.35 !important;
+}
+
+/* KPI values use one visual scale */
+.kpis strong,
+.kpi b{
+  font-family:var(--font-ui) !important;
+  font-size:1.55rem !important;
+  line-height:1.05 !important;
+  font-weight:750 !important;
+}
+
+/* Keep modules section from looking denser than the rest */
+#modules .module-card strong{
+  font-family:var(--font-ui) !important;
+  font-size:1.02rem !important;
+  line-height:1.35 !important;
+  font-weight:650 !important;
+}
+
+#modules .module-card{
+  font-size:var(--type-body) !important;
+}
+
+/* Responsive type rhythm */
+@media(max-width:900px){
+  :root{
+    --type-hero:clamp(2.8rem,8vw,4.2rem);
+    --type-section:clamp(2rem,6vw,3rem);
+    --type-lead:.98rem;
+    --type-body:.89rem;
+  }
+}
+
+
+/* SUPPLIED VERSIONS.CSS */
+#versions#versions .versions-section{max-width:1480px;margin:auto;padding:54px 42px;background:linear-gradient(rgba(0,194,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,255,.03) 1px,transparent 1px);background-size:48px 48px}#versions #versions .versions-head{display:flex;justify-content:space-between;gap:28px;align-items:flex-start;margin-bottom:26px}#versions .eyebrow{color:#00c2ff;font-weight:800;letter-spacing:.07em;margin-bottom:10px}#versions #versions #versions .versions-head h2{margin:0;font-size:38px}#versions .modular-note{min-width:350px;border:1px solid #00c2ff;border-radius:12px;padding:16px 20px;background:#061016}#versions #versions .modular-note strong,#versions #versions #versions .modular-note span{display:block}#versions #versions .modular-note span{margin-top:5px;color:#cfd9dd}#versions .table-wrap{overflow:auto;border:1px solid #35505b;border-radius:12px;background:#061016}#versions #versions .versions-table{width:100%;border-collapse:collapse;min-width:1120px}#versions #versions #versions .versions-table th,#versions #versions #versions .versions-table td{border-right:1px solid #35505b;border-bottom:1px solid #35505b;padding:15px 18px}#versions #versions .versions-table th{color:#00c2ff;background:#07141b;font-size:17px}#versions #versions #versions .versions-table th span{display:block;color:#edf3f5;font-size:13px;font-weight:400;margin-top:5px}#versions #versions #versions .versions-table .func{text-align:left;width:500px}#versions #versions #versions .versions-table td:nth-child(n+3){text-align:center;font-size:21px;font-weight:800}#versions #versions #versions .versions-table em{color:#8ad91e;font-style:normal}#versions .v{font-size:23px;font-weight:900;color:#168cff;white-space:nowrap}#versions .f1 #versions .v{color:#00c2ff}#versions .f2 #versions .v{color:#8ad91e}#versions .f1 td:first-child{border-left:4px solid #00c2ff}#versions .f2 td:first-child{border-left:4px solid #8ad91e}#versions .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}#versions #versions .info-grid article{border:1px solid #35505b;border-radius:12px;padding:18px 20px;background:#061116;min-height:108px}#versions #versions .info-grid strong{display:block;color:#00c2ff;margin-bottom:7px}#versions #versions .info-grid span{color:#d6e0e4;font-size:14px;line-height:1.35}#versions .note{color:#85979f;font-size:12px;margin:14px 2px 0}@media(max-width:980px){#versions #versions .versions-head{display:block}#versions .modular-note{margin-top:18px;min-width:0}#versions .info-grid{grid-template-columns:1fr 1fr}}@media(max-width:640px){#versions#versions .versions-section{padding:36px 18px}#versions .info-grid{grid-template-columns:1fr}#versions #versions #versions .versions-head h2{font-size:30px}}
+
+/* ===== VERSIONS integration ===== */
+#versions.versions-section{
+  width:min(1480px,calc(100% - 48px));
+  max-width:1480px;
+  margin:0 auto;
+  padding-top:78px;
+  padding-bottom:70px;
+  border-top:1px solid #152830;
+  background-color:#03080b;
+  scroll-margin-top:96px;
+}
+#versions .versions-head{align-items:center}
+#versions .versions-head h2{
+  font-size:var(--type-section) !important;
+  line-height:var(--line-section) !important;
+  letter-spacing:var(--tracking-section) !important;
+  font-weight:750 !important;
+}
+#versions .eyebrow{
+  font-size:var(--type-label) !important;
+  letter-spacing:var(--tracking-label) !important;
+}
+#versions .modular-note{
+  min-width:360px;
+}
+#versions .table-wrap{
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+#versions .versions-table td:nth-child(n+3){
+  font-size:1.42rem;
+}
+#versions .versions-table .func{
+  font-size:.95rem;
+  line-height:1.35;
+}
+#versions .v{font-size:1.55rem}
+#versions .info-grid article{min-height:118px}
+#versions .info-grid strong{font-size:.95rem}
+#versions .info-grid span{font-size:.88rem}
+#versions .note{font-size:.78rem}
+
+@media(max-width:980px){
+  #versions.versions-section{width:calc(100% - 28px)}
+}
+
+
+
+/* ===== v49 FIX: protect calibrated first screen from global typography ===== */
+.artboard{
+  font-family:Arial,Helvetica,sans-serif !important;
+}
+.artboard .hero-left h1{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:50px !important;
+  line-height:.95 !important;
+  letter-spacing:-1px !important;
+  font-weight:900 !important;
+}
+.artboard .lead{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:18px !important;
+  line-height:1.45 !important;
+}
+.artboard .benefit b{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:15px !important;
+  line-height:1.2 !important;
+}
+.artboard .benefit small{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:13px !important;
+  line-height:1.25 !important;
+}
+.artboard .cards-title{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:15px !important;
+  letter-spacing:1px !important;
+}
+.artboard .card h2{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:19px !important;
+  line-height:1.15 !important;
+}
+.artboard .card .sub{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:13px !important;
+  line-height:1.25 !important;
+}
+.artboard .card li{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:12px !important;
+  line-height:1.18 !important;
+}
+.artboard .kpis strong{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:25px !important;
+}
+.artboard .kpis span:last-child{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+}
+.artboard .mode b{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:16px !important;
+  line-height:1.2 !important;
+}
+.artboard .mode span{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:12px !important;
+  line-height:1.4 !important;
+}
+.artboard .process-item{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:14px !important;
+  line-height:1.2 !important;
+}
+
+/* ===== v49 VERSIONS: clean, aligned, clearly separated ===== */
+#versions.versions-section{
+  width:min(1480px,calc(100% - 48px)) !important;
+  max-width:1480px !important;
+  margin:0 auto !important;
+  padding:72px 42px 58px !important;
+  background:
+    linear-gradient(rgba(0,194,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,194,255,.025) 1px,transparent 1px),
+    #03080b !important;
+  background-size:48px 48px !important;
+  scroll-margin-top:96px;
+}
+#versions .versions-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 390px !important;
+  gap:32px !important;
+  align-items:center !important;
+  margin-bottom:26px !important;
+}
+#versions .versions-head h2{
+  margin:0 !important;
+  max-width:880px;
+}
+#versions .modular-note{
+  min-width:0 !important;
+  width:100% !important;
+  padding:17px 20px !important;
+  border:1px solid #00c2ff !important;
+  border-radius:12px !important;
+  background:#061016 !important;
+}
+#versions .modular-note strong{
+  display:block !important;
+  color:#eef5f7 !important;
+  font-size:.98rem !important;
+}
+#versions .modular-note span{
+  display:block !important;
+  margin-top:5px !important;
+  color:#cfd9dd !important;
+  font-size:.86rem !important;
+  line-height:1.35 !important;
+}
+
+#versions .table-wrap{
+  width:100% !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  border:1px solid #3b5965 !important;
+  border-radius:12px !important;
+  background:#061016 !important;
+}
+#versions .versions-table{
+  width:100% !important;
+  min-width:1120px !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+  table-layout:fixed !important;
+}
+#versions .versions-table th,
+#versions .versions-table td{
+  padding:14px 18px !important;
+  border-right:1px solid #35505b !important;
+  border-bottom:1px solid #35505b !important;
+  vertical-align:middle !important;
+  background:rgba(6,16,22,.72);
+}
+#versions .versions-table tr:last-child td{
+  border-bottom:0 !important;
+}
+#versions .versions-table th:last-child,
+#versions .versions-table td:last-child{
+  border-right:0 !important;
+}
+#versions .versions-table thead th{
+  background:#081821 !important;
+  color:#00c2ff !important;
+  font-size:1rem !important;
+  font-weight:750 !important;
+  text-align:center !important;
+}
+#versions .versions-table thead th.func{
+  text-align:left !important;
+}
+#versions .versions-table th span{
+  display:block !important;
+  color:#edf3f5 !important;
+  font-size:.76rem !important;
+  font-weight:400 !important;
+  margin-top:5px !important;
+}
+#versions .versions-table th:first-child{
+  width:170px !important;
+}
+#versions .versions-table .func{
+  width:470px !important;
+  text-align:left !important;
+}
+#versions .versions-table td:nth-child(n+3){
+  text-align:center !important;
+  font-size:1.28rem !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+}
+#versions .versions-table em{
+  color:#8ad91e !important;
+  font-style:normal !important;
+}
+#versions .v{
+  font-size:1.45rem !important;
+  font-weight:900 !important;
+  color:#168cff !important;
+  white-space:nowrap !important;
+}
+#versions tr.f1 .v{color:#00c2ff !important}
+#versions tr.f2 .v{color:#8ad91e !important}
+#versions tr.f1 td:first-child{border-left:4px solid #00c2ff !important}
+#versions tr.f2 td:first-child{border-left:4px solid #8ad91e !important}
+
+/* bottom info cards: always four equal columns on desktop/tablet */
+#versions .info-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:14px !important;
+  margin-top:18px !important;
+  align-items:stretch !important;
+}
+#versions .info-grid article{
+  min-width:0 !important;
+  min-height:126px !important;
+  padding:18px 20px !important;
+  border:1px solid #35505b !important;
+  border-radius:12px !important;
+  background:#061116 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+#versions .info-grid strong{
+  display:block !important;
+  color:#00c2ff !important;
+  margin-bottom:8px !important;
+  font-size:.92rem !important;
+}
+#versions .info-grid span{
+  color:#d6e0e4 !important;
+  font-size:.84rem !important;
+  line-height:1.38 !important;
+}
+#versions .note{
+  margin:14px 2px 0 !important;
+  color:#85979f !important;
+  font-size:.76rem !important;
+}
+
+@media(max-width:900px){
+  #versions.versions-section{
+    width:calc(100% - 24px) !important;
+    padding:52px 18px 44px !important;
+  }
+  #versions .versions-head{
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+  }
+  #versions .info-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:560px){
+  #versions .info-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+
+/* ===== PROGRAM / BB610 SYSTEMS + INTELLIGENCE ===== */
+#software.program-section{
+  width:min(1480px,calc(100% - 48px));
+  max-width:1480px;
+  margin:0 auto;
+  padding:76px 36px 54px;
+  border-top:1px solid #152830;
+  scroll-margin-top:96px;
+  background:
+    linear-gradient(rgba(0,194,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,194,255,.028) 1px,transparent 1px),
+    radial-gradient(circle at 45% 20%,rgba(0,194,255,.07),transparent 40%),
+    #03080b;
+  background-size:48px 48px,48px 48px,auto,auto;
+}
+#software .program-head .eyebrow{
+  margin:0 0 12px;
+  color:#00c2ff;
+  font-size:var(--type-label) !important;
+  font-weight:800;
+  letter-spacing:var(--tracking-label) !important;
+}
+#software .program-head h2{
+  margin:0 0 10px;
+  font-size:var(--type-section) !important;
+  line-height:var(--line-section) !important;
+  letter-spacing:var(--tracking-section) !important;
+  font-weight:750 !important;
+}
+#software .program-head p{
+  max-width:940px;
+  margin:0 0 28px;
+  color:#a4b4bb;
+  font-size:var(--type-lead) !important;
+  line-height:1.5;
+}
+
+#software .brand-grid{
+  display:grid;
+  grid-template-columns:2.2fr 1fr;
+  gap:16px;
+}
+#software .systems-panel,
+#software .intelligence-panel,
+#software .flow-panel,
+#software .today-panel{
+  border:1px solid #294552;
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(8,22,29,.96),rgba(4,11,15,.96));
+}
+#software .systems-panel{padding:18px}
+#software .intelligence-panel{
+  padding:18px 16px;
+  border-color:#6f348f;
+  box-shadow:inset 0 0 34px rgba(138,60,255,.035);
+}
+#software .brand-logo{
+  display:block;
+  object-fit:contain;
+}
+#software .systems-logo{
+  width:340px;
+  max-width:82%;
+  max-height:86px;
+  margin:0 auto 4px;
+}
+#software .intelligence-logo{
+  width:350px;
+  max-width:90%;
+  max-height:88px;
+  margin:0 auto 4px;
+}
+#software .brand-sub{
+  text-align:center;
+  margin:0 0 12px;
+  color:#e1e8eb;
+  font-size:.95rem;
+}
+
+#software .systems-content{
+  display:grid;
+  grid-template-columns:.86fr 1.35fr;
+  gap:18px;
+  border-top:1px solid #233842;
+  padding-top:14px;
+}
+#software .mobile-block,
+#software .scada-block{min-width:0}
+
+#software .mobile-block h3,
+#software .scada-block h3,
+#software .flow-panel h3,
+#software .today-panel h3{
+  margin:0 0 4px;
+  color:#00c2ff;
+  font-size:var(--type-card) !important;
+  line-height:1.18;
+  font-weight:700;
+}
+#software .mobile-block p,
+#software .scada-block p{
+  margin:0 0 12px;
+  color:#d4dde1;
+  font-size:.9rem;
+}
+#software .ui-shot{
+  display:block;
+  width:100%;
+  object-fit:cover;
+  border-radius:10px;
+  border:1px solid #253b46;
+  background:#020608;
+}
+#software .mobile-shot,
+#software .scada-shot{height:340px}
+#software .intel-shot{
+  height:365px;
+  margin:10px 0 12px;
+}
+
+#software ul{
+  list-style:none;
+  padding:0;
+  margin:10px 0 0;
+}
+#software li{
+  position:relative;
+  padding:6px 0 6px 21px;
+  color:#d8e2e6;
+  font-size:.86rem !important;
+  line-height:1.32 !important;
+}
+#software li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  top:6px;
+  color:#00c2ff;
+  font-weight:800;
+}
+#software .intelligence-panel li::before{color:#7bd91c}
+
+#software .bottom-grid{
+  display:grid;
+  grid-template-columns:1.85fr 1fr;
+  gap:16px;
+  margin-top:14px;
+}
+#software .flow-panel,
+#software .today-panel{padding:16px 20px}
+#software .flow{
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  gap:12px;
+  align-items:center;
+}
+#software .flow > b{
+  color:#00c2ff;
+  font-size:28px;
+}
+#software .flow-node{
+  text-align:center;
+  min-width:0;
+}
+#software .flow-node img{
+  display:block;
+  width:150px;
+  height:70px;
+  object-fit:contain;
+  margin:0 auto 5px;
+}
+#software .flow-node strong,
+#software .flow-node span{display:block}
+#software .flow-node strong{font-size:.84rem}
+#software .flow-node span{
+  font-size:.8rem;
+  color:#b9c7cd;
+  line-height:1.3;
+}
+
+#software .today-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+}
+#software .today-grid div{
+  border:1px solid #283f4a;
+  border-radius:10px;
+  padding:18px 10px;
+  text-align:center;
+  background:#061016;
+}
+#software .today-grid strong{
+  display:block;
+  color:#00c2ff;
+  font-size:1.45rem;
+  margin-bottom:5px;
+}
+#software .today-grid .ok{color:#7bd91c}
+#software .today-grid .warn{color:#ff3b30}
+#software .today-grid .rec{color:#ffca28}
+#software .today-grid span{
+  font-size:.75rem;
+  color:#cbd6da;
+}
+
+#software .program-foot{
+  display:flex;
+  gap:26px;
+  align-items:center;
+  padding:20px 4px 0;
+}
+#software .program-foot strong{
+  font-size:1rem;
+  color:#8a3cff;
+  white-space:nowrap;
+}
+#software .program-foot span{
+  font-size:.86rem;
+  color:#a9b8be;
+  line-height:1.4;
+}
+
+/* visual relationship: Systems = main software contour, Intelligence = separate analysis layer */
+#software .systems-panel{position:relative}
+#software .systems-panel::before{
+  content:"BB610 SYSTEMS";
+  position:absolute;
+  top:14px;
+  left:18px;
+  color:#8a3cff;
+  font-size:.63rem;
+  letter-spacing:.13em;
+  opacity:.75;
+}
+#software .intelligence-panel::before{
+  content:"ANALYSIS LAYER";
+  display:block;
+  margin-bottom:4px;
+  color:#8a3cff;
+  font-size:.63rem;
+  letter-spacing:.13em;
+  opacity:.8;
+}
+
+@media(max-width:1000px){
+  #software.program-section{
+    width:calc(100% - 28px);
+    padding:56px 22px 46px;
+  }
+  #software .brand-grid,
+  #software .bottom-grid,
+  #software .systems-content{
+    grid-template-columns:1fr;
+  }
+  #software .flow{
+    grid-template-columns:1fr;
+  }
+  #software .flow > b{
+    transform:rotate(90deg);
+    text-align:center;
+  }
+  #software .mobile-shot,
+  #software .scada-shot,
+  #software .intel-shot{
+    height:auto;
+    max-height:none;
+  }
+}
+@media(max-width:640px){
+  #software.program-section{
+    width:calc(100% - 18px);
+    padding:42px 14px 36px;
+  }
+  #software .today-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  #software .program-foot{
+    display:block;
+  }
+  #software .program-foot strong{
+    display:block;
+    margin-bottom:8px;
+    white-space:normal;
+  }
+}
+
+
+/* SUPPLIED CONTACTS.CSS */
+
+
+
+#contacts.contacts-section{
+  position:relative;overflow:hidden;max-width:1480px;margin:0 auto;padding:58px 44px 30px;
+  display:grid;grid-template-columns:1fr 1.05fr;gap:28px;
+  background:
+    radial-gradient(circle at 66% 15%,rgba(0,194,255,.05),transparent 34%),
+    linear-gradient(rgba(0,194,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,194,255,.025) 1px,transparent 1px);
+  background-size:auto,48px 48px,48px 48px;
+}
+#contacts .bg-logo{
+  position:absolute;right:110px;top:18px;width:640px;height:270px;
+  background:url("../assets/extracted/01_340b1d74d092.webp") center/contain no-repeat;
+  opacity:.9;pointer-events:none;z-index:0;
+}
+.contacts-left,.contact-form-wrap,#contacts .contact-bar{position:relative;z-index:1}
+#contacts .eyebrow{color:var(--cyan);font-size:18px;font-weight:800;letter-spacing:.06em;margin-bottom:25px}
+#contacts .contacts-left h2{font-size:58px;line-height:1.02;margin:0 0 20px;font-weight:900}
+#contacts .contacts-left h2 span{color:var(--blue)}
+#contacts .lead{max-width:610px;color:#b9c4c9;font-size:20px;line-height:1.4;margin:0 0 36px}
+#contacts .divider-line{height:1px;background:linear-gradient(90deg,#31515e 0 78%,transparent);margin:0 0 34px}
+#contacts .subhead{font-size:18px;color:#dde5e8;margin-bottom:24px}
+#contacts .feature-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border-bottom:0}
+#contacts .feature-grid article{min-width:0;text-align:center;padding:4px 10px 18px;border-right:1px solid #1d313a}
+#contacts .feature-grid article:last-child{border-right:0}
+#contacts .icon{height:48px;display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:10px}
+.cyan,#contacts .cyan-t{color:var(--cyan)}.green,#contacts .green-t{color:var(--green)}.purple,#contacts .purple-t{color:var(--purple)}.orange,#contacts .orange-t{color:var(--orange)}
+#contacts .feature-grid strong{display:block;font-size:14px;margin-bottom:8px;white-space:nowrap}
+#contacts .feature-grid span{font-size:12px;color:#c9d3d7;line-height:1.4}
+#contacts .trust-strip{margin-top:30px;border:1px solid var(--line);border-radius:12px;background:#061116;display:grid;grid-template-columns:1.2fr .75fr .85fr}
+#contacts .trust-strip>div{padding:22px 20px;border-right:1px solid #29404a}#contacts .trust-strip>div:last-child{border-right:0}
+#contacts .trust-strip strong{color:var(--cyan);font-size:16px}#contacts .trust-strip strong span{color:var(--green)}#contacts .trust-strip strong em{color:var(--purple);font-style:normal}
+#contacts .trust-strip b{display:block;color:var(--cyan);font-size:24px;margin-bottom:4px}#contacts .trust-strip span{font-size:12px;color:#c3ced2}
+#contacts .contact-form-wrap{align-self:end;margin-top:185px;border:1px solid var(--cyan);border-radius:14px;background:linear-gradient(180deg,rgba(8,20,27,.96),rgba(4,11,15,.97));padding:22px 26px 20px}
+#contacts .contact-form-wrap h3{font-size:24px;margin:0 0 16px}
+#contacts .contact-form{display:grid;gap:12px}#contacts .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#contacts label{display:grid;gap:7px;color:#d9e2e6;font-size:13px}
+input,select,#contacts textarea{
+  width:100%;border:1px solid #2a404b;border-radius:10px;background:#0a151d;color:#eef5f7;
+  padding:15px 16px;font:inherit;outline:none
+}
+input:focus,select:focus,#contacts textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,194,255,.08)}
+#contacts textarea{resize:vertical}
+#contacts button{border:0;border-radius:10px;padding:17px 20px;background:linear-gradient(180deg,#159cff,#0477e8);color:#fff;font-size:17px;font-weight:800;cursor:pointer}
+#contacts button:hover{filter:brightness(1.08)}#contacts .privacy{text-align:center;color:#8fa1a8;font-size:11px;margin:0}
+#contacts .contact-bar{grid-column:1/-1;margin-top:12px;border:1px solid var(--line);border-radius:12px;background:#061116;display:grid;grid-template-columns:.85fr .85fr .7fr 1.65fr}
+#contacts .contact-bar>div{padding:20px 24px;border-right:1px solid #243943}#contacts .contact-bar>div:last-child{border-right:0}
+#contacts .contact-bar b{display:block;font-size:17px;margin-bottom:5px}#contacts .contact-bar span{font-size:12px;color:#aab9bf}
+#contacts .contact-bar .brand b{color:var(--cyan)}#contacts .contact-bar .brand span{font-size:13px;color:#d9e1e5}
+@media(max-width:1050px){
+  #contacts.contacts-section{grid-template-columns:1fr}
+  #contacts .bg-logo{right:0;top:0;width:520px;height:220px}
+  #contacts .contact-form-wrap{margin-top:10px}
+  #contacts .feature-grid{grid-template-columns:repeat(3,1fr);row-gap:18px}
+  .feature-grid article:nth-child(3){border-right:0}
+  #contacts .contact-bar{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  #contacts.contacts-section{padding:38px 18px 24px}#contacts .contacts-left h2{font-size:42px}#contacts .lead{font-size:17px}
+  #contacts .two-col{grid-template-columns:1fr}#contacts .feature-grid{grid-template-columns:1fr 1fr}.feature-grid article:nth-child(odd){border-right:1px solid #1d313a}.feature-grid article:nth-child(even){border-right:0}
+  .trust-strip,#contacts .contact-bar{grid-template-columns:1fr}.trust-strip>div,#contacts .contact-bar>div{border-right:0;border-bottom:1px solid #243943}.trust-strip>div:last-child,#contacts .contact-bar>div:last-child{border-bottom:0}
+  #contacts .bg-logo{width:360px;height:160px;right:-50px;opacity:.65}
+}
+
+/* ===== CONTACTS integration ===== */
+#contacts.contacts-section{
+  width:min(1480px,calc(100% - 48px));
+  max-width:1480px;
+  margin:0 auto;
+  padding-top:78px;
+  padding-bottom:34px;
+  border-top:1px solid #152830;
+  scroll-margin-top:96px;
+  background-color:#03080b;
+}
+#contacts .eyebrow{
+  font-size:var(--type-label) !important;
+  letter-spacing:var(--tracking-label) !important;
+}
+#contacts .contacts-left h2{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-section) !important;
+  line-height:var(--line-section) !important;
+  letter-spacing:var(--tracking-section) !important;
+  font-weight:800 !important;
+}
+#contacts .lead{
+  font-size:var(--type-lead) !important;
+  line-height:1.52 !important;
+}
+#contacts .contact-form-wrap h3{
+  font-family:var(--font-ui) !important;
+  font-size:var(--type-card) !important;
+}
+#contacts .feature-grid strong,
+#contacts .subhead,
+#contacts .contact-bar b{
+  font-family:var(--font-ui) !important;
+}
+#contacts .feature-grid span,
+#contacts label,
+#contacts input,
+#contacts select,
+#contacts textarea,
+#contacts .privacy,
+#contacts .contact-bar span{
+  font-family:var(--font-ui) !important;
+}
+#contacts button{
+  font-family:var(--font-ui) !important;
+}
+
+
+
+/* ==========================================================
+   v52 PRE-FINAL DESIGN SYSTEM
+   One font, one content width, one vertical rhythm.
+   ========================================================== */
+:root{
+  --site-font:"Segoe UI Variable","Segoe UI","Inter",Arial,sans-serif;
+  --site-max:1480px;
+  --site-side:48px;
+  --section-pad-top:76px;
+  --section-pad-bottom:64px;
+
+  --title-size:clamp(2.55rem,3.35vw,3.75rem);
+  --title-line:1.02;
+  --title-track:-.025em;
+
+  --lead-size:1.02rem;
+  --body-size:.90rem;
+  --small-size:.78rem;
+  --card-title:1.22rem;
+}
+
+/* One font family across the complete site, including the calibrated hero. */
+html,body,
+.artboard,
+.header,
+.header nav,
+.header .lang,
+#how,#modules,#versions,#software,#contacts,
+#how *,#modules *,#versions *,#software *,#contacts *{
+  font-family:var(--site-font) !important;
+}
+
+/* Keep calibrated first-screen geometry but use the common typeface. */
+.artboard .hero-left h1{
+  font-family:var(--site-font) !important;
+  font-size:50px !important;
+  line-height:.95 !important;
+  letter-spacing:-1px !important;
+  font-weight:800 !important;
+}
+.artboard .lead{
+  font-family:var(--site-font) !important;
+  font-size:18px !important;
+  line-height:1.45 !important;
+}
+.artboard .benefit b{font-family:var(--site-font)!important;font-size:15px!important}
+.artboard .benefit small{font-family:var(--site-font)!important;font-size:13px!important;line-height:1.25!important}
+.artboard .card h2{font-family:var(--site-font)!important;font-size:19px!important;line-height:1.15!important}
+.artboard .card .sub{font-family:var(--site-font)!important;font-size:13px!important}
+.artboard .card li{font-family:var(--site-font)!important;font-size:12px!important;line-height:1.2!important}
+.artboard .kpis strong{font-family:var(--site-font)!important;font-size:25px!important}
+.artboard .kpis span:last-child{font-family:var(--site-font)!important;font-size:12px!important}
+.artboard .mode b{font-family:var(--site-font)!important;font-size:16px!important}
+.artboard .mode span{font-family:var(--site-font)!important;font-size:12px!important;line-height:1.4!important}
+.artboard .process-item{font-family:var(--site-font)!important;font-size:14px!important}
+
+/* Unified section width and vertical rhythm */
+#how,
+#modules.modules-section,
+#versions.versions-section,
+#software.program-section,
+#contacts.contacts-section{
+  box-sizing:border-box;
+  width:min(var(--site-max),calc(100% - var(--site-side))) !important;
+  max-width:var(--site-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-top:var(--section-pad-top) !important;
+  padding-bottom:var(--section-pad-bottom) !important;
+  scroll-margin-top:96px;
+}
+#how .container{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+
+/* Unified section titles */
+#how h2,
+#modules h2,
+#versions .versions-head h2,
+#software .program-head h2,
+#contacts .contacts-left h2{
+  margin-top:0 !important;
+  font-size:var(--title-size) !important;
+  line-height:var(--title-line) !important;
+  letter-spacing:var(--title-track) !important;
+  font-weight:760 !important;
+}
+
+/* No empty visual gap left after removing section labels */
+#how .section-head{margin-bottom:34px !important}
+#modules h2{margin-bottom:14px !important}
+#versions .versions-head{margin-top:0 !important}
+#software .program-head{margin-top:0 !important}
+#contacts .contacts-left h2{margin-top:0 !important}
+
+/* Unified lead/intro text */
+#modules .intro,
+#versions .modular-note span,
+#software .program-head p,
+#contacts .lead{
+  font-size:var(--lead-size) !important;
+  line-height:1.5 !important;
+}
+
+/* Unified body text */
+#modules .module-card li,
+#modules .scope b,
+#software li,
+#software .mobile-block p,
+#software .scada-block p,
+#software .flow-node span,
+#software .program-foot span,
+#contacts .feature-grid span,
+#contacts label,
+#contacts input,
+#contacts select,
+#contacts textarea,
+#contacts .contact-bar span{
+  font-size:var(--body-size) !important;
+  line-height:1.42 !important;
+}
+
+/* Unified card headings */
+#modules .module-card h3,
+#software .mobile-block h3,
+#software .scada-block h3,
+#software .flow-panel h3,
+#software .today-panel h3,
+#contacts .contact-form-wrap h3{
+  font-size:var(--card-title) !important;
+  line-height:1.18 !important;
+  font-weight:700 !important;
+}
+
+/* Visual consistency: border/radius strength */
+#modules .module-card,
+#modules .scope,
+#versions .table-wrap,
+#versions .info-grid article,
+#software .systems-panel,
+#software .intelligence-panel,
+#software .flow-panel,
+#software .today-panel,
+#contacts .trust-strip,
+#contacts .contact-form-wrap,
+#contacts .contact-bar{
+  border-radius:12px !important;
+}
+
+/* Versions table readability */
+#versions .versions-table th,
+#versions .versions-table td{
+  border-color:#35505b !important;
+}
+#versions .versions-table thead th{
+  font-size:.96rem !important;
+}
+#versions .versions-table .func{
+  font-size:.91rem !important;
+}
+#versions .versions-table td:nth-child(n+3){
+  font-size:1.24rem !important;
+}
+#versions .info-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+}
+#versions .info-grid article{
+  min-height:118px !important;
+  justify-content:center !important;
+}
+
+/* Program: let the real logos/UI remain the focus, reduce repeated small text density */
+#software .brand-sub{
+  font-size:.90rem !important;
+}
+#software .systems-panel::before,
+#software .intelligence-panel::before{
+  display:none !important;
+}
+
+/* Contacts: form controls same height/typographic rhythm */
+#contacts input,
+#contacts select{
+  min-height:48px;
+}
+#contacts textarea{min-height:108px}
+#contacts button{
+  min-height:56px;
+  font-family:var(--site-font)!important;
+  font-size:1rem!important;
+}
+#contacts button:disabled{
+  opacity:.72;
+  cursor:default;
+}
+
+/* Fixed menu: same font scale and clearer active state */
+.header nav{
+  font-family:var(--site-font)!important;
+  font-size:.86rem!important;
+  letter-spacing:.025em!important;
+}
+.header nav a{
+  opacity:.82;
+  transition:opacity .18s ease,color .18s ease;
+}
+.header nav a:hover,
+.header nav a.active{
+  opacity:1;
+  color:#fff;
+}
+
+/* Mobile / narrow screens */
+@media(max-width:1000px){
+  :root{
+    --site-side:28px;
+    --section-pad-top:58px;
+    --section-pad-bottom:50px;
+  }
+  #versions .info-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:640px){
+  :root{
+    --site-side:18px;
+    --section-pad-top:46px;
+    --section-pad-bottom:40px;
+    --title-size:clamp(2rem,9vw,2.8rem);
+    --lead-size:.96rem;
+    --body-size:.86rem;
+  }
+  #versions .info-grid{grid-template-columns:1fr!important}
+}
+
+
+
+/* ==========================================================
+   v53 — SCREEN COMPOSITION
+   Goal: each menu target should feel like a complete viewport,
+   without shrinking typography or forcing strict scroll-snap.
+   ========================================================== */
+
+:root{
+  --fixed-header:86px;
+  --screen-h:calc(100vh - var(--fixed-header));
+  --screen-pad:clamp(34px,4.2vh,62px);
+}
+
+/* Every main menu target starts exactly below the fixed header. */
+#product,
+#how,
+#modules,
+#versions,
+#software,
+#contacts{
+  scroll-margin-top:var(--fixed-header) !important;
+}
+
+/* Generic "screen-like" behavior for content sections. */
+#how,
+#modules.modules-section,
+#versions.versions-section,
+#software.program-section,
+#contacts.contacts-section{
+  min-height:var(--screen-h);
+  padding-top:var(--screen-pad) !important;
+  padding-bottom:var(--screen-pad) !important;
+}
+
+/* ---------------- HOW ---------------- */
+#how{
+  display:flex;
+  align-items:center;
+}
+#how .container{
+  width:min(1240px,calc(100% - 42px)) !important;
+}
+#how .section-head{
+  margin-bottom:clamp(20px,2.7vh,34px) !important;
+}
+#how .plan-v23{
+  max-height:calc(var(--screen-h) - 150px);
+}
+#how .plan-v23-image{
+  width:100%;
+  height:auto;
+  max-height:calc(var(--screen-h) - 150px);
+  object-fit:contain;
+}
+
+/* ---------------- MODULES ---------------- */
+#modules.modules-section{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+#modules h2{
+  margin-bottom:10px !important;
+}
+#modules .intro{
+  margin-bottom:clamp(20px,2.5vh,28px) !important;
+}
+#modules .module-grid{
+  gap:18px !important;
+}
+#modules .module-card{
+  min-height:0 !important;
+  padding:20px !important;
+}
+#modules .module-card img{
+  height:clamp(180px,23vh,235px) !important;
+  margin:12px 0 10px !important;
+}
+#modules .module-card li{
+  padding-top:6px !important;
+  padding-bottom:6px !important;
+}
+#modules .scope{
+  margin-top:18px !important;
+  padding:18px 24px !important;
+}
+#modules .divider{
+  height:58px !important;
+}
+#modules .footer-line{
+  padding-top:18px !important;
+}
+
+/* ---------------- VERSIONS ---------------- */
+#versions.versions-section{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+#versions .versions-head{
+  margin-bottom:18px !important;
+}
+#versions .modular-note{
+  padding:13px 18px !important;
+}
+#versions .versions-table th,
+#versions .versions-table td{
+  padding:10px 15px !important;
+}
+#versions .versions-table thead th{
+  padding-top:11px !important;
+  padding-bottom:11px !important;
+}
+#versions .info-grid{
+  margin-top:14px !important;
+  gap:12px !important;
+}
+#versions .info-grid article{
+  min-height:92px !important;
+  padding:14px 17px !important;
+}
+#versions .note{
+  margin-top:10px !important;
+}
+
+/* ---------------- PROGRAM ---------------- */
+#software.program-section{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+#software .program-head p{
+  margin-bottom:18px !important;
+}
+#software .brand-grid{
+  gap:14px !important;
+}
+#software .systems-panel,
+#software .intelligence-panel{
+  padding:15px !important;
+}
+#software .systems-content{
+  padding-top:11px !important;
+  gap:14px !important;
+}
+#software .systems-logo{
+  max-height:70px !important;
+}
+#software .intelligence-logo{
+  max-height:72px !important;
+}
+#software .brand-sub{
+  margin-bottom:8px !important;
+}
+#software .mobile-shot,
+#software .scada-shot{
+  height:clamp(220px,27vh,300px) !important;
+}
+#software .intel-shot{
+  height:clamp(235px,29vh,320px) !important;
+  margin:8px 0 9px !important;
+}
+#software ul{
+  margin-top:7px !important;
+}
+#software li{
+  padding-top:4px !important;
+  padding-bottom:4px !important;
+}
+#software .bottom-grid{
+  margin-top:12px !important;
+  gap:14px !important;
+}
+#software .flow-panel,
+#software .today-panel{
+  padding:13px 17px !important;
+}
+#software .today-grid{
+  margin-top:11px !important;
+}
+#software .today-grid div{
+  padding:13px 8px !important;
+}
+#software .program-foot{
+  padding-top:13px !important;
+}
+
+/* ---------------- CONTACTS ---------------- */
+#contacts.contacts-section{
+  align-content:center;
+}
+#contacts .contacts-left h2{
+  margin-bottom:14px !important;
+}
+#contacts .lead{
+  margin-bottom:24px !important;
+}
+#contacts .divider-line{
+  margin-bottom:24px !important;
+}
+#contacts .subhead{
+  margin-bottom:18px !important;
+}
+#contacts .feature-grid article{
+  padding-bottom:12px !important;
+}
+#contacts .icon{
+  margin-bottom:7px !important;
+}
+#contacts .trust-strip{
+  margin-top:20px !important;
+}
+#contacts .trust-strip>div{
+  padding:16px 17px !important;
+}
+#contacts .contact-form-wrap{
+  margin-top:120px !important;
+  padding:18px 22px 17px !important;
+}
+#contacts .contact-form{
+  gap:9px !important;
+}
+#contacts .two-col{
+  gap:10px !important;
+}
+#contacts input,
+#contacts select,
+#contacts textarea{
+  padding:12px 14px !important;
+}
+#contacts input,
+#contacts select{
+  min-height:44px !important;
+}
+#contacts textarea{
+  min-height:84px !important;
+}
+#contacts button{
+  min-height:50px !important;
+  padding:13px 18px !important;
+}
+#contacts .contact-bar{
+  margin-top:10px !important;
+}
+#contacts .contact-bar>div{
+  padding:16px 20px !important;
+}
+
+/* Large desktop: keep sections visually centered inside viewport. */
+@media(min-width:1200px) and (min-height:780px){
+  #modules.modules-section,
+  #versions.versions-section,
+  #software.program-section{
+    justify-content:center;
+  }
+}
+
+/* Short notebook screens:
+   preserve type size, tighten only spacing and visuals. */
+@media(max-height:760px) and (min-width:1000px){
+  :root{ --screen-pad:26px; }
+
+  #modules .module-card img{
+    height:165px !important;
+  }
+  #versions .versions-table th,
+  #versions .versions-table td{
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+  }
+  #versions .info-grid article{
+    min-height:82px !important;
+  }
+
+  #software .mobile-shot,
+  #software .scada-shot{
+    height:205px !important;
+  }
+  #software .intel-shot{
+    height:220px !important;
+  }
+
+  #contacts .contact-form-wrap{
+    margin-top:78px !important;
+  }
+  #contacts .feature-grid span{
+    line-height:1.25 !important;
+  }
+}
+
+/* Narrow screens should remain naturally scrollable. */
+@media(max-width:1000px){
+  #how,
+  #modules.modules-section,
+  #versions.versions-section,
+  #software.program-section,
+  #contacts.contacts-section{
+    min-height:0;
+    display:block;
+  }
+  #software .mobile-shot,
+  #software .scada-shot,
+  #software .intel-shot{
+    height:auto !important;
+  }
+  #contacts .contact-form-wrap{
+    margin-top:10px !important;
+  }
+}
+
+
+
+/* ===== v54 HERO POLISH ===== */
+
+/* Main statement must read as a real headline, not body copy. */
+.artboard .hero-left h1{
+  font-size:54px !important;
+  line-height:.92 !important;
+  letter-spacing:-1.5px !important;
+  font-weight:850 !important;
+  margin:0 0 18px !important;
+}
+.artboard .hero-left h1 em{
+  display:inline-block;
+  margin-top:4px;
+  color:var(--cyan);
+  font-style:normal;
+  font-weight:850;
+}
+
+/* Supporting copy visually separates from the headline. */
+.artboard .hero-left .lead{
+  max-width:455px;
+  margin:0 0 24px !important;
+  color:#b9c7cc !important;
+  font-size:17px !important;
+  line-height:1.42 !important;
+}
+
+/* Benefits: make labels read as subheadings. */
+.artboard .benefit{
+  margin:15px 0 !important;
+}
+.artboard .benefit i{
+  width:30px !important;
+  min-width:30px !important;
+  font-size:22px !important;
+  line-height:1.05 !important;
+}
+.artboard .benefit b{
+  font-size:15.5px !important;
+  font-weight:750 !important;
+  letter-spacing:.015em !important;
+  margin-bottom:3px !important;
+}
+.artboard .benefit small{
+  color:#aebdc3 !important;
+}
+
+/* KPI strip: larger icons + controlled wrapping. */
+.artboard .kpis div{
+  padding:17px 10px 0 !important;
+}
+.artboard .kpi-ico{
+  height:46px !important;
+  font-size:34px !important;
+  line-height:42px !important;
+  font-weight:700 !important;
+}
+.artboard .kpis div:last-child .kpi-ico{
+  font-size:25px !important;
+}
+.artboard .kpis strong{
+  font-size:24px !important;
+  line-height:1.08 !important;
+}
+.artboard .kpis span:last-child{
+  margin-top:8px !important;
+  font-size:11.5px !important;
+  line-height:1.28 !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  hyphens:none !important;
+}
+
+/* Modes also need heading hierarchy. */
+.artboard .modes h3{
+  font-size:17px !important;
+  font-weight:800 !important;
+  letter-spacing:.08em !important;
+}
+.artboard .mode b{
+  font-size:16.5px !important;
+  font-weight:800 !important;
+}
+
+
+
+/* ===== v55 MODULES: use the screen, do not leave a dead lower half ===== */
+#modules.modules-section{
+  min-height:calc(100vh - 86px) !important;
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) auto auto !important;
+  align-content:stretch !important;
+  justify-content:normal !important;
+  gap:0 !important;
+  padding-top:clamp(28px,3.2vh,46px) !important;
+  padding-bottom:clamp(24px,2.8vh,40px) !important;
+}
+
+/* Header area */
+#modules > h2{
+  align-self:end;
+}
+#modules > .intro{
+  margin:8px 0 20px !important;
+}
+
+/* Cards should occupy the available central area rather than sit at the top */
+#modules .module-grid{
+  height:100% !important;
+  min-height:0 !important;
+  align-items:stretch !important;
+  gap:20px !important;
+  margin:0 !important;
+}
+#modules .module-card{
+  height:100% !important;
+  min-height:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  padding:22px !important;
+}
+#modules .module-card img{
+  width:100% !important;
+  height:auto !important;
+  min-height:190px !important;
+  max-height:clamp(230px,30vh,330px) !important;
+  flex:1 1 auto !important;
+  object-fit:contain !important;
+  margin:14px 0 12px !important;
+}
+#modules .module-card ul{
+  margin-top:auto !important;
+}
+
+/* Scope and footer sit close to cards, not at the top leaving empty space below */
+#modules .scope{
+  margin-top:18px !important;
+  padding:18px 24px !important;
+}
+#modules .footer-line{
+  padding-top:14px !important;
+}
+
+/* For very tall screens, don't let cards become comically tall. */
+@media(min-height:1000px) and (min-width:1001px){
+  #modules.modules-section{
+    grid-template-rows:auto auto minmax(520px,1fr) auto auto !important;
+  }
+}
+
+/* For shorter desktop screens, keep it compact but balanced. */
+@media(max-height:760px) and (min-width:1001px){
+  #modules.modules-section{
+    padding-top:24px !important;
+    padding-bottom:22px !important;
+  }
+  #modules > .intro{
+    margin-bottom:14px !important;
+  }
+  #modules .module-card{
+    padding:18px !important;
+  }
+  #modules .module-card img{
+    min-height:140px !important;
+    max-height:185px !important;
+  }
+  #modules .scope{
+    margin-top:12px !important;
+    padding:14px 20px !important;
+  }
+  #modules .footer-line{
+    padding-top:10px !important;
+  }
+}
+
+/* Mobile remains natural-height. */
+@media(max-width:1000px){
+  #modules.modules-section{
+    min-height:0 !important;
+    display:block !important;
+  }
+  #modules .module-card{
+    height:auto !important;
+  }
+  #modules .module-card img{
+    min-height:0 !important;
+    max-height:none !important;
+  }
+}
+
+
+
+/* ==========================================================
+   v56 MODULES CLEAN — no duplicated copy inside images
+   ========================================================== */
+#modules.modules-clean{
+  min-height:calc(100vh - 86px) !important;
+  width:min(1480px,calc(100% - 48px)) !important;
+  max-width:1480px !important;
+  margin:0 auto !important;
+  padding:48px 40px 34px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  border-top:1px solid #152830;
+  background:
+    linear-gradient(rgba(0,194,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,194,255,.028) 1px,transparent 1px),
+    #03080b !important;
+  background-size:48px 48px,48px 48px,auto !important;
+}
+#modules .modules-clean-head{
+  margin-bottom:22px;
+}
+#modules .modules-clean-head h2{
+  margin:0 0 10px !important;
+}
+#modules .modules-clean-head .intro{
+  margin:0 !important;
+  max-width:920px;
+}
+
+#modules .modules-clean-grid{
+  display:grid;
+  grid-template-columns:1fr 1.08fr 1fr;
+  gap:20px;
+  align-items:stretch;
+}
+#modules .module-clean-card{
+  min-width:0;
+  min-height:470px;
+  display:grid;
+  grid-template-rows:auto minmax(220px,1fr) auto;
+  padding:22px;
+  border:1px solid #294552;
+  border-radius:12px;
+  background:linear-gradient(180deg,#081820,#050c10);
+  overflow:hidden;
+}
+#modules .module-clean-copy h3{
+  margin:0 0 6px;
+  color:#00c2ff;
+  font-size:1.18rem !important;
+  line-height:1.18 !important;
+  font-weight:750 !important;
+}
+#modules .module-clean-copy strong{
+  display:block;
+  color:#eef5f7;
+  font-size:1rem !important;
+  line-height:1.35 !important;
+  font-weight:650 !important;
+}
+#modules .module-equipment{
+  min-height:220px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:8px 0 8px;
+  overflow:hidden;
+}
+#modules .module-equipment img{
+  display:block;
+  width:auto !important;
+  max-width:100% !important;
+  height:clamp(225px,28vh,315px) !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  margin:0 !important;
+  background:transparent !important;
+}
+#modules .module-clean-card ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+#modules .module-clean-card li{
+  position:relative;
+  padding:5px 0 5px 18px !important;
+  color:#d8e2e6;
+  font-size:.89rem !important;
+  line-height:1.34 !important;
+}
+#modules .module-clean-card li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:11px;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#7bd91c;
+}
+
+/* One strong supply-boundary line instead of a weak lower info box */
+#modules .supply-line{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 54px 1.28fr;
+  align-items:center;
+  gap:0;
+  min-height:82px;
+  border-top:1px solid #294552;
+  border-bottom:1px solid #294552;
+  background:linear-gradient(90deg,rgba(6,17,22,.82),rgba(5,14,19,.96));
+}
+#modules .supply-side{
+  min-width:0;
+  padding:15px 22px;
+}
+#modules .supply-label{
+  display:block;
+  margin-bottom:6px;
+  color:#90a4ad;
+  font-size:.70rem !important;
+  font-weight:800;
+  letter-spacing:.10em;
+}
+#modules .bb-side .supply-label{
+  color:#7bd91c;
+}
+#modules .supply-side b{
+  display:block;
+  color:#eef5f7;
+  font-size:1rem !important;
+  line-height:1.35 !important;
+  font-weight:650 !important;
+}
+#modules .supply-side i{
+  color:#00c2ff;
+  font-style:normal;
+  padding:0 6px;
+}
+#modules .supply-arrow{
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-left:1px solid #294552;
+  border-right:1px solid #294552;
+  color:#00c2ff;
+  font-size:1.6rem;
+  font-weight:700;
+}
+#modules .modules-clean-foot{
+  padding-top:12px;
+  text-align:center;
+  color:#aebdc3;
+  font-size:.82rem !important;
+  font-weight:650;
+  letter-spacing:.025em;
+}
+
+/* Short desktop screens: keep the whole composition visible without tiny text */
+@media(max-height:780px) and (min-width:1001px){
+  #modules.modules-clean{
+    padding-top:28px !important;
+    padding-bottom:22px !important;
+  }
+  #modules .modules-clean-head{margin-bottom:14px}
+  #modules .module-clean-card{
+    min-height:390px;
+    padding:18px;
+    grid-template-rows:auto minmax(170px,1fr) auto;
+  }
+  #modules .module-equipment{min-height:170px}
+  #modules .module-equipment img{
+    height:clamp(175px,24vh,225px) !important;
+  }
+  #modules .module-clean-card li{
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+  }
+  #modules .supply-line{
+    margin-top:12px;
+    min-height:70px;
+  }
+  #modules .supply-side{padding:11px 18px}
+  #modules .modules-clean-foot{padding-top:8px}
+}
+
+/* Mobile: natural vertical layout */
+@media(max-width:1000px){
+  #modules.modules-clean{
+    min-height:0 !important;
+    width:calc(100% - 28px) !important;
+    padding:50px 20px 42px !important;
+    display:block !important;
+  }
+  #modules .modules-clean-grid{
+    grid-template-columns:1fr;
+  }
+  #modules .module-clean-card{
+    min-height:0;
+  }
+  #modules .module-equipment img{
+    height:auto !important;
+    max-height:320px !important;
+  }
+  #modules .supply-line{
+    grid-template-columns:1fr;
+  }
+  #modules .supply-arrow{
+    height:38px;
+    border-left:0;
+    border-right:0;
+    border-top:1px solid #294552;
+    border-bottom:1px solid #294552;
+    transform:rotate(90deg);
+  }
+}
+
+
+
+/* ===== v57 MODULES READABILITY ===== */
+#modules .modules-clean-head h2{
+  font-size:3.1rem !important;
+  line-height:1.02 !important;
+  font-weight:800 !important;
+  letter-spacing:-.025em !important;
+}
+#modules .modules-clean-head .intro{
+  font-size:1.05rem !important;
+  line-height:1.45 !important;
+  color:#b9c7cc !important;
+}
+
+#modules .module-clean-copy h3{
+  font-size:1.32rem !important;
+}
+#modules .module-clean-copy strong{
+  font-size:1.06rem !important;
+}
+#modules .module-clean-card li{
+  font-size:.98rem !important;
+  line-height:1.36 !important;
+  padding-top:6px !important;
+  padding-bottom:6px !important;
+}
+
+/* Bottom supply line: increase hierarchy and legibility */
+#modules .supply-line{
+  min-height:94px !important;
+}
+#modules .supply-side{
+  padding:18px 24px !important;
+}
+#modules .supply-label{
+  font-size:.82rem !important;
+  letter-spacing:.095em !important;
+  margin-bottom:8px !important;
+}
+#modules .supply-side b{
+  font-size:1.12rem !important;
+  line-height:1.38 !important;
+  font-weight:700 !important;
+}
+#modules .supply-side i{
+  padding:0 8px !important;
+}
+#modules .supply-arrow{
+  font-size:1.9rem !important;
+}
+#modules .modules-clean-foot{
+  padding-top:16px !important;
+  font-size:.98rem !important;
+  line-height:1.35 !important;
+  font-weight:650 !important;
+  color:#c1cdd2 !important;
+}
+
+/* On lower-height desktop screens keep type readable; shrink visuals, not copy */
+@media(max-height:780px) and (min-width:1001px){
+  #modules .modules-clean-head h2{
+    font-size:2.65rem !important;
+  }
+  #modules .modules-clean-head .intro{
+    font-size:.98rem !important;
+  }
+  #modules .module-clean-copy h3{
+    font-size:1.18rem !important;
+  }
+  #modules .module-clean-copy strong{
+    font-size:.98rem !important;
+  }
+  #modules .module-clean-card li{
+    font-size:.90rem !important;
+  }
+  #modules .supply-label{
+    font-size:.76rem !important;
+  }
+  #modules .supply-side b{
+    font-size:1.02rem !important;
+  }
+  #modules .modules-clean-foot{
+    font-size:.9rem !important;
+  }
+}
+
+
+
+/* ===== v58 MODULES TYPOGRAPHY — desktop readability target =====
+   Target sizes:
+   section title ~54px
+   lead ~18px
+   card titles ~22px
+   card copy ~17px
+   supply line ~19px
+   secondary labels 14–16px
+*/
+#modules .modules-clean-head h2{
+  font-size:3.4rem !important;      /* ~54px */
+  line-height:1.00 !important;
+}
+#modules .modules-clean-head .intro{
+  font-size:1.125rem !important;    /* 18px */
+  line-height:1.48 !important;
+}
+
+#modules .module-clean-copy h3{
+  font-size:1.38rem !important;     /* ~22px */
+}
+#modules .module-clean-copy strong{
+  font-size:1.125rem !important;    /* 18px */
+  line-height:1.35 !important;
+}
+#modules .module-clean-card li{
+  font-size:1.0625rem !important;   /* 17px */
+  line-height:1.38 !important;
+  padding-top:7px !important;
+  padding-bottom:7px !important;
+}
+
+/* Bottom band */
+#modules .supply-line{
+  min-height:106px !important;
+}
+#modules .supply-side{
+  padding:20px 26px !important;
+}
+#modules .supply-label{
+  font-size:.875rem !important;     /* 14px */
+  letter-spacing:.09em !important;
+  margin-bottom:9px !important;
+}
+#modules .supply-side b{
+  font-size:1.20rem !important;     /* ~19px */
+  line-height:1.40 !important;
+}
+#modules .modules-clean-foot{
+  padding-top:16px !important;
+  font-size:1.05rem !important;     /* ~17px */
+  line-height:1.4 !important;
+}
+
+/* Do not over-shrink text on short desktop screens.
+   Reduce graphics/spacing first. */
+@media(max-height:780px) and (min-width:1001px){
+  #modules .modules-clean-head h2{
+    font-size:3rem !important;       /* 48px */
+  }
+  #modules .modules-clean-head .intro{
+    font-size:1.0625rem !important;  /* 17px */
+  }
+  #modules .module-clean-copy h3{
+    font-size:1.25rem !important;    /* 20px */
+  }
+  #modules .module-clean-copy strong{
+    font-size:1.0625rem !important;  /* 17px */
+  }
+  #modules .module-clean-card li{
+    font-size:1rem !important;       /* 16px */
+  }
+  #modules .supply-label{
+    font-size:.8125rem !important;   /* 13px */
+  }
+  #modules .supply-side b{
+    font-size:1.10rem !important;    /* ~18px */
+  }
+  #modules .modules-clean-foot{
+    font-size:1rem !important;       /* 16px */
+  }
+}
+
+
+
+/* ===== v59 ZONE CONFIG EXPLANATION ===== */
+#versions .zones-config-card{
+  justify-content:center !important;
+}
+#versions .zones-config-card span{
+  display:block !important;
+  margin-top:4px !important;
+  font-size:.86rem !important;
+  line-height:1.34 !important;
+  color:#d6e0e4 !important;
+}
+#versions .zones-config-card span b{
+  color:#00c2ff !important;
+  font-weight:800 !important;
+}
+@media(max-height:780px) and (min-width:1001px){
+  #versions .zones-config-card span{
+    font-size:.80rem !important;
+    line-height:1.28 !important;
+  }
+}
+
+
+
+/* ==========================================================
+   v60 — PROFESSIONAL MOBILE PASS
+   Target: phones 360–480px, touch-first, readable, no tiny desktop scaling.
+   ========================================================== */
+
+@media(max-width:760px){
+
+  :root{
+    --mobile-gutter:16px;
+    --mobile-header-h:104px;
+  }
+
+  html{
+    scroll-behavior:smooth;
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    padding-top:var(--mobile-header-h) !important;
+    overflow-x:hidden !important;
+  }
+
+  /* ---------- MOBILE HEADER ---------- */
+  .header{
+    height:var(--mobile-header-h) !important;
+    min-height:var(--mobile-header-h) !important;
+    background:rgba(2,7,10,.97) !important;
+    border-bottom:1px solid #1b3038 !important;
+  }
+
+  .header .logo{
+    left:14px !important;
+    top:7px !important;
+    width:116px !important;
+    height:48px !important;
+  }
+
+  .header .lang{
+    right:12px !important;
+    top:12px !important;
+    font-size:12px !important;
+  }
+
+  .header nav{
+    left:0 !important;
+    right:0 !important;
+    top:60px !important;
+    transform:none !important;
+    width:100% !important;
+    height:43px !important;
+    padding:0 12px 7px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:22px !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    white-space:nowrap !important;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    font-size:12px !important;
+  }
+  .header nav::-webkit-scrollbar{display:none}
+  .header nav a{
+    flex:0 0 auto;
+    padding:8px 0 7px;
+    font-size:12px !important;
+    letter-spacing:.03em !important;
+  }
+
+  /* ---------- HERO: stop shrinking 1536px desktop artboard ---------- */
+  .stage{
+    height:auto !important;
+    min-height:0 !important;
+    overflow:visible !important;
+    background:#02070a !important;
+  }
+
+  .artboard{
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    transform:none !important;
+    margin:0 !important;
+    padding:30px var(--mobile-gutter) 22px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:22px !important;
+    overflow:visible !important;
+  }
+
+  .artboard > .overlay{
+    display:none !important;
+  }
+
+  .hero-left,
+  .cards,
+  .kpis,
+  .modes,
+  .process{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:auto !important;
+    margin:0 !important;
+  }
+
+  /* Main hero text */
+  .artboard .hero-left h1{
+    font-size:clamp(38px,11vw,48px) !important;
+    line-height:.94 !important;
+    letter-spacing:-1.1px !important;
+    margin:0 0 16px !important;
+  }
+
+  .artboard .hero-left .lead{
+    width:100% !important;
+    max-width:none !important;
+    font-size:17px !important;
+    line-height:1.48 !important;
+    margin-bottom:22px !important;
+  }
+
+  .artboard .benefit{
+    gap:12px !important;
+    margin:14px 0 !important;
+  }
+  .artboard .benefit i{
+    width:28px !important;
+    min-width:28px !important;
+    font-size:21px !important;
+  }
+  .artboard .benefit b{
+    font-size:15px !important;
+    line-height:1.28 !important;
+  }
+  .artboard .benefit small{
+    font-size:14px !important;
+    line-height:1.38 !important;
+  }
+
+  /* Product cards: real mobile stack */
+  .cards{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+  }
+  .cards-title{
+    text-align:left !important;
+    font-size:13px !important;
+    line-height:1.35 !important;
+    letter-spacing:.08em !important;
+    margin:0 0 2px !important;
+  }
+  .card{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:390px !important;
+    min-height:390px !important;
+    margin:0 !important;
+  }
+  .card-head{
+    height:68px !important;
+    padding:14px 14px 0 !important;
+  }
+  .card-icon{
+    font-size:27px !important;
+  }
+  .card h2{
+    font-size:20px !important;
+  }
+  .card .sub{
+    font-size:14px !important;
+  }
+  .card img{
+    top:78px !important;
+    height:220px !important;
+    max-width:calc(100% - 22px) !important;
+  }
+  .card ul{
+    bottom:12px !important;
+    padding:0 16px !important;
+  }
+  .card li{
+    font-size:13px !important;
+    line-height:1.28 !important;
+  }
+
+  /* KPI: 2×2, larger touch-readable typography */
+  .kpis{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    border-top:1px solid #294552 !important;
+    border-left:1px solid #20313a !important;
+    border-radius:10px !important;
+    overflow:hidden !important;
+    background:#061016 !important;
+  }
+  .kpis div{
+    min-height:145px !important;
+    padding:16px 10px 14px !important;
+    border-right:1px solid #20313a !important;
+    border-bottom:1px solid #20313a !important;
+  }
+  .kpis div:nth-child(even){border-right:0 !important}
+  .kpis div:nth-last-child(-n+2){border-bottom:0 !important}
+  .artboard .kpi-ico{
+    height:40px !important;
+    font-size:31px !important;
+    line-height:38px !important;
+  }
+  .artboard .kpis strong{
+    font-size:22px !important;
+  }
+  .artboard .kpis span:last-child{
+    font-size:13px !important;
+    line-height:1.32 !important;
+  }
+
+  /* Irrigation modes */
+  .modes{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+  .modes h3{
+    text-align:left !important;
+    margin:0 0 2px !important;
+    font-size:17px !important;
+  }
+  .mode{
+    width:100% !important;
+    height:auto !important;
+    min-height:112px !important;
+    margin:0 !important;
+    padding:22px 18px 18px 66px !important;
+  }
+  .mode::before{
+    left:18px !important;
+    top:24px !important;
+    font-size:30px !important;
+  }
+  .mode b{
+    font-size:17px !important;
+  }
+  .mode span{
+    font-size:14px !important;
+    line-height:1.45 !important;
+  }
+
+  /* Bottom process line: vertical steps instead of microscopic horizontal chain */
+  .process{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:0 !important;
+    padding:12px 14px !important;
+    border:1px solid #20313a !important;
+    border-radius:10px !important;
+    background:#050e13 !important;
+  }
+  .process > b{
+    transform:rotate(90deg);
+    align-self:flex-start;
+    margin:3px 0 3px 18px;
+    color:#00c2ff;
+  }
+  .process-item{
+    width:100% !important;
+    min-height:44px !important;
+    display:block !important;
+    padding:9px 4px !important;
+    font-size:14px !important;
+    line-height:1.32 !important;
+  }
+  .process-item em{
+    font-size:14px !important;
+  }
+  .process-item small{
+    display:block !important;
+    margin:4px 0 0 24px !important;
+    font-size:12px !important;
+    line-height:1.3 !important;
+  }
+  .process-runner{display:none !important}
+
+  /* ---------- HOW: preserve diagram readability with horizontal pan ---------- */
+  #how{
+    display:block !important;
+    min-height:0 !important;
+    width:calc(100% - 24px) !important;
+    padding:44px 0 38px !important;
+  }
+  #how .container{
+    width:100% !important;
+    max-width:none !important;
+    padding:0 !important;
+  }
+  #how h2{
+    padding:0 4px !important;
+    font-size:34px !important;
+    margin-bottom:12px !important;
+  }
+  #how .section-head{
+    margin-bottom:18px !important;
+    padding:0 4px !important;
+  }
+  #how .plan-v23{
+    width:100% !important;
+    max-height:none !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    -webkit-overflow-scrolling:touch;
+    border-radius:10px;
+  }
+  #how .plan-v23-image,
+  #how .plan-v23 svg{
+    min-width:820px !important;
+    width:820px !important;
+    max-width:none !important;
+    height:auto !important;
+    max-height:none !important;
+  }
+
+  /* ---------- MODULES ---------- */
+  #modules.modules-clean{
+    width:calc(100% - 24px) !important;
+    min-height:0 !important;
+    padding:44px 14px 38px !important;
+  }
+  #modules .modules-clean-head h2{
+    font-size:36px !important;
+    line-height:1.03 !important;
+  }
+  #modules .modules-clean-head .intro{
+    font-size:17px !important;
+    line-height:1.48 !important;
+  }
+  #modules .modules-clean-grid{
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+  }
+  #modules .module-clean-card{
+    min-height:0 !important;
+    padding:18px !important;
+  }
+  #modules .module-clean-copy h3{
+    font-size:21px !important;
+  }
+  #modules .module-clean-copy strong{
+    font-size:17px !important;
+  }
+  #modules .module-equipment{
+    min-height:180px !important;
+    margin:8px 0 !important;
+  }
+  #modules .module-equipment img{
+    height:auto !important;
+    max-height:240px !important;
+  }
+  #modules .module-clean-card li{
+    font-size:16px !important;
+    line-height:1.4 !important;
+  }
+  #modules .supply-line{
+    grid-template-columns:1fr !important;
+    min-height:0 !important;
+    margin-top:14px !important;
+  }
+  #modules .supply-side{
+    padding:16px !important;
+  }
+  #modules .supply-label{
+    font-size:13px !important;
+  }
+  #modules .supply-side b{
+    font-size:16px !important;
+    line-height:1.45 !important;
+  }
+  #modules .supply-arrow{
+    height:36px !important;
+    transform:rotate(90deg);
+    border-left:0 !important;
+    border-right:0 !important;
+    border-top:1px solid #294552 !important;
+    border-bottom:1px solid #294552 !important;
+  }
+  #modules .modules-clean-foot{
+    font-size:15px !important;
+    line-height:1.4 !important;
+  }
+
+  /* ---------- VERSIONS ---------- */
+  #versions.versions-section{
+    width:calc(100% - 24px) !important;
+    min-height:0 !important;
+    padding:44px 12px 38px !important;
+  }
+  #versions .versions-head{
+    display:block !important;
+    margin-bottom:16px !important;
+  }
+  #versions .versions-head h2{
+    font-size:34px !important;
+    line-height:1.04 !important;
+  }
+  #versions .modular-note{
+    margin-top:14px !important;
+    min-width:0 !important;
+    padding:14px 16px !important;
+  }
+  #versions .modular-note strong{
+    font-size:15px !important;
+  }
+  #versions .modular-note span{
+    font-size:14px !important;
+  }
+
+  #versions .table-wrap{
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch;
+    border-radius:10px !important;
+  }
+  #versions .versions-table{
+    min-width:940px !important;
+    table-layout:fixed !important;
+  }
+  #versions .versions-table th:first-child{
+    width:130px !important;
+  }
+  #versions .versions-table .func{
+    width:360px !important;
+  }
+  #versions .versions-table th,
+  #versions .versions-table td{
+    padding:11px 12px !important;
+    font-size:14px !important;
+  }
+  #versions .versions-table td:nth-child(n+3){
+    font-size:18px !important;
+  }
+  #versions .v{
+    font-size:20px !important;
+  }
+  #versions .versions-table th:first-child,
+  #versions .versions-table td:first-child{
+    position:sticky;
+    left:0;
+    z-index:3;
+    background:#07141b !important;
+  }
+  #versions .info-grid{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+  #versions .info-grid article{
+    min-height:0 !important;
+    padding:15px 16px !important;
+  }
+  #versions .info-grid strong{
+    font-size:16px !important;
+  }
+  #versions .info-grid span,
+  #versions .zones-config-card span{
+    font-size:15px !important;
+    line-height:1.4 !important;
+  }
+  #versions .note{
+    font-size:13px !important;
+    line-height:1.4 !important;
+  }
+
+  /* ---------- PROGRAM ---------- */
+  #software.program-section{
+    width:calc(100% - 24px) !important;
+    min-height:0 !important;
+    padding:44px 12px 38px !important;
+  }
+  #software .program-head h2{
+    font-size:34px !important;
+    line-height:1.04 !important;
+  }
+  #software .program-head p{
+    font-size:16px !important;
+    line-height:1.48 !important;
+  }
+  #software .brand-grid,
+  #software .systems-content,
+  #software .bottom-grid{
+    grid-template-columns:1fr !important;
+  }
+  #software .systems-panel,
+  #software .intelligence-panel,
+  #software .flow-panel,
+  #software .today-panel{
+    padding:14px !important;
+  }
+  #software .systems-logo,
+  #software .intelligence-logo{
+    width:260px !important;
+    max-width:90% !important;
+    max-height:none !important;
+  }
+  #software .mobile-block h3,
+  #software .scada-block h3,
+  #software .flow-panel h3,
+  #software .today-panel h3{
+    font-size:20px !important;
+  }
+  #software .mobile-block p,
+  #software .scada-block p{
+    font-size:15px !important;
+  }
+  #software .ui-shot{
+    height:auto !important;
+    max-height:none !important;
+  }
+  #software li{
+    font-size:15px !important;
+    line-height:1.38 !important;
+    padding-top:5px !important;
+    padding-bottom:5px !important;
+  }
+  #software .flow{
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+  }
+  #software .flow > b{
+    transform:rotate(90deg);
+    text-align:center;
+  }
+  #software .flow-node img{
+    width:180px !important;
+    height:82px !important;
+  }
+  #software .flow-node span,
+  #software .flow-node strong{
+    font-size:14px !important;
+  }
+  #software .today-grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+  #software .today-grid strong{
+    font-size:20px !important;
+  }
+  #software .today-grid span{
+    font-size:13px !important;
+  }
+  #software .program-foot{
+    display:block !important;
+    padding-top:14px !important;
+  }
+  #software .program-foot strong{
+    font-size:15px !important;
+    white-space:normal !important;
+  }
+  #software .program-foot span{
+    display:block;
+    margin-top:6px;
+    font-size:14px !important;
+  }
+
+  /* ---------- CONTACTS ---------- */
+  #contacts.contacts-section{
+    width:calc(100% - 24px) !important;
+    min-height:0 !important;
+    padding:44px 14px 32px !important;
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+  }
+  #contacts .bg-logo{
+    width:300px !important;
+    height:140px !important;
+    right:-70px !important;
+    top:8px !important;
+    opacity:.45 !important;
+  }
+  #contacts .contacts-left h2{
+    font-size:36px !important;
+    line-height:1.03 !important;
+  }
+  #contacts .lead{
+    font-size:17px !important;
+    line-height:1.48 !important;
+  }
+  #contacts .subhead{
+    font-size:15px !important;
+  }
+  #contacts .feature-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
+  #contacts .feature-grid article{
+    padding:10px 8px 14px !important;
+  }
+  #contacts .feature-grid strong{
+    font-size:14px !important;
+    white-space:normal !important;
+  }
+  #contacts .feature-grid span{
+    font-size:13px !important;
+  }
+  #contacts .trust-strip{
+    grid-template-columns:1fr !important;
+  }
+  #contacts .trust-strip>div{
+    border-right:0 !important;
+    border-bottom:1px solid #243943 !important;
+    padding:15px 16px !important;
+  }
+  #contacts .trust-strip>div:last-child{
+    border-bottom:0 !important;
+  }
+  #contacts .contact-form-wrap{
+    margin-top:0 !important;
+    padding:18px 14px 16px !important;
+  }
+  #contacts .contact-form-wrap h3{
+    font-size:21px !important;
+  }
+  #contacts .two-col{
+    grid-template-columns:1fr !important;
+  }
+
+  /* 16px minimum prevents iOS auto-zoom on focus */
+  #contacts label{
+    font-size:14px !important;
+  }
+  #contacts input,
+  #contacts select,
+  #contacts textarea{
+    font-size:16px !important;
+    line-height:1.35 !important;
+    min-height:48px !important;
+  }
+  #contacts textarea{
+    min-height:104px !important;
+  }
+  #contacts button{
+    min-height:52px !important;
+    font-size:16px !important;
+    padding:14px 12px !important;
+  }
+  #contacts .privacy{
+    font-size:12px !important;
+    line-height:1.4 !important;
+  }
+  #contacts .contact-bar{
+    grid-template-columns:1fr !important;
+  }
+  #contacts .contact-bar>div{
+    padding:15px 16px !important;
+    border-right:0 !important;
+    border-bottom:1px solid #243943 !important;
+  }
+  #contacts .contact-bar>div:last-child{
+    border-bottom:0 !important;
+  }
+  #contacts .contact-bar b{
+    font-size:16px !important;
+  }
+  #contacts .contact-bar span{
+    font-size:13px !important;
+  }
+
+  /* ---------- ACCESSIBILITY / TOUCH ---------- */
+  a,button,input,select,textarea{
+    -webkit-tap-highlight-color:rgba(0,194,255,.15);
+  }
+
+  .header nav a,
+  #contacts button{
+    touch-action:manipulation;
+  }
+
+  /* anchors compensate for taller mobile header */
+  #product,#how,#modules,#versions,#software,#contacts{
+    scroll-margin-top:var(--mobile-header-h) !important;
+  }
+}
+
+/* Very narrow phones */
+@media(max-width:380px){
+  .artboard{
+    padding-left:13px !important;
+    padding-right:13px !important;
+  }
+  .artboard .hero-left h1{
+    font-size:36px !important;
+  }
+  #contacts .feature-grid{
+    grid-template-columns:1fr !important;
+  }
+  #software .today-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+
+/* ==========================================================
+   FINAL RESPONSIVE HERO
+   Replaces fixed 1536×1024 whole-artboard scaling.
+   No transform:scale(), no viewport-dependent JS sizing.
+   ========================================================== */
+
+.stage#product{
+  width:100%;
+  height:auto !important;
+  min-height:calc(100vh - 86px);
+  overflow:visible !important;
+  background:#02070a;
+}
+
+.stage#product .artboard{
+  position:relative !important;
+  inset:auto !important;
+  width:min(100%,1536px) !important;
+  max-width:1536px !important;
+  height:auto !important;
+  min-height:calc(100vh - 86px);
+  margin:0 auto !important;
+  padding:clamp(34px,4vw,58px) clamp(24px,3vw,46px) 24px !important;
+  transform:none !important;
+  transform-origin:initial !important;
+  overflow:visible !important;
+
+  display:grid !important;
+  grid-template-columns:minmax(330px,.92fr) minmax(560px,1.72fr) minmax(190px,.52fr);
+  grid-template-areas:
+    "hero cards cards"
+    "kpis modes phone"
+    "process process process";
+  grid-template-rows:auto auto auto;
+  column-gap:clamp(18px,1.7vw,28px);
+  row-gap:18px;
+  align-items:start;
+}
+
+/* Debug overlay from the calibration phase must never participate in layout. */
+.stage#product .overlay{display:none !important}
+
+/* ---- left thesis / benefits ---- */
+.stage#product .hero-left{
+  grid-area:hero;
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:500px;
+  padding-top:18px;
+  align-self:start;
+}
+
+/* Keep approved typography and content; only make size fluid. */
+.stage#product .hero-left h1{
+  font-size:clamp(46px,3.35vw,56px) !important;
+  line-height:.92 !important;
+}
+.stage#product .hero-left .lead{
+  max-width:470px !important;
+}
+
+/* ---- three product cards ---- */
+.stage#product .cards{
+  grid-area:cards;
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0;
+  display:grid !important;
+  grid-template-columns:.92fr 1.16fr 1.08fr !important;
+  grid-template-rows:auto minmax(450px,1fr);
+  gap:14px !important;
+}
+.stage#product .cards-title{
+  grid-column:1/-1;
+  margin:0 0 2px !important;
+}
+.stage#product .card{
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:clamp(450px,48vh,520px) !important;
+  min-height:450px !important;
+  margin:0 !important;
+}
+.stage#product .card img{
+  max-width:calc(100% - 20px) !important;
+}
+
+/* ---- KPI ---- */
+.stage#product .kpis{
+  grid-area:kpis;
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0;
+  min-height:170px;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  align-self:stretch;
+}
+.stage#product .kpis div{
+  min-width:0;
+}
+.stage#product .kpis strong{
+  font-size:clamp(20px,1.55vw,25px) !important;
+}
+.stage#product .kpis span:last-child{
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  hyphens:none !important;
+}
+
+/* ---- irrigation modes ---- */
+.stage#product .modes{
+  grid-area:modes;
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-template-rows:auto 1fr;
+  gap:10px !important;
+  align-self:stretch;
+}
+.stage#product .modes h3{
+  grid-column:1/-1;
+  margin:0 0 6px !important;
+}
+.stage#product .mode{
+  width:auto !important;
+  height:auto !important;
+  min-height:135px;
+  margin:0 !important;
+}
+
+/* ---- phone ---- */
+.stage#product .phone{
+  grid-area:phone;
+  position:relative !important;
+  inset:auto !important;
+  width:min(100%,270px) !important;
+  height:auto !important;
+  max-height:360px;
+  object-fit:contain;
+  object-position:center bottom;
+  align-self:end;
+  justify-self:center;
+  margin:0 !important;
+}
+
+/* ---- process line ---- */
+.stage#product .process{
+  grid-area:process;
+  position:relative !important;
+  inset:auto !important;
+  width:auto !important;
+  height:auto !important;
+  min-height:88px;
+  margin:0 !important;
+}
+
+/* ==========================================================
+   1024px class: preserve full-size HERO, reorganize—not shrink.
+   Covers 900–1199px.
+   ========================================================== */
+@media(min-width:900px) and (max-width:1199px){
+  .stage#product .artboard{
+    width:100% !important;
+    max-width:none !important;
+    min-height:auto;
+    padding:34px 28px 24px !important;
+    grid-template-columns:minmax(0,1.55fr) minmax(220px,.45fr);
+    grid-template-areas:
+      "hero hero"
+      "cards cards"
+      "kpis phone"
+      "modes phone"
+      "process process";
+    row-gap:18px;
+  }
+
+  .stage#product .hero-left{
+    max-width:760px;
+    padding-top:0;
+  }
+  .stage#product .hero-left h1{
+    font-size:clamp(48px,5.4vw,58px) !important;
+  }
+  .stage#product .hero-left .lead{
+    max-width:620px !important;
+  }
+
+  .stage#product .cards{
+    grid-template-columns:.92fr 1.16fr 1.08fr !important;
+    grid-template-rows:auto minmax(430px,1fr);
+  }
+  .stage#product .card{
+    height:440px !important;
+    min-height:440px !important;
+  }
+  .stage#product .card img{
+    height:230px !important;
+  }
+
+  .stage#product .kpis{
+    min-height:164px;
+  }
+  .stage#product .modes{
+    grid-template-columns:1fr 1fr !important;
+  }
+  .stage#product .phone{
+    width:min(100%,240px) !important;
+    max-height:330px;
+    align-self:center;
+  }
+}
+
+/* ==========================================================
+   768px tablet class: two-column cards, readable content.
+   ========================================================== */
+@media(min-width:761px) and (max-width:899px){
+  .stage#product{
+    min-height:auto;
+  }
+  .stage#product .artboard{
+    width:100% !important;
+    max-width:none !important;
+    min-height:auto;
+    padding:30px 22px 24px !important;
+    display:grid !important;
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "hero hero"
+      "cards cards"
+      "kpis phone"
+      "modes modes"
+      "process process";
+    gap:18px;
+  }
+
+  .stage#product .hero-left{
+    max-width:680px;
+    padding-top:0;
+  }
+  .stage#product .hero-left h1{
+    font-size:48px !important;
+  }
+
+  .stage#product .cards{
+    grid-template-columns:1fr 1fr !important;
+    grid-template-rows:auto auto auto;
+  }
+  .stage#product .cards-title{grid-column:1/-1}
+  .stage#product .card{
+    height:420px !important;
+    min-height:420px !important;
+  }
+  .stage#product .card.zones{
+    grid-column:1/-1;
+    width:calc(50% - 7px) !important;
+    justify-self:center;
+  }
+  .stage#product .card img{
+    height:220px !important;
+  }
+
+  .stage#product .kpis{
+    grid-template-columns:1fr 1fr !important;
+    min-height:300px;
+    border-left:1px solid #20313a;
+  }
+  .stage#product .kpis div{
+    min-height:145px;
+    border-bottom:1px solid #20313a;
+  }
+  .stage#product .phone{
+    width:250px !important;
+    max-height:330px;
+    align-self:center;
+  }
+  .stage#product .modes{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .stage#product .process{
+    display:grid !important;
+    grid-template-columns:1fr auto 1fr auto 1fr auto 1fr !important;
+    align-items:center;
+    gap:8px;
+    padding:14px 16px !important;
+  }
+}
+
+/* ==========================================================
+   MOBILE ≤760px: natural one-column layout.
+   Explicitly neutralizes all old fixed coordinates including phone.
+   ========================================================== */
+@media(max-width:760px){
+  .stage#product{
+    min-height:0 !important;
+    height:auto !important;
+    overflow:visible !important;
+  }
+
+  .stage#product .artboard{
+    width:100% !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    padding:28px 16px 22px !important;
+    transform:none !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:20px !important;
+  }
+
+  .stage#product .hero-left,
+  .stage#product .cards,
+  .stage#product .kpis,
+  .stage#product .modes,
+  .stage#product .phone,
+  .stage#product .process{
+    position:relative !important;
+    inset:auto !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:auto !important;
+    margin:0 !important;
+  }
+
+  .stage#product .hero-left{
+    max-width:none;
+    padding-top:0;
+  }
+  .stage#product .hero-left h1{
+    font-size:clamp(38px,11vw,48px) !important;
+  }
+
+  .stage#product .cards{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto !important;
+    gap:14px !important;
+  }
+  .stage#product .cards-title{
+    grid-column:auto;
+  }
+  .stage#product .card,
+  .stage#product .card.zones{
+    grid-column:auto;
+    width:100% !important;
+    height:390px !important;
+    min-height:390px !important;
+  }
+
+  .stage#product .kpis{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    min-height:0;
+  }
+
+  .stage#product .modes{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto !important;
+  }
+  .stage#product .modes h3{
+    grid-column:auto;
+  }
+  .stage#product .mode{
+    min-height:112px;
+  }
+
+  .stage#product .phone{
+    width:min(68vw,270px) !important;
+    max-height:none;
+    align-self:center;
+    object-fit:contain;
+  }
+
+  .stage#product .process{
+    display:flex !important;
+    flex-direction:column !important;
+    min-height:0;
+  }
+}
+
+/* Very narrow phones */
+@media(max-width:380px){
+  .stage#product .artboard{
+    padding-left:13px !important;
+    padding-right:13px !important;
+  }
+  .stage#product .hero-left h1{
+    font-size:36px !important;
+  }
+}
+
+
+/* ===== V10 PATCH 02 — requested HERO-only corrections ===== */
+@media (min-width:900px){
+  /* 1: make new product description prominent and keep it inside left column */
+  .stage#product .hero-left .lead{
+    width:auto !important;
+    max-width:330px !important;
+    margin-right:0 !important;
+    color:#dce7eb !important;
+    font-size:15px !important;
+    line-height:1.42 !important;
+    font-weight:600 !important;
+  }
+  .stage#product .hero-left .lead::first-line{
+    color:#00c8ff;
+  }
+
+  /* 3: prevent KPI values from colliding across columns */
+  .stage#product .kpis{
+    grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr) minmax(0,1fr) minmax(0,1fr) !important;
+  }
+  .stage#product .kpis > div{
+    min-width:0 !important;
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+  .stage#product .kpis strong{
+    white-space:nowrap !important;
+    font-size:1.34rem !important;
+    letter-spacing:-.02em !important;
+  }
+
+  /* 4: use the empty lower area of both mode cards */
+  .stage#product .mode{
+    min-height:178px !important;
+  }
+  .stage#product .mode span > small{
+    display:block !important;
+    margin-top:9px !important;
+    padding-top:8px !important;
+    border-top:1px solid rgba(49,88,102,.55) !important;
+    color:#eef4f6 !important;
+    font-size:12px !important;
+    line-height:1.38 !important;
+    font-weight:600 !important;
+  }
+}
+@media (min-width:761px) and (max-width:899px){
+  .stage#product .mode span > small{display:block;margin-top:8px;color:#eef4f6;font-size:12px;line-height:1.4;font-weight:600}
+}
+@media (max-width:760px){
+  .stage#product .mode span > small{display:block;margin-top:8px;color:#eef4f6;font-size:13px;line-height:1.45;font-weight:600}
+}
+
+/* ===== V10 PATCH 09 — REAL COMPACT LOWER PRODUCT ROW ===== */
+@media (min-width:900px){
+  .stage#product{
+    height:auto !important;
+    min-height:0 !important;
+    overflow:visible !important;
+  }
+  .stage#product .artboard{
+    transform:none !important;
+    zoom:1 !important;
+    margin-bottom:0 !important;
+  }
+
+  /* Compact the lower row by content rather than scaling the whole page. */
+  .stage#product .modes{
+    margin-top:-42px !important;
+    margin-bottom:0 !important;
+    align-items:start !important;
+  }
+  .stage#product .mode-card{
+    min-height:0 !important;
+    height:auto !important;
+    padding-bottom:18px !important;
+  }
+  .stage#product .kpis,
+  .stage#product .kpi{
+    min-height:0 !important;
+    height:auto !important;
+  }
+
+  /* Final strip immediately follows actual lower-row content. */
+  .stage#product .process-strip{
+    margin-top:16px !important;
+    margin-bottom:0 !important;
+    position:relative !important;
+    z-index:5;
+  }
+
+  /* Unified explanatory copy — one family, one weight, one rhythm. */
+  .stage#product .hero-copy,
+  .stage#product .hero-copy *,
+  .stage#product .feature-copy,
+  .stage#product .feature-copy *,
+  .stage#product .cards .card li,
+  .stage#product .cards .card li *,
+  .stage#product .mode-card p,
+  .stage#product .mode-card p *,
+  .stage#product .mode-card li,
+  .stage#product .mode-card li *,
+  .stage#product .kpi small,
+  .stage#product .process-strip small{
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-weight:400 !important;
+    font-style:normal !important;
+    letter-spacing:0 !important;
+  }
+
+  /* Module explanatory lists remain +24% from the original. */
+  .stage#product .cards .card ul,
+  .stage#product .cards .card li,
+  .stage#product .cards .card li *{
+    font-size:13.6px !important;
+    line-height:1.34 !important;
+  }
+
+  /* Both irrigation-mode cards: every explanatory line is identical. */
+  .stage#product .mode-card p,
+  .stage#product .mode-card p *,
+  .stage#product .mode-card li,
+  .stage#product .mode-card li *{
+    font-size:13.6px !important;
+    line-height:1.34 !important;
+    font-weight:400 !important;
+    color:#f4f7f8 !important;
+  }
+
+  /* Preserve approved white section hierarchy headings. */
+  .stage#product .cards-title,
+  .stage#product .modes h3{
+    color:#f4f7f8 !important;
+    font-weight:850 !important;
+    letter-spacing:.055em !important;
+    text-shadow:0 0 12px rgba(255,255,255,.12);
+  }
+  .stage#product .cards-title{font-size:17px !important;}
+  .stage#product .modes h3{font-size:19px !important;}
+}
+
+/* ===== PATCH 10 REBUILT — process strip moved to TOP ===== */
+.process-top{
+  position:absolute;
+  left:250px;
+  right:250px;
+  top:103px;
+  height:48px;
+  z-index:50;
+  border:1px solid #35515d;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  padding:0 20px;
+  background:rgba(7,17,22,.92);
+  font-size:11px;
+  overflow:hidden;
+}
+.process-top > b{color:var(--cyan);font-size:18px}
+.process-top .process-item{display:flex;align-items:center;gap:7px;color:#d9e0e3;white-space:nowrap}
+.process-top .process-item em{font-style:normal}
+.process-top .process-item small{display:block;color:#9fb0b7;font-size:9px}
+.process-top .green{color:var(--green)}
+.process-top .process-runner{
+  position:absolute;left:30px;bottom:0;width:90px;height:1px;
+  background:var(--cyan);box-shadow:0 0 8px var(--cyan);
+  animation:run 8s linear infinite
+}
+
+/* Old bottom process is absent in HTML. */
+
+/* ===== PATCH 11 — tighten first screen only ===== */
+#product{
+  min-height:0 !important;
+  height:auto !important;
+  padding-bottom:10px !important;
+  margin-bottom:0 !important;
+}
+#product .hero{
+  padding-bottom:0 !important;
+  margin-bottom:0 !important;
+}
+#product .modes{
+  margin-bottom:0 !important;
+  padding-bottom:0 !important;
+}
+#product .phone,
+#product .phone-wrap,
+#product .phone-preview{
+  max-height:330px !important;
+  overflow:hidden !important;
+  align-self:start !important;
+}
+#product .phone img,
+#product .phone-wrap img,
+#product .phone-preview img{
+  max-height:330px !important;
+  width:auto !important;
+  object-fit:contain !important;
+  object-position:top center !important;
+}
+#how{
+  margin-top:0 !important;
+  padding-top:18px !important;
+}
+
+
+/* =========================================================
+   PATCH 13 — USER MARKUP ALIGNMENT, based on PATCH 11
+   Only requested geometry changes.
+   ========================================================= */
+@media (min-width: 900px) {
+
+  /* 1) Move the complete right upper block down so its title top
+     aligns with the top of the large "КОНТРОЛЬ" heading. */
+  #product .cards-wrap,
+  #product .cards-area,
+  #product .hero-cards {
+    margin-top: 26px !important;
+  }
+
+  /* Fallback for the actual structure in this build:
+     cards-title + cards live in the right grid column. */
+  #product .cards-title {
+    margin-top: 26px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Keep the three module cards moving together with their title. */
+  #product .cards {
+    transform: translateY(26px) !important;
+  }
+
+  /* 2) Both mode cards exactly the same height. */
+  #product .modes {
+    align-items: stretch !important;
+  }
+  #product .mode,
+  #product .mode-card {
+    height: 168px !important;
+    min-height: 168px !important;
+    max-height: 168px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* 3) First screen ends at the user's red line:
+     remove artificial bottom reserve; phone may not set row height. */
+  #product,
+  #product .hero,
+  #product .artboard {
+    min-height: 0 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  #product .phone,
+  #product .phone-wrap,
+  #product .phone-preview {
+    height: 168px !important;
+    max-height: 168px !important;
+    overflow: hidden !important;
+    align-self: start !important;
+  }
+
+  #product .phone img,
+  #product .phone-wrap img,
+  #product .phone-preview img {
+    height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+  }
+
+  #product .kpis {
+    min-height: 168px !important;
+    height: 168px !important;
+    align-self: start !important;
+  }
+
+  #how {
+    margin-top: 0 !important;
+    padding-top: 8px !important;
+  }
+}
+
+/* =========================================================
+   PATCH 15 — BOTTOM-ONLY HEIGHT FIT
+   Keep PATCH 13 upper geometry intact.
+   Recover height only from the lower HERO row.
+   ========================================================= */
+@media (min-width: 900px) {
+
+  /* Preserve the approved PATCH 13 top position. */
+  .stage#product .artboard{
+    padding-top:clamp(34px,4vw,58px) !important;
+    row-gap:12px !important;
+  }
+  #product .cards-title{
+    margin-top:26px !important;
+    margin-bottom:8px !important;
+  }
+  #product .cards{
+    transform:translateY(26px) !important;
+  }
+
+  /* Do NOT move the top process strip upward. */
+  .process-top{
+    top:103px !important;
+  }
+
+  /* Recover the missing height below the three main cards. */
+  #product .modes{
+    margin-top:-50px !important;
+  }
+
+  /* Equal and slightly shorter lower row. */
+  #product .mode,
+  #product .mode-card{
+    height:148px !important;
+    min-height:148px !important;
+    max-height:148px !important;
+    overflow:hidden !important;
+  }
+
+  #product .kpis{
+    height:148px !important;
+    min-height:148px !important;
+    max-height:148px !important;
+  }
+
+  #product .phone,
+  #product .phone-wrap,
+  #product .phone-preview{
+    height:148px !important;
+    max-height:148px !important;
+    overflow:hidden !important;
+  }
+
+  /* No artificial reserve after the lower row. */
+  #product,
+  #product .hero,
+  #product .artboard{
+    padding-bottom:0 !important;
+    margin-bottom:0 !important;
+  }
+
+  #how{
+    margin-top:0 !important;
+    padding-top:8px !important;
+  }
+}
+
+/* =========================================================
+   PATCH 17 — CORRECT TARGETS, TEXT ONLY
+   Geometry from PATCH15 is untouched.
+   ========================================================= */
+@media (min-width:900px){
+
+  /* 3 — the cyan first line was created with ::first-line.
+     Make the whole introductory paragraph white. */
+  .stage#product .hero-left .lead,
+  .stage#product .hero-left .lead::first-line{
+    color:#f4f7f8 !important;
+  }
+
+  /* 2 — lower explanatory items are SMALL elements inside .mode.
+     Match the approved lists in the three upper cards. */
+  .stage#product .mode span > small{
+    position:relative !important;
+    display:block !important;
+    margin-top:7px !important;
+    padding-top:0 !important;
+    padding-left:18px !important;
+    border-top:0 !important;
+
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.34 !important;
+    font-weight:400 !important;
+    font-style:normal !important;
+    letter-spacing:0 !important;
+    color:#f4f7f8 !important;
+  }
+
+  /* Same cyan check as the upper module lists. */
+  .stage#product .mode span > small::before{
+    content:"✓" !important;
+    position:absolute !important;
+    left:0 !important;
+    top:0 !important;
+    color:#00c8ff !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.34 !important;
+    font-weight:400 !important;
+  }
+
+  /* If bold tags exist inside the lower explanatory copy,
+     normalize them to the same weight. */
+  .stage#product .mode span > small strong,
+  .stage#product .mode span > small b{
+    font:inherit !important;
+    color:inherit !important;
+  }
+}
+
+/* =========================================================
+   PATCH 18 — LOWER MODE TEXT NORMALIZATION ONLY
+   Geometry unchanged.
+   ========================================================= */
+@media (min-width:900px){
+
+  /* Make ALL explanatory copy inside each lower mode one common style. */
+  .stage#product .mode span{
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.34 !important;
+    font-weight:400 !important;
+    color:#f4f7f8 !important;
+  }
+
+  /* First (green-marked) explanatory text gets the same visual style. */
+  .stage#product .mode span > :not(small),
+  .stage#product .mode span > p{
+    font-family:inherit !important;
+    font-size:inherit !important;
+    line-height:inherit !important;
+    font-weight:inherit !important;
+    color:inherit !important;
+  }
+
+  /* Lower phrases: same text style, but no pseudo-check here. */
+  .stage#product .mode span > small{
+    display:block !important;
+    position:relative !important;
+    margin-top:7px !important;
+    padding-left:18px !important;
+    font-family:inherit !important;
+    font-size:inherit !important;
+    line-height:inherit !important;
+    font-weight:inherit !important;
+    color:inherit !important;
+  }
+
+  /* Disable the check that PATCH17 attached to the whole small block. */
+  .stage#product .mode span > small::before{
+    content:none !important;
+  }
+
+  /* Put check on the actual phrase line so it cannot drop to the bottom. */
+  .stage#product .mode span > small{
+    text-indent:-18px !important;
+  }
+  .stage#product .mode span > small::first-letter{
+    color:#f4f7f8 !important;
+  }
+
+  /* Use a background-free inline marker at the start of the small block. */
+  .stage#product .mode span > small{
+    padding-left:18px !important;
+  }
+  .stage#product .mode span > small::after{
+    content:"" !important;
+  }
+
+  /* Existing check-like nodes inside lower modes: align them with text. */
+  .stage#product .mode .check,
+  .stage#product .mode .tick,
+  .stage#product .mode span > i{
+    display:inline-block !important;
+    vertical-align:baseline !important;
+    transform:none !important;
+    margin:0 7px 0 0 !important;
+    position:static !important;
+    color:#00c8ff !important;
+    font-size:13.6px !important;
+    line-height:1 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 19 — RESTORE CHECKS IN LOWER MODE BLOCKS
+   Text/layout from PATCH18 unchanged.
+   ========================================================= */
+@media (min-width:900px){
+
+  .stage#product .mode span > small{
+    position:relative !important;
+    display:block !important;
+    padding-left:18px !important;
+    text-indent:0 !important;
+  }
+
+  .stage#product .mode span > small::before{
+    content:"✓" !important;
+    position:absolute !important;
+    left:0 !important;
+    top:0.02em !important;
+    display:block !important;
+    color:#00c8ff !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    font-weight:400 !important;
+    line-height:1.34 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 20 — MERGE MODE COPY INTO ONE CHECKED LIST VISUALLY
+   No page geometry changes.
+   ========================================================= */
+@media (min-width:900px){
+
+  /* Hide the old upper explanatory copy in each lower mode card. */
+  .stage#product .mode > span{
+    font-size:0 !important;
+    line-height:0 !important;
+  }
+
+  /* Rebuild all explanatory copy as one uniform checked list. */
+  .stage#product .mode:nth-of-type(1) > span::after{
+    content:
+      "✓  Задайте потрібну кількість літрів. Система завершить полив після досягнення заданого об’єму.\A"
+      "✓  Не скільки часу поливали, а скільки води фактично подано.\A"
+      "✓  Заданий і фактичний об’єм зберігаються для кожного поливу.";
+  }
+
+  .stage#product .mode:nth-of-type(2) > span::after{
+    content:
+      "✓  Задайте тривалість. BB610 виконає цикл і покаже фактично поданий об’єм води.\A"
+      "✓  Працюйте за часом, якщо саме так налаштована ваша технологія поливу.\A"
+      "✓  Навіть у режимі за часом BB610 покаже, скільки води було реально подано.";
+  }
+
+  .stage#product .mode > span::after{
+    display:block !important;
+    white-space:pre-line !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+    color:#f4f7f8 !important;
+  }
+
+  /* Hide old nested lower phrases/checks: they are now included above. */
+  .stage#product .mode > span > small{
+    display:none !important;
+  }
+}
+
+/* =========================================================
+   PATCH 21 — BLUE CHECKS + REMOVE LAST TIME-MODE PHRASE
+   Geometry unchanged.
+   ========================================================= */
+@media (min-width:900px){
+
+  .stage#product .mode > span::after{
+    color:#f4f7f8 !important;
+  }
+
+  /* Rebuild copy with a blue check character rendered through
+     a dedicated inline SVG data marker on each line. */
+  .stage#product .mode:nth-of-type(1) > span::after{
+    content:
+      "✓  Задайте потрібну кількість літрів. Система завершить полив після досягнення заданого об’єму.\A"
+      "✓  Не скільки часу поливали, а скільки води фактично подано.\A"
+      "✓  Заданий і фактичний об’єм зберігаються для кожного поливу." !important;
+  }
+
+  /* Right block: remove the final “Навіть у режимі...” phrase. */
+  .stage#product .mode:nth-of-type(2) > span::after{
+    content:
+      "✓  Задайте тривалість. BB610 виконає цикл і покаже фактично поданий об’єм води.\A"
+      "✓  Працюйте за часом, якщо саме так налаштована ваша технологія поливу." !important;
+  }
+
+  /* Make the check glyphs cyan by overlaying cyan checks at line starts. */
+  .stage#product .mode > span{
+    position:relative !important;
+  }
+
+  .stage#product .mode:nth-of-type(1) > span::before{
+    content:"✓\A✓\A✓" !important;
+  }
+  .stage#product .mode:nth-of-type(2) > span::before{
+    content:"✓\A✓" !important;
+  }
+
+  .stage#product .mode > span::before{
+    position:absolute !important;
+    left:0 !important;
+    top:0 !important;
+    white-space:pre-line !important;
+    color:#00c8ff !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+    z-index:2 !important;
+  }
+
+  /* Hide the white check glyphs in the text under the cyan overlay
+     by matching the text indentation. */
+  .stage#product .mode > span::after{
+    padding-left:0 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 22 — EXACT TWO BLUE CHECKS PER MODE CARD
+   ========================================================= */
+@media (min-width:900px){
+
+  /* Remove PATCH21 duplicate pseudo-check layer completely */
+  .stage#product .mode > span::before{
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Two phrases only in each card.
+     Blue checks are part of the text itself, so no white duplicates. */
+  .stage#product .mode:nth-of-type(1) > span::after{
+    content:
+      "✓  Задайте потрібну кількість літрів Система завершить полив після досягнення заданого об’єму.\A"
+      "✓  Не скільки часу поливали, а скільки води фактично подано." !important;
+    color:#00c8ff !important;
+    white-space:pre-line !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+  }
+
+  .stage#product .mode:nth-of-type(2) > span::after{
+    content:
+      "✓  Задайте тривалість. BB610 виконає цикл і покаже фактично поданий об’єм води.\A"
+      "✓  Працюйте за часом, якщо саме так налаштована ваша технологія поливу." !important;
+    color:#00c8ff !important;
+    white-space:pre-line !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 23 — WHITE TEXT + BLUE CHECKS
+   ========================================================= */
+@media (min-width:900px){
+
+  .stage#product .mode > span::before{
+    content:none !important;
+    display:none !important;
+  }
+
+  .stage#product .mode:nth-of-type(1) > span::after{
+    content:
+      "✓  Задайте потрібну кількість літрів. Система завершить полив після досягнення заданого об’єму.\A"
+      "✓  Не скільки часу поливали, а скільки води фактично подано." !important;
+    white-space:pre-line !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+    color:#ffffff !important;
+  }
+
+  .stage#product .mode:nth-of-type(2) > span::after{
+    content:
+      "✓  Задайте тривалість. BB610 виконає цикл і покаже фактично поданий об’єм води.\A"
+      "✓  Працюйте за часом, якщо саме так налаштована ваша технологія поливу." !important;
+    white-space:pre-line !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+    color:#ffffff !important;
+  }
+
+  /* Color only the checkmarks blue using a blue text-shadow overlay is not
+     reliable for generated content; use first-line marker styling via
+     separate marker pseudo-elements supplied by background-independent spans. */
+  .stage#product .mode > span{
+    color:#ffffff !important;
+  }
+}
+
+/* =========================================================
+   PATCH 24 — HOW IT WORKS: CENTER WHOLE DIAGRAM AS ONE UNIT
+   Image + animation overlay stay in the same parent,
+   so their relative coordinates are not changed.
+   ========================================================= */
+@media (min-width:900px){
+  #how .plan-v23{
+    width:min(100%,1180px) !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  #how .plan-v23-image,
+  #how .plan-v23-overlay{
+    transform:none !important;
+    margin:0 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 28 — MODULES SCREEN, corrected selectors
+   Based on working PATCH24. No changes to screens 1–2.
+   ========================================================= */
+@media (min-width:1001px){
+
+  /* Actual section is #modules, with .modules-clean inside it. */
+  #modules{
+    min-height:0 !important;
+    height:auto !important;
+    padding-top:20px !important;
+    padding-bottom:10px !important;
+  }
+
+  #modules .modules-clean{
+    min-height:0 !important;
+    height:auto !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+  }
+
+  /* Real heading selector. */
+  #modules .modules-clean-head h2{
+    font-size:0 !important;
+    margin-top:0 !important;
+    margin-bottom:8px !important;
+  }
+  #modules .modules-clean-head h2::after{
+    content:"ТРИ МОДУЛІ — ОДНА ГОТОВА СИСТЕМА" !important;
+    display:block !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:42px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    color:#f4f7f8 !important;
+    letter-spacing:-.02em !important;
+  }
+
+  #modules .modules-clean-head{
+    margin-top:0 !important;
+    margin-bottom:10px !important;
+  }
+
+  /* Compress only vertical whitespace, not typography. */
+  #modules .modules-clean-grid{
+    margin-top:0 !important;
+    margin-bottom:8px !important;
+    gap:14px !important;
+  }
+
+  #modules .module-card{
+    min-height:0 !important;
+    height:auto !important;
+    padding-top:12px !important;
+    padding-bottom:12px !important;
+  }
+
+  #modules .module-card img{
+    max-height:220px !important;
+    width:auto !important;
+    object-fit:contain !important;
+  }
+
+  #modules .module-card ul{
+    margin-top:8px !important;
+    margin-bottom:6px !important;
+  }
+
+  #modules .module-card li{
+    margin-top:2px !important;
+    margin-bottom:2px !important;
+  }
+
+  #modules .modules-clean-foot{
+    margin-top:6px !important;
+    margin-bottom:0 !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+  }
+}
+
+/* =========================================================
+   PATCH 30 — VERSIONS: REAL COMPACTION
+   Goal: fit title + full table + all 4 lower cards + note
+   into the desktop viewport without hiding/cropping content.
+   ========================================================= */
+@media (min-width:1001px){
+
+  #versions{
+    min-height:calc(100vh - 76px) !important;
+    height:auto !important;
+    padding:18px 36px 10px !important;
+  }
+
+  #versions .section-head{
+    margin:0 0 10px !important;
+  }
+
+  #versions .section-head h2{
+    margin:0 !important;
+    font-size:clamp(36px,3.2vw,52px) !important;
+    line-height:1.02 !important;
+  }
+
+  #versions .section-head .badge,
+  #versions .section-head .head-note{
+    padding-top:10px !important;
+    padding-bottom:10px !important;
+  }
+
+  #versions .table-wrap{
+    margin:0 0 8px !important;
+  }
+
+  #versions table{
+    line-height:1.08 !important;
+  }
+
+  #versions table th,
+  #versions table td{
+    padding-top:5px !important;
+    padding-bottom:5px !important;
+  }
+
+  #versions table thead th{
+    padding-top:6px !important;
+    padding-bottom:6px !important;
+  }
+
+  #versions .info-grid{
+    margin:8px 0 0 !important;
+    gap:10px !important;
+  }
+
+  #versions .info-grid article{
+    min-height:0 !important;
+    padding:10px 14px !important;
+  }
+
+  #versions .info-grid article h3{
+    margin-top:0 !important;
+    margin-bottom:5px !important;
+  }
+
+  #versions .info-grid article p{
+    margin-top:2px !important;
+    margin-bottom:2px !important;
+    line-height:1.25 !important;
+  }
+
+  #versions .fineprint,
+  #versions .price-note,
+  #versions .versions-note{
+    margin-top:6px !important;
+    margin-bottom:0 !important;
+    padding-bottom:0 !important;
+    line-height:1.2 !important;
+  }
+}
+
+/* PATCH 31 — VERSIONS: recover final note line */
+@media (min-width:1001px){
+  #versions{
+    padding-top:12px !important;
+    padding-bottom:6px !important;
+  }
+
+  #versions .section-head{
+    margin-bottom:6px !important;
+  }
+
+  #versions .table-wrap{
+    margin-bottom:5px !important;
+  }
+
+  #versions table th,
+  #versions table td{
+    padding-top:4px !important;
+    padding-bottom:4px !important;
+  }
+
+  #versions .info-grid{
+    margin-top:5px !important;
+  }
+
+  #versions .info-grid article{
+    padding-top:7px !important;
+    padding-bottom:7px !important;
+  }
+
+  #versions .fineprint,
+  #versions .price-note,
+  #versions .versions-note{
+    display:block !important;
+    margin-top:3px !important;
+    padding:0 !important;
+    font-size:11px !important;
+    line-height:1.15 !important;
+  }
+}
+
+
+/* ===== PATCH32 — PROGRAM desktop compact layout only ===== */
+@media (min-width:1001px){
+  #software.program-section{
+    padding-top:28px !important;
+    padding-bottom:24px !important;
+  }
+  #software .program-head h2{
+    margin-bottom:7px !important;
+  }
+  #software .program-head p{
+    max-width:none !important;
+    white-space:nowrap !important;
+    margin-bottom:14px !important;
+    line-height:1.3 !important;
+  }
+
+  #software .brand-grid{
+    gap:14px !important;
+    align-items:stretch !important;
+  }
+  #software .systems-panel,
+  #software .intelligence-panel{
+    padding:14px 16px !important;
+  }
+
+  /* logo at left, explanation on the same line */
+  #software .systems-panel,
+  #software .intelligence-panel{
+    display:grid !important;
+    grid-template-columns:170px minmax(0,1fr) !important;
+    grid-template-rows:62px auto !important;
+    column-gap:16px !important;
+    align-items:center !important;
+  }
+  #software .systems-panel::before,
+  #software .intelligence-panel::before{
+    display:none !important;
+    content:none !important;
+  }
+  #software .systems-logo,
+  #software .intelligence-logo{
+    grid-column:1 !important;
+    grid-row:1 !important;
+    width:160px !important;
+    max-width:160px !important;
+    height:56px !important;
+    max-height:56px !important;
+    margin:0 !important;
+    object-fit:contain !important;
+    object-position:left center !important;
+  }
+  #software .brand-sub{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    margin:0 !important;
+    text-align:left !important;
+    white-space:nowrap !important;
+    line-height:1.25 !important;
+  }
+  #software .systems-content,
+  #software .intelligence-panel > .intel-shot,
+  #software .intelligence-panel > ul{
+    grid-column:1 / -1 !important;
+  }
+  #software .systems-content{grid-row:2 !important}
+  #software .intelligence-panel > .intel-shot{grid-row:2 !important}
+  #software .intelligence-panel > ul{grid-row:3 !important}
+
+  /* Mobile + SCADA: three text columns in total (1 + 2) */
+  #software .systems-content{
+    grid-template-columns:.86fr 1.35fr !important;
+    gap:16px !important;
+    padding-top:10px !important;
+  }
+  #software .mobile-block p,
+  #software .scada-block p{
+    margin-bottom:7px !important;
+  }
+  #software .mobile-shot,
+  #software .scada-shot{
+    height:250px !important;
+    margin-bottom:6px !important;
+  }
+  #software .mobile-block ul{
+    columns:1 !important;
+    margin-top:6px !important;
+  }
+  #software .scada-block ul{
+    columns:2 !important;
+    column-gap:22px !important;
+    margin-top:6px !important;
+  }
+  #software .mobile-block li,
+  #software .scada-block li{
+    break-inside:avoid !important;
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+    line-height:1.25 !important;
+  }
+
+  #software .intel-shot{
+    height:250px !important;
+    margin:8px 0 7px !important;
+  }
+  #software .intelligence-panel ul{
+    margin-top:4px !important;
+  }
+  #software .intelligence-panel li{
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+    line-height:1.25 !important;
+  }
+
+  /* raise and compact the lower row */
+  #software .bottom-grid{
+    margin-top:10px !important;
+    gap:14px !important;
+  }
+  #software .flow-panel,
+  #software .today-panel{
+    padding:11px 16px !important;
+  }
+  #software .flow-panel h3,
+  #software .today-panel h3{
+    margin-bottom:6px !important;
+  }
+  #software .flow{
+    gap:8px !important;
+  }
+  #software .flow-node img{
+    width:125px !important;
+    height:48px !important;
+    margin-bottom:2px !important;
+  }
+  #software .flow-node span{
+    line-height:1.18 !important;
+  }
+  #software .today-grid{
+    margin-top:7px !important;
+    gap:7px !important;
+  }
+  #software .today-grid div{
+    padding:9px 6px !important;
+  }
+  #software .program-foot{
+    padding-top:9px !important;
+  }
+}
+
+@media (min-width:1001px) and (max-height:900px){
+  #software.program-section{
+    padding-top:20px !important;
+    padding-bottom:18px !important;
+  }
+  #software .mobile-shot,
+  #software .scada-shot,
+  #software .intel-shot{
+    height:220px !important;
+  }
+  #software .bottom-grid{margin-top:8px !important}
+  #software .program-foot{padding-top:7px !important}
+}
+
+
+/* =========================================================
+   PATCH 33 — CONTACTS: fit final phone / email / country bar
+   Base: approved PATCH32-PROGRAM.
+   Only desktop #contacts geometry is changed.
+   ========================================================= */
+@media (min-width:1001px){
+
+  #contacts.contacts-section{
+    padding-top:24px !important;
+    padding-bottom:10px !important;
+    row-gap:12px !important;
+  }
+
+  #contacts .contact-intro{
+    margin-bottom:8px !important;
+  }
+
+  #contacts .trust-strip{
+    margin-top:8px !important;
+    margin-bottom:8px !important;
+    padding-top:9px !important;
+    padding-bottom:9px !important;
+  }
+
+  #contacts .contact-form-wrap{
+    padding-top:14px !important;
+    padding-bottom:12px !important;
+  }
+
+  #contacts form{
+    gap:8px !important;
+  }
+
+  #contacts textarea{
+    min-height:72px !important;
+    height:72px !important;
+  }
+
+  #contacts .feature-grid{
+    gap:8px !important;
+    margin-top:8px !important;
+    margin-bottom:8px !important;
+  }
+
+  /* The only block that was outside the viewport. */
+  #contacts .contact-bar{
+    margin-top:6px !important;
+    margin-bottom:0 !important;
+    padding-top:9px !important;
+    padding-bottom:9px !important;
+    min-height:0 !important;
+  }
+
+  #contacts .contact-bar div{
+    padding-top:2px !important;
+    padding-bottom:2px !important;
+  }
+}
+
+
+/* =========================================================
+   PATCH 34 — PRODUCT: blue checks in lower mode cards
+   Base: approved PATCH33-CONTACTS.
+   Geometry and text unchanged.
+   ========================================================= */
+@media (min-width:900px){
+
+  /* Keep explanatory text white. */
+  #product .mode > span::after{
+    color:#f4f7f8 !important;
+  }
+
+  /* Remove any old/duplicate generated check layer. */
+  #product .mode > span::before{
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Blue check markers placed at the starts of the two explanation lines. */
+  #product .mode{
+    --mode-check:#00c8ff;
+  }
+
+  #product .mode > span{
+    position:relative !important;
+  }
+
+  #product .mode > span::before{
+    display:block !important;
+    position:absolute !important;
+    left:0 !important;
+    top:0 !important;
+    color:var(--mode-check) !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:13.6px !important;
+    line-height:1.42 !important;
+    font-weight:400 !important;
+    white-space:pre-line !important;
+    z-index:2 !important;
+  }
+
+  #product .mode:nth-of-type(1) > span::before,
+  #product .mode:nth-of-type(2) > span::before{
+    content:"✓\A✓" !important;
+  }
+
+  /* Hide the white check glyphs embedded in PATCH23 generated text
+     by overlaying them with the background color; blue markers above remain. */
+  #product .mode > span::after{
+    text-shadow:none !important;
+  }
+}
+
