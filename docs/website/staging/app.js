@@ -13,27 +13,23 @@
   const md = document.querySelector('meta[name="description"]');
   if (md) md.setAttribute('content', C.meta.description);
 
-  // Navigation + CTA
   $('#site-nav').innerHTML = C.navigation.map(i => `<a href="${i.href}">${i.label}</a>`).join('');
   $$('[data-hero-cta]').forEach(el => { el.textContent = C.cta.heroPrimary.label; el.href = C.cta.heroPrimary.href; });
   $$('[data-configure-cta]').forEach(el => { el.textContent = C.cta.configure.label; el.href = C.cta.configure.href; });
   $$('[data-contact-cta]').forEach(el => { el.textContent = C.cta.contact.label; el.href = C.cta.contact.href; });
 
-  // Screen 1 — Hero
   setText('[data-hero-eyebrow]', C.hero.eyebrow);
   setText('[data-hero-title]', C.hero.headline);
   setText('[data-hero-subtitle]', C.hero.subheadline);
   setText('[data-hero-note]', C.hero.note);
   $('[data-hero-principle]').innerHTML = C.hero.principle.map((x, i, arr) => `<strong>${x}</strong>${i < arr.length - 1 ? '<span aria-hidden="true">→</span>' : ''}`).join('');
 
-  // Screen 2 — Routine
   setText('[data-routine-eyebrow]', C.routine.eyebrow);
   setText('[data-routine-title]', C.routine.title);
   setText('[data-routine-intro]', C.routine.intro);
   $('[data-routine-items]').innerHTML = cards(C.routine.items);
   setText('[data-routine-conclusion]', C.routine.conclusion);
 
-  // Screen 3 — Zones
   setText('[data-zones-eyebrow]', C.zones.eyebrow);
   setText('[data-zones-title]', C.zones.title);
   setText('[data-zones-intro]', C.zones.intro);
@@ -42,7 +38,6 @@
   setText('[data-zones-conclusion]', C.zones.conclusion);
   setText('[data-zones-boundary]', C.zones.boundary);
 
-  // Screen 4 — Actual result
   setText('[data-actual-eyebrow]', C.actual.eyebrow);
   setText('[data-actual-title]', C.actual.title);
   setText('[data-actual-intro]', C.actual.intro);
@@ -53,14 +48,12 @@
   setText('[data-actual-line]', C.actual.line);
   setText('[data-actual-boundary]', C.actual.boundary);
 
-  // Screen 5 — Deviations
   setText('[data-deviations-eyebrow]', C.deviations.eyebrow);
   setText('[data-deviations-title]', C.deviations.title);
   setText('[data-deviations-intro]', C.deviations.intro);
   $('[data-deviation-items]').innerHTML = cards(C.deviations.items);
   setText('[data-deviation-protection]', C.deviations.protection);
 
-  // Screen 6 — Fertigation
   setText('[data-fertigation-eyebrow]', C.fertigation.eyebrow);
   setText('[data-fertigation-title]', C.fertigation.title);
   setText('[data-fertigation-intro]', C.fertigation.intro);
@@ -70,7 +63,17 @@
   setText('[data-fertigation-mixing]', C.fertigation.mixing);
   setText('[data-fertigation-conclusion]', C.fertigation.conclusion);
 
-  // Screen 7 — PULS. Existing staging image is retained unchanged as a placeholder only.
+  setText('[data-ph-ec-eyebrow]', C.phEc.eyebrow);
+  setText('[data-ph-ec-title]', C.phEc.title);
+  setText('[data-ph-ec-intro]', C.phEc.intro);
+  $('[data-ph-ec-items]').innerHTML = cards(C.phEc.items);
+  setText('[data-ph-ec-boundary]', C.phEc.boundary);
+
+  setText('[data-owner-impact-eyebrow]', C.ownerImpact.eyebrow);
+  setText('[data-owner-impact-title]', C.ownerImpact.title);
+  setText('[data-owner-impact-intro]', C.ownerImpact.intro);
+  $('[data-owner-impact-items]').innerHTML = cards(C.ownerImpact.items);
+
   setText('[data-puls-eyebrow]', C.puls.eyebrow);
   setText('[data-puls-title]', C.puls.title);
   setText('[data-puls-text]', C.puls.text);
@@ -80,7 +83,6 @@
   setText('[data-puls-caption]', C.puls.caption);
   setText('[data-proof-needed]', C.puls.proofNeeded);
 
-  // Supporting system/installation block. Existing visuals retained unchanged as placeholders.
   setText('[data-architecture-eyebrow]', C.architecture.eyebrow);
   setText('[data-architecture-title]', C.architecture.title);
   setText('[data-architecture-intro]', C.architecture.intro);
@@ -96,7 +98,6 @@
     <article class="digital-node primary"><strong>BB610 PULS</strong><p>${C.architecture.software.PULS}</p><span class="branch">└─ BB610 PULS MOBILE</span><small>${C.architecture.software.MOBILE}</small></article>
     <article class="digital-node"><strong>BB610 INTELLIGENCE</strong><p>${C.architecture.software.INTELLIGENCE}</p></article>`;
 
-  // Screen 8 — Configuration / price
   setText('[data-config-eyebrow]', C.configurator.eyebrow);
   setText('[data-config-title]', C.configurator.title);
   setText('[data-config-intro]', C.configurator.intro);
@@ -133,7 +134,6 @@
   renderChoices();
   renderResult();
 
-  // Contact
   setText('[data-contact-eyebrow]', C.contact.eyebrow);
   setText('[data-contact-title]', C.contact.title);
   setText('[data-contact-text]', C.contact.text);
@@ -174,7 +174,6 @@
     }
   });
 
-  // Mobile nav
   const toggle = $('.menu-toggle');
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') === 'true';
