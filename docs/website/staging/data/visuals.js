@@ -3,6 +3,10 @@
  * EXPLANATORY UI/DIAGRAM ONLY — never product proof / live telemetry.
  */
 window.BB610_VISUALS = {
+  heroSchedule: [
+    { time: "06:00", zone: "ПОЛИВНИЙ БЛОК 1", action: "черга зон · об’єм", state: "done" },
+    { time: "15:00", zone: "ПОЛИВНИЙ БЛОК 2", action: "черга зон · об’єм", state: "active" }
+  ],
   heroBlocks: [
     {
       start: "06:00",
@@ -27,55 +31,40 @@ window.BB610_VISUALS = {
   ],
   zones: [
     {
-      id: "greenhouse-tomato",
-      name: "Теплиця — томати",
-      detail: "назва зони, зрозуміла власнику",
-      recipe: "Полив",
-      target: "300 л",
+      id: "greenhouse-tomato", name: "Теплиця — томати", summary: "Полив · заданий об’єм 300 л", schedule: [["06:00","300 л"],["15:00","300 л"]],
+      detail: "назва зони, зрозуміла власнику", recipe: "Полив", target: "300 л",
       blocks: [
         { start: "06:00", block: "Блок 1", order: "1 у черзі", target: "300 л", actual: "302 л", state: "done" },
         { start: "15:00", block: "Блок 2", order: "2 у черзі", target: "300 л", actual: "184 / 300 л", state: "active" }
       ]
     },
     {
-      id: "blueberry-young",
-      name: "Лохина — молоді рослини",
-      detail: "сорт Duke · необов’язкове уточнення",
-      recipe: "Полив",
-      target: "220 л",
+      id: "blueberry-young", name: "Лохина — молоді рослини", summary: "Полив · заданий об’єм 220 л", schedule: [["06:00","220 л"],["18:00","220 л"]],
+      detail: "сорт Duke · необов’язкове уточнення", recipe: "Полив", target: "220 л",
       blocks: [
         { start: "06:00", block: "Блок 1", order: "2 у черзі", target: "220 л", actual: "221 л", state: "done" },
         { start: "18:00", block: "Блок 3", order: "1 у черзі", target: "220 л", actual: "очікує", state: "planned" }
       ]
     },
     {
-      id: "nursery",
-      name: "Розсадник",
-      detail: "окрема група рослин",
-      recipe: "Полив",
-      target: "180 л",
+      id: "nursery", name: "Розсадник", summary: "Полив · заданий об’єм 180 л", schedule: [["06:00","180 л"],["15:00","180 л"]],
+      detail: "окрема група рослин", recipe: "Полив", target: "180 л",
       blocks: [
         { start: "06:00", block: "Блок 1", order: "3 у черзі", target: "180 л", actual: "179 л", state: "done" },
         { start: "15:00", block: "Блок 2", order: "4 у черзі", target: "180 л", actual: "очікує", state: "planned" }
       ]
     },
     {
-      id: "strawberry-tunnel-1",
-      name: "Полуниця — тунель 1",
-      detail: "зона тунелю",
-      recipe: "Полив + живлення",
-      target: "260 л",
+      id: "strawberry-tunnel-1", name: "Полуниця — тунель 1", summary: "Полив + живлення · заданий об’єм 260 л", schedule: [["06:30","260 л"],["15:00","260 л"]],
+      detail: "зона тунелю", recipe: "Полив + живлення", target: "260 л",
       blocks: [
         { start: "06:30", block: "Блок 1", order: "1 у черзі", target: "260 л", actual: "260 л", state: "done" },
         { start: "15:00", block: "Блок 2", order: "1 у черзі", target: "260 л", actual: "261 л", state: "done" }
       ]
     },
     {
-      id: "favorite-bed",
-      name: "Улюблена грядка",
-      detail: "назва, звична власнику",
-      recipe: "Полив",
-      target: "120 л",
+      id: "favorite-bed", name: "Улюблена грядка", summary: "Полив · заданий об’єм 120 л", schedule: [["08:00","120 л"],["17:00","120 л"]],
+      detail: "назва, звична власнику", recipe: "Полив", target: "120 л",
       blocks: [
         { start: "08:00", block: "Блок 1", order: "1 у черзі", target: "120 л", actual: "120 л", state: "done" },
         { start: "17:00", block: "Блок 2", order: "1 у черзі", target: "120 л", actual: "очікує", state: "planned" }
