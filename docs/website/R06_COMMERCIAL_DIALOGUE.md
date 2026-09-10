@@ -4,230 +4,152 @@
 - **Status:** REVIEW
 - **Date:** 2026-09-10
 - **Base:** R05 PASS staging implementation
-- **Task:** `TASK_06_COMMERCIAL_DIALOGUE_R1.md` + owner clarification for Task 06
-- **Implementation commit:** `81f628ab3194f87149ae92aac78bd0e8900005f6`
-- **Scope:** commercial/textual recomposition of current staging only; visual proof/assets deferred
+- **Task:** `TASK_06_COMMERCIAL_DIALOGUE_R1.md` + owner clarification
+- **Working copy source:** `BB610_WATER_COMMERCIAL_COPY_R1.md`
+- **Implementation commit:** `d584cbe11be8028d3b3d40e01597ce23b09d6f9b`
+- **Scope:** commercial/textual recomposition only; visual-proof work deferred
 - **Copy:** WORKING COPY / NOT FREEZE
 - **Production:** NOT CHANGED
 
-## 1. Staging review access
+## 1. Review access
 
-Implementation path:
+Staging path:
 
 `docs/website/staging/index.html`
 
 Commit-pinned review URL:
 
-`https://rawcdn.githack.com/ladima75-source/bb610-water/81f628ab3194f87149ae92aac78bd0e8900005f6/docs/website/staging/index.html`
+`https://rawcdn.githack.com/ladima75-source/bb610-water/d584cbe11be8028d3b3d40e01597ce23b09d6f9b/docs/website/staging/index.html`
 
-The same responsive staging URL is intended for desktop and mobile review.
+The same responsive page is used for desktop and mobile review.
 
-## 2. Task 06 clarification applied
+## 2. Commercial dialogue implemented
 
-The owner clarified that this iteration is **commercial dialogue / working copy only**.
+The R05 staging page was recomposed around the agreed commercial conversation from `BB610_WATER_COMMERCIAL_COPY_R1.md`:
 
-Therefore this implementation deliberately does **not**:
+1. HERO: owner remains the decision-maker; BB610 takes over irrigation/feeding routine.
+2. Irrigation and feeding by the owner’s schedule, including the four-block explanatory daily example.
+3. Individual regime and human-readable names for each zone.
+4. Actual measured result rather than command-only automation, including the clearly labeled `800 л / 802 л` explanatory example.
+5. Deviation/control logic with validated wording only.
+6. Fertigation as part of the irrigation cycle; stock solution remains owner-prepared; wet/feed/flush example is explicitly non-prescriptive.
+7. Separate pH/EC distinction: pH management/correction and control; EC monitoring/deviation notification only.
+8. Concrete owner impact: fewer manual launches, zone-specific regimes, factual execution visibility, attention to deviations.
+9. PULS textual role only in this task.
+10. CONTROL / HYDRAULIC / ZONE physical system and plug-and-play installation intent.
+11. Customer-language configuration dialogue followed by the exact frozen technical selector and price state.
+12. Final conversion/contact copy.
 
-- select or replace photographs;
-- select or replace PULS screenshots;
-- crop or annotate PULS screens;
-- select or replace engineering visualizations;
-- create new diagrams/graphs/animations as visual proof;
-- treat `assets/extracted/*` as validated product evidence merely because the files exist in the repository;
-- redesign the accepted R05 visual system.
+All marketing wording remains WORKING COPY.
 
-Current staging images remain in place as temporary working placeholders. The UI now labels the PULS and physical-module visuals as temporary/review-later material so they are not presented as proof of specific functions during R06 review.
+## 3. Centralized content/data architecture preserved
 
-`docs/website/staging/data/assets.js` was **not modified**.
+R05 architecture was retained.
 
-## 3. Homepage commercial dialogue implemented
-
-The staging homepage now follows one customer conversation instead of a feature-list structure:
-
-1. **What changes for me?**
-   - `Ви вирішуєте, як вирощувати. BB610 бере на себе рутину поливу та підживлення.`
-   - supporting logic: `Ви вирішуєте → BB610 виконує → BB610 контролює`;
-   - primary first-screen CTA: `Подивитися, як це працює`.
-
-2. **What no longer needs my presence every cycle?**
-   - schedule;
-   - individual zones;
-   - time or actual-volume irrigation;
-   - multiple daily blocks/cycles;
-   - fertigation integrated into scheduled operation.
-
-3. **My plants are different**
-   - human-readable demo zone names centralized in data:
-     - `Duke — молоді`;
-     - `Chandler — плодоношення`;
-     - `Томати чері`;
-     - `Улюблена грядка`;
-   - explicit boundary: control is by zone, not by individual plant.
-
-4. **How do I know it actually happened?**
-   - timer/controller evidence vs BB610 factual measurement;
-   - explanatory HTML example `800 л → 802 л → цикл виконано`;
-   - explicit label that this is an example, not live telemetry;
-   - flowmeter identified as factual-volume basis;
-   - no unsupported diagnosis of deviation causes.
-
-5. **What if execution goes wrong?**
-   - actual flow/volume;
-   - pressure;
-   - pH according to P/PE configuration;
-   - EC in PE as monitoring/deviation notification only;
-   - low-level/system-state signals;
-   - validated response language: warning, warning + confirmation, or emergency stop where applicable.
-
-6. **Feeding without a separate repeated manual ritual**
-   - user prepares the stock/mother solution;
-   - BB610 does not automatically create stock solution from raw fertilizer;
-   - mixing/recirculation pump role is explained;
-   - one mixing pump for one fertigation channel, two for two channels, according to configuration;
-   - cycle concept: `Змочування → Підживлення → Промивка`;
-   - `15% / 70% / 15%` is explicitly labeled only as an example, not agronomic guidance.
-
-7. **Where do I see/manage it?**
-   - BB610 PULS remains the main software/SCADA term;
-   - PULS MOBILE remains in the PULS family;
-   - visual evidence review is explicitly deferred;
-   - current staging image is labeled temporary placeholder and is not used to prove a function.
-
-8. **What system do I need and what does it cost?**
-   - customer-language questions appear before the technical selector;
-   - the existing exact frozen selector remains intact:
-     `I / F1 / F1-P / F1-PE / F2 / F2-P / F2-PE`;
-   - zones remain:
-     `Z4(8) / Z8(12) / Z12(16)`;
-   - exact result remains version + zone;
-   - HMI state remains available;
-   - no missing F1-P/F2-P price is invented.
-
-A supporting installation/system block remains between PULS and configuration to explain CONTROL / HYDRAULIC / ZONE and plug-and-play intent without claiming zero maintenance. Its existing visual assets remain placeholders.
-
-## 4. Centralized content/data layer preserved
-
-R05 architecture was preserved rather than replaced.
-
-Changed working-copy source:
+### Marketing/content source
 
 `docs/website/staging/data/content.js`
 
-It now contains all Task 06 commercial copy, including:
+All new Task 06 copy, CTA labels, demo zone names, customer questions and explanatory examples live here.
 
-- navigation labels;
-- HERO copy and CTA labels;
-- routine-operation copy;
-- zone examples/demo names;
-- actual-result comparison and explanatory proof values;
-- deviation/control language;
-- fertigation workflow and cycle labels;
-- PULS placeholder/review wording;
-- architecture/installation wording;
-- configuration customer questions;
-- contact copy;
-- intended future routes.
-
-Commercial data source remains:
+### Commercial source
 
 `docs/website/staging/data/commercial.js`
 
-and was **not changed** in R06.
+**Not changed in R06.**
 
-Asset references remain:
+The exact frozen versions remain:
+
+`I / F1 / F1-P / F1-PE / F2 / F2-P / F2-PE`
+
+Zones remain:
+
+`Z4(8) / Z8(12) / Z12(16)`
+
+No missing F1-P/F2-P price was invented.
+
+### Asset source
 
 `docs/website/staging/data/assets.js`
 
-and were **not changed** in R06.
+**Not changed in R06.**
 
-Rendering remains centralized through:
+### Rendering
 
 `docs/website/staging/app.js`
 
-No marketing/commercial copy was duplicated into multiple page templates.
+The page continues to render both desktop and mobile from the same centralized sources.
 
-## 5. Files changed
+## 4. Owner clarification about visuals applied
 
-Compared with Task 06 assignment commit `b64c3eea8fa9962d4fa549d3071e14f0e5004e6a`, staging implementation changes are limited to:
+R06 deliberately does not select, replace, crop, annotate or validate:
 
-- `docs/website/staging/data/content.js` — commercial dialogue / centralized WORKING COPY;
-- `docs/website/staging/index.html` — semantic section sequence / data hooks;
-- `docs/website/staging/app.js` — rendering of the new content/data fields;
-- `docs/website/staging/task06.css` — small structural additions using the existing R05 visual tokens/styles.
+- photographs;
+- PULS screenshots;
+- engineering visuals;
+- schemes;
+- graphs;
+- animations;
+- any other visual proof.
 
-No root production file was changed by Task 06 implementation.
+No `assets/extracted/*` file is treated as verified real-product evidence merely because it exists in the repository.
 
-## 6. Visual/assets status
+Current staging images remain temporarily in place and are explicitly labeled as placeholders/review-later material.
 
-### PULS
+Real BB610 PULS visual presentation is deferred to the next dedicated stage.
 
-No PULS asset was selected, replaced, cropped, annotated, or validated during R06.
+PULS MOBILE is not presented as an already finished real product; the staging text marks it as a project/development direction until separately confirmed.
 
-Current asset usage: **TEMPORARY STAGING PLACEHOLDER ONLY**.
+## 5. Files changed in Task 06
 
-No derivative was created.
+Staging changes:
 
-Real BB610 PULS exists, but its website visual presentation is intentionally deferred to the next owner/supervising review stage.
+- `docs/website/staging/data/content.js`
+- `docs/website/staging/index.html`
+- `docs/website/staging/app.js`
+- `docs/website/staging/task06.css`
 
-### CONTROL / HYDRAULIC / ZONE
+Review document:
 
-Existing staging images remain unchanged and are labeled as temporary placeholders. Their repository presence is not treated as validation that they are current/final product evidence.
+- `docs/website/R06_COMMERCIAL_DIALOGUE.md`
 
-## 7. Statements still requiring owner/copy review
+A concurrent supervising-chat file `docs/website/BB610_WATER_COMMERCIAL_COPY_R1.md` appeared during execution and was then used as the authoritative WORKING COPY source for final alignment.
 
-All marketing copy remains WORKING COPY, especially:
+`commercial.js`, `assets.js`, production root files and production deployment were not changed by R06 implementation.
 
-- HERO headline;
-- HERO explanation;
-- routine-operation wording;
-- emotional wording around human-readable zone names;
-- fertigation explanation length;
-- plug-and-play wording;
-- contact wording;
-- customer-language questions before the configuration selector.
+## 6. Responsive / structural checks
 
-No copy in R06 is FREEZE.
+The accepted R05 responsive system remains the base.
 
-## 8. Responsive checks
+Task 06 additions use the same breakpoints and tokens:
 
-R06 preserves the R05 responsive system and adds only structural styles consistent with it.
+- new dialogue grids collapse to one column on mobile;
+- principle and wet/feed/flush sequences stack vertically on narrow screens;
+- configuration remains touch-friendly and consumes the same commercial data source;
+- no fixed-width commercial table was introduced;
+- no new horizontal-overflow dependency was introduced;
+- desktop structure remains compatible with the existing 1366/1920 review layouts;
+- mobile structure remains compatible with the existing <=760 px rules used for 390/430 review widths.
 
-Source-level responsive checks cover the existing breakpoints used for the required review widths:
+Owner browser review remains required before PASS.
 
-- mobile layout <= 760 px supports 390×844 and 430×932 classes of viewport;
-- intermediate <= 1100 px behavior remains intact;
-- desktop layout remains the R05 base for 1366×768 and 1920×1080 classes of viewport;
-- new principle/cycle flows stack vertically on mobile;
-- new compare/deviation/fertigation/question grids collapse to one column on mobile;
-- configuration selector continues to use the same desktop/mobile commercial data source;
-- no new fixed-width table or horizontal-scrolling commercial matrix was introduced.
+## 7. Items still open
 
-Owner browser review remains required before PASS because R06 is a staging review iteration, not production acceptance.
+- all slogans/headlines/body copy are WORKING COPY;
+- exact visual treatment of real BB610 PULS is deferred;
+- final engineering/product imagery is deferred;
+- PULS MOBILE product-state/visual confirmation is deferred;
+- full production contact backend is outside Task 06;
+- full Water Admin remains outside Task 06.
 
-## 9. Future page routes prepared in centralized content
+## 8. Production confirmation
 
-The content source records the intended future routes without implementing them in this task:
+Task 06 changes are isolated to `docs/website/staging/` and review documentation.
 
-- `/irrigation/`;
-- `/fertigation/`;
-- `/ph-ec/`;
-- `/puls/`;
-- `/puls/mobile/`;
-- `/system/`;
-- `/configurations/`.
-
-No public `BB610 SYSTEM` product name is introduced.
-
-## 10. Production confirmation
-
-Task 06 implementation is isolated under `docs/website/staging/` plus this review document.
-
-Production `water.bb610.com.ua`, root `index.html`, root production CSS/JS and `CNAME` were not modified.
+`water.bb610.com.ua`, root production `index.html`, root production CSS/JS and `CNAME` were not changed.
 
 ## Stage result
 
-**R06: REVIEW**
+**R06 = REVIEW**
 
-Commercial/textual staging iteration is ready for owner/supervising review.
-
-Do not deploy to production. Do not freeze copy. Do not begin PULS/engineering visual-proof selection until a new explicit task is assigned.
+Stop after review handoff. Do not deploy production, freeze copy, or begin visual-proof selection without a new explicit assignment.
