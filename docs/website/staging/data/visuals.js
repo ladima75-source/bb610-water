@@ -1,19 +1,86 @@
 /* BB610 WATER staging explanatory visual data
- * Task 07 source: BB610_WATER_VISUAL_UX_BRIEF_R1.md
+ * Task 07.1 correction: irrigation block -> zone queue -> target volume -> actual execution.
  * EXPLANATORY UI/DIAGRAM ONLY — never product proof / live telemetry.
  */
 window.BB610_VISUALS = {
-  heroSchedule: [
-    { time: "06:00", zone: "Duke — молоді", action: "Полив", state: "done" },
-    { time: "11:00", zone: "Chandler", action: "Полив", state: "done" },
-    { time: "15:00", zone: "Chandler", action: "Полив + живлення", state: "active" },
-    { time: "18:00", zone: "Duke — молоді", action: "Полив", state: "planned" }
+  heroBlocks: [
+    {
+      start: "06:00",
+      label: "ПОЛИВНИЙ БЛОК 1",
+      state: "done",
+      queue: [
+        { order: 1, zone: "Теплиця — томати", target: "300 л", actual: "302 л", state: "done" },
+        { order: 2, zone: "Лохина — молоді рослини", detail: "сорт Duke · приклад", target: "220 л", actual: "221 л", state: "done" },
+        { order: 3, zone: "Розсадник", target: "180 л", actual: "179 л", state: "done" }
+      ]
+    },
+    {
+      start: "15:00",
+      label: "ПОЛИВНИЙ БЛОК 2",
+      state: "active",
+      queue: [
+        { order: 1, zone: "Полуниця — тунель 1", target: "260 л", actual: "261 л", state: "done" },
+        { order: 2, zone: "Теплиця — томати", target: "300 л", actual: "184 / 300 л", state: "active" },
+        { order: 3, zone: "Улюблена грядка", target: "120 л", actual: "очікує", state: "planned" }
+      ]
+    }
   ],
   zones: [
-    { id: "duke", name: "Duke — молоді", summary: "4 поливні блоки / об’єм", schedule: [["06:00","200 л"],["11:00","200 л"],["15:00","200 л"],["18:00","200 л"]] },
-    { id: "chandler", name: "Chandler — плодоношення", summary: "2 поливи + цикл живлення", schedule: [["06:30","300 л"],["12:00","300 л"],["16:00","змочування → живлення → промивання"]] },
-    { id: "tomato", name: "Томати чері", summary: "власний графік / час", schedule: [["07:00","12 хв"],["13:00","10 хв"],["18:30","12 хв"]] },
-    { id: "favorite", name: "Улюблена грядка", summary: "окрема група рослин", schedule: [["08:00","120 л"],["17:00","120 л"]] }
+    {
+      id: "greenhouse-tomato",
+      name: "Теплиця — томати",
+      detail: "назва зони, зрозуміла власнику",
+      recipe: "Полив",
+      target: "300 л",
+      blocks: [
+        { start: "06:00", block: "Блок 1", order: "1 у черзі", target: "300 л", actual: "302 л", state: "done" },
+        { start: "15:00", block: "Блок 2", order: "2 у черзі", target: "300 л", actual: "184 / 300 л", state: "active" }
+      ]
+    },
+    {
+      id: "blueberry-young",
+      name: "Лохина — молоді рослини",
+      detail: "сорт Duke · необов’язкове уточнення",
+      recipe: "Полив",
+      target: "220 л",
+      blocks: [
+        { start: "06:00", block: "Блок 1", order: "2 у черзі", target: "220 л", actual: "221 л", state: "done" },
+        { start: "18:00", block: "Блок 3", order: "1 у черзі", target: "220 л", actual: "очікує", state: "planned" }
+      ]
+    },
+    {
+      id: "nursery",
+      name: "Розсадник",
+      detail: "окрема група рослин",
+      recipe: "Полив",
+      target: "180 л",
+      blocks: [
+        { start: "06:00", block: "Блок 1", order: "3 у черзі", target: "180 л", actual: "179 л", state: "done" },
+        { start: "15:00", block: "Блок 2", order: "4 у черзі", target: "180 л", actual: "очікує", state: "planned" }
+      ]
+    },
+    {
+      id: "strawberry-tunnel-1",
+      name: "Полуниця — тунель 1",
+      detail: "зона тунелю",
+      recipe: "Полив + живлення",
+      target: "260 л",
+      blocks: [
+        { start: "06:30", block: "Блок 1", order: "1 у черзі", target: "260 л", actual: "260 л", state: "done" },
+        { start: "15:00", block: "Блок 2", order: "1 у черзі", target: "260 л", actual: "261 л", state: "done" }
+      ]
+    },
+    {
+      id: "favorite-bed",
+      name: "Улюблена грядка",
+      detail: "назва, звична власнику",
+      recipe: "Полив",
+      target: "120 л",
+      blocks: [
+        { start: "08:00", block: "Блок 1", order: "1 у черзі", target: "120 л", actual: "120 л", state: "done" },
+        { start: "17:00", block: "Блок 2", order: "1 у черзі", target: "120 л", actual: "очікує", state: "planned" }
+      ]
+    }
   ],
   actualVolume: { target: 800, checkpoints: [200,400,600,800,802], actual: 802, unit: "л", result: "ВИКОНАНО" },
   fertigation: {
@@ -34,8 +101,8 @@ window.BB610_VISUALS = {
     ec: { label: "EC", actual: "1.36", role: "МОНІТОРИНГ + ПОВІДОМЛЕННЯ ПРО ВІДХИЛЕННЯ" }
   },
   states: {
-    normal: { zone: "Chandler", target: "800 л", actual: "802 л", state: "Виконано ✓" },
-    attention: { zone: "Duke — молоді", target: "600 л", actual: "Фактична витрата нижча очікуваної", state: "Потрібна увага" }
+    normal: { zone: "Теплиця — томати", target: "800 л", actual: "802 л", state: "Виконано ✓" },
+    attention: { zone: "Лохина — молоді рослини", target: "600 л", actual: "Фактична витрата нижча очікуваної", state: "Потрібна увага" }
   },
   architecture: [
     { code: "CONTROL", meaning: "керує тим, що і коли виконати" },
@@ -54,7 +121,7 @@ window.BB610_VISUALS = {
   },
   beforeWith: {
     before: ["пам’ятати про черговий запуск поливу","запускати / контролювати підживлення","стежити за перемішуванням маточного розчину","перевіряти, чи пройшов полив","підходити до системи, щоб зрозуміти її стан"],
-    with: ["кожна зона має власний графік","полив запускається автоматично","фертигація виконується як частина програми","перемішування керується системою","фактичний об’єм вимірюється","контрольовані відхилення привертають увагу власника"]
+    with: ["поливні блоки стартують за заданим розкладом","усередині блоку система виконує чергу зон","для зони задається потрібний об’єм","фертигація виконується як частина програми","фактичний об’єм вимірюється","контрольовані відхилення привертають увагу власника"]
   },
   proofStates: {
     puls: { label: "PROOF NEEDED", text: "Тут буде затверджений реальний BB610 PULS. Поточний staging не підміняє його mockup або repository-asset." },
