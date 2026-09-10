@@ -46,14 +46,17 @@
   }
   renderZone();
 
-  // Move owner-value comparison directly after HERO, as requested.
+  // Keep owner-value comparison immediately after HERO even if earlier layers change its source position.
   const heroSection = $('#hero');
   const beforeWith = $('#before-with');
   if (heroSection && beforeWith) heroSection.insertAdjacentElement('afterend', beforeWith);
 
-  // One remaining hard-coded overall-system label from the R07 renderer.
+  // Remaining hard-coded overall-system labels created by the R07 renderer.
   document.querySelectorAll('[data-f2-flow] span').forEach(el => {
     if (el.textContent.trim() === 'BB610 F2') el.textContent = 'BB610 WATER F2';
+  });
+  document.querySelectorAll('[data-fert-process] small').forEach(el => {
+    if (el.textContent.trim() === 'BB610 / HYDRAULIC') el.textContent = 'BB610 WATER / HYDRAULIC';
   });
 
   const footerVersion = document.querySelector('.site-footer .footer-inner span:last-child');
