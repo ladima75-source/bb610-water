@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0",
+  "source": "R17 PASS seed from R16/R17 canonical commercial data",
+  "currency": "UAH",
+  "options": {"hmi": {"id": "hmi", "label": "Локальна HMI"}},
+  "models": [
+    {"id":"I","name":"Полив","description":"Полив без фертигації","active":true,"sort":10,"capabilities":{"irrigation":true,"fertigationChannels":0,"phManagement":false,"ecMonitoring":false},"internalNote":""},
+    {"id":"F1","name":"Полив + 1 канал живлення","description":"Полив + 1 канал фертигації","active":true,"sort":20,"capabilities":{"irrigation":true,"fertigationChannels":1,"phManagement":false,"ecMonitoring":false},"internalNote":""},
+    {"id":"F1-P","name":"1 канал живлення + pH","description":"1 канал фертигації + керування / корекція pH","active":true,"sort":30,"capabilities":{"irrigation":true,"fertigationChannels":1,"phManagement":true,"ecMonitoring":false},"internalNote":""},
+    {"id":"F1-PE","name":"1 канал живлення + pH + EC","description":"1 канал фертигації + pH + моніторинг EC","active":true,"sort":40,"capabilities":{"irrigation":true,"fertigationChannels":1,"phManagement":true,"ecMonitoring":true},"internalNote":""},
+    {"id":"F2","name":"Полив + 2 канали живлення","description":"Полив + 2 канали фертигації","active":true,"sort":50,"capabilities":{"irrigation":true,"fertigationChannels":2,"phManagement":false,"ecMonitoring":false},"internalNote":""},
+    {"id":"F2-P","name":"2 канали живлення + pH","description":"2 канали фертигації + керування / корекція pH","active":true,"sort":60,"capabilities":{"irrigation":true,"fertigationChannels":2,"phManagement":true,"ecMonitoring":false},"internalNote":""},
+    {"id":"F2-PE","name":"2 канали живлення + pH + EC","description":"2 канали фертигації + pH + моніторинг EC","active":true,"sort":70,"capabilities":{"irrigation":true,"fertigationChannels":2,"phManagement":true,"ecMonitoring":true},"internalNote":""}
+  ],
+  "zones": [
+    {"id":"Z4(8)","installed":4,"max":8,"description":"4 встановлені зони · розширення до 8","active":true,"sort":10},
+    {"id":"Z8(12)","installed":8,"max":12,"description":"8 встановлених зон · розширення до 12","active":true,"sort":20},
+    {"id":"Z12(16)","installed":12,"max":16,"description":"12 встановлених зон · розширення до 16","active":true,"sort":30}
+  ],
+  "rows": [
+    {"modelId":"I","zoneId":"Z4(8)","active":true,"priceState":"APPROVED","prices":{"base":209000,"hmi":234000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"I","zoneId":"Z8(12)","active":true,"priceState":"APPROVED","prices":{"base":229000,"hmi":254000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"I","zoneId":"Z12(16)","active":true,"priceState":"APPROVED","prices":{"base":252000,"hmi":277000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1","zoneId":"Z4(8)","active":true,"priceState":"APPROVED","prices":{"base":244000,"hmi":269000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1","zoneId":"Z8(12)","active":true,"priceState":"APPROVED","prices":{"base":265000,"hmi":290000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1","zoneId":"Z12(16)","active":true,"priceState":"APPROVED","prices":{"base":287000,"hmi":312000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-P","zoneId":"Z4(8)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-P","zoneId":"Z8(12)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-P","zoneId":"Z12(16)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-PE","zoneId":"Z4(8)","active":true,"priceState":"APPROVED","prices":{"base":337000,"hmi":362000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-PE","zoneId":"Z8(12)","active":true,"priceState":"APPROVED","prices":{"base":357000,"hmi":382000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F1-PE","zoneId":"Z12(16)","active":true,"priceState":"APPROVED","prices":{"base":380000,"hmi":405000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2","zoneId":"Z4(8)","active":true,"priceState":"APPROVED","prices":{"base":280000,"hmi":305000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2","zoneId":"Z8(12)","active":true,"priceState":"APPROVED","prices":{"base":300000,"hmi":325000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2","zoneId":"Z12(16)","active":true,"priceState":"APPROVED","prices":{"base":322000,"hmi":347000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-P","zoneId":"Z4(8)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-P","zoneId":"Z8(12)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-P","zoneId":"Z12(16)","active":true,"priceState":"PRICE_ON_REQUEST","prices":{"base":null,"hmi":null},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-PE","zoneId":"Z4(8)","active":true,"priceState":"APPROVED","prices":{"base":372000,"hmi":397000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-PE","zoneId":"Z8(12)","active":true,"priceState":"APPROVED","prices":{"base":392000,"hmi":417000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null},
+    {"modelId":"F2-PE","zoneId":"Z12(16)","active":true,"priceState":"APPROVED","prices":{"base":415000,"hmi":440000},"currency":"UAH","buyerNote":"","updatedAt":"2026-09-11T00:00:00+03:00","effectiveFrom":null}
+  ],
+  "history": []
+}
