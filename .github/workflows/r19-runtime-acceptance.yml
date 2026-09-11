@@ -1,0 +1,169 @@
+name: R19 Admin Runtime Acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/r19-runtime-acceptance.yml'
+      - 'services/water-admin-api/**'
+      - 'docs/website/admin/review/v2/**'
+      - 'docs/website/staging/**'
+  workflow_dispatch:
+
+jobs:
+  runtime-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: bb610
+          POSTGRES_DB: bb610_water_admin
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bb610 -d bb610_water_admin"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      BB610_ADMIN_DATABASE_URL: postgresql+psycopg://bb610@127.0.0.1:5432/bb610_water_admin
+      BB610_ADMIN_JWT_ISSUER: bb610-water-admin-r19
+      BB610_ADMIN_JWT_TTL_MIN: '60'
+      BB610_ADMIN_CORS_ORIGINS: http://127.0.0.1:8000,http://localhost:8000
+      BB610_ADMIN_LOGIN_MAX_FAILURES: '5'
+      BB610_ADMIN_LOGIN_BLOCK_MIN: '15'
+      BB610_ADMIN_BOOTSTRAP_EMAIL: r19-admin@example.test
+      R19_API_BASE: http://127.0.0.1:8080
+      R19_EVIDENCE_PATH: /tmp/r19-runtime-evidence.json
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate private runtime secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "BB610_ADMIN_JWT_SECRET=$(openssl rand -hex 48)" >> "$GITHUB_ENV"
+          echo "BB610_ADMIN_BOOTSTRAP_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> "$GITHUB_ENV"
+
+      - name: Install runtime dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r services/water-admin-api/requirements.txt requests
+          npm install --no-save jsdom@24
+          sudo apt-get update -y
+          sudo apt-get install -y postgresql-client
+
+      - name: Run migrations
+        working-directory: services/water-admin-api
+        run: alembic upgrade head
+
+      - name: Start API and static review server
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd services/water-admin-api && uvicorn app:app --host 127.0.0.1 --port 8080 > /tmp/r19-api.log 2>&1 & echo $! > /tmp/r19-api.pid)
+          (python -m http.server 8000 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" > /tmp/r19-static.log 2>&1 & echo $! > /tmp/r19-static.pid)
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:8080/health >/tmp/r19-health.json; then break; fi
+            sleep 1
+          done
+          cat /tmp/r19-health.json
+          curl -fsS http://127.0.0.1:8000/docs/website/admin/review/v2/ >/dev/null
+          curl -fsS http://127.0.0.1:8000/docs/website/staging/ >/dev/null
+
+      - name: Execute full API/Admin/staging runtime acceptance
+        run: python services/water-admin-api/tests/r19_runtime_acceptance.py
+
+      - name: PostgreSQL backup and disposable restore drill
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r19-backup
+          pg_dump -h 127.0.0.1 -U bb610 -d bb610_water_admin -Fc -f /tmp/r19-backup/water-admin.dump
+          sha256sum /tmp/r19-backup/water-admin.dump | tee /tmp/r19-backup/water-admin.dump.sha256
+          createdb -h 127.0.0.1 -U bb610 bb610_restore
+          pg_restore -h 127.0.0.1 -U bb610 -d bb610_restore --no-owner --no-privileges /tmp/r19-backup/water-admin.dump
+          python - <<'PY'
+          import json, psycopg
+          conn=psycopg.connect('postgresql://bb610@127.0.0.1:5432/bb610_restore')
+          with conn.cursor() as c:
+              counts={}
+              for t in ['admin_users','catalog_versions','catalog_publications','catalog_audit_events','auth_login_throttle','revoked_tokens']:
+                  c.execute(f'SELECT count(*) FROM {t}')
+                  counts[t]=c.fetchone()[0]
+              c.execute('SELECT version,snapshot FROM catalog_versions ORDER BY version DESC LIMIT 1')
+              version,catalog=c.fetchone()
+              c.execute('SELECT version FROM catalog_publications ORDER BY id DESC LIMIT 1')
+              published=c.fetchone()[0]
+          rows=catalog['rows']; approved=sum(r['priceState']=='APPROVED' for r in rows); por=sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)
+          assert version==4 and published==4, (version,published)
+          assert len(rows)==21 and approved==15 and por==6, (len(rows),approved,por)
+          assert counts['admin_users']>=3 and counts['catalog_versions']>=4 and counts['catalog_publications']>=3 and counts['catalog_audit_events']>0, counts
+          print(json.dumps({'restoreCounts':counts,'latestVersion':version,'publishedVersion':published,'approved':approved,'priceOnRequest':por},indent=2))
+          PY
+
+      - name: Verify staging safe fallback with API stopped, then restore API
+        shell: bash
+        run: |
+          set -euo pipefail
+          kill "$(cat /tmp/r19-api.pid)" || true
+          for i in {1..10}; do
+            if ! curl -fsS http://127.0.0.1:8080/health >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          node services/water-admin-api/tests/r19_ui_smoke.mjs staging-fallback
+          (cd services/water-admin-api && uvicorn app:app --host 127.0.0.1 --port 8080 > /tmp/r19-api-restored.log 2>&1 & echo $! > /tmp/r19-api.pid)
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8080/health >/tmp/r19-health-restored.json; then break; fi
+            sleep 1
+          done
+          cat /tmp/r19-health-restored.json
+
+      - name: Final catalog invariant after all tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS http://127.0.0.1:8080/public/commercial > /tmp/r19-final-public.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/r19-final-public.json'))
+          rows=d['catalog']['rows']; approved=sum(r['priceState']=='APPROVED' for r in rows); por=sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)
+          assert len(rows)==21 and approved==15 and por==6, (len(rows),approved,por)
+          for model in ('F1-P','F2-P'):
+              for zone in ('Z4(8)','Z8(12)','Z12(16)'):
+                  r=next(x for x in rows if x['modelId']==model and x['zoneId']==zone)
+                  assert r['priceState']=='PRICE_ON_REQUEST' and r['prices']=={'base':None,'hmi':None}, r
+          print({'finalVersion':d['version'],'approved':approved,'priceOnRequest':por,'checksum':d['checksum']})
+          PY
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r19-runtime-evidence
+          path: |
+            /tmp/r19-runtime-evidence.json
+            /tmp/r19-health.json
+            /tmp/r19-health-restored.json
+            /tmp/r19-final-public.json
+            /tmp/r19-api.log
+            /tmp/r19-api-restored.log
+            /tmp/r19-static.log
+            /tmp/r19-backup/water-admin.dump.sha256
+          if-no-files-found: warn
+          retention-days: 7
