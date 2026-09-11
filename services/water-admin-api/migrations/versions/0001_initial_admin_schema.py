@@ -28,6 +28,28 @@ def upgrade():
     op.create_index("ix_admin_users_email", "admin_users", ["email"], unique=True)
 
     op.create_table(
+        "auth_login_throttle",
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("key_hash", sa.String(length=64), nullable=False),
+        sa.Column("failures", sa.Integer(), nullable=False),
+        sa.Column("blocked_until", sa.DateTime(timezone=True), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
+        sa.UniqueConstraint("key_hash", name="uq_auth_login_throttle_key_hash"),
+    )
+    op.create_index("ix_auth_login_throttle_key_hash", "auth_login_throttle", ["key_hash"], unique=True)
+
+    op.create_table(
+        "revoked_tokens",
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("jti", sa.String(length=64), nullable=False),
+        sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
+        sa.Column("revoked_by", sa.String(length=320), nullable=False),
+        sa.Column("revoked_at", sa.DateTime(timezone=True), nullable=False),
+        sa.UniqueConstraint("jti", name="uq_revoked_tokens_jti"),
+    )
+    op.create_index("ix_revoked_tokens_jti", "revoked_tokens", ["jti"], unique=True)
+
+    op.create_table(
         "catalog_versions",
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("version", sa.Integer(), nullable=False),
@@ -55,6 +77,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("event_type", sa.String(length=64), nullable=False),
         sa.Column("actor", sa.String(length=320), nullable=False),
+        sa.Column("actor_role", sa.String(length=32), nullable=False),
         sa.Column("version", sa.Integer(), nullable=True),
         sa.Column("payload", sa.JSON(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
@@ -75,5 +98,9 @@ def downgrade():
     op.drop_table("catalog_publications")
     op.drop_index("ix_catalog_versions_version", table_name="catalog_versions")
     op.drop_table("catalog_versions")
+    op.drop_index("ix_revoked_tokens_jti", table_name="revoked_tokens")
+    op.drop_table("revoked_tokens")
+    op.drop_index("ix_auth_login_throttle_key_hash", table_name="auth_login_throttle")
+    op.drop_table("auth_login_throttle")
     op.drop_index("ix_admin_users_email", table_name="admin_users")
     op.drop_table("admin_users")
