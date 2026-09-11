@@ -1,6 +1,6 @@
 # BB610 WATER — WEBSITE COMPLETION REGISTER
 
-Single operational register after R17 WATER Admin v1. Contains unresolved items only.
+Single operational register after Admin persistence implementation. Contains unresolved items only.
 
 ## REQUIRED BEFORE PRODUCTION
 
@@ -19,16 +19,21 @@ Integration point: `docs/website/staging/data/assets.js` → `pulsNewTask`, `pul
 - [ ] F2-P × Z8(12): without HMI / with HMI.
 - [ ] F2-P × Z12(16): without HMI / with HMI.
 
-Canonical integration point: `docs/website/staging/data/commercial.js` → `BB610_COMMERCIAL_CATALOG`. Until approved, rows remain `PRICE_ON_REQUEST` and public UI shows `Ціна уточнюється`.
+Until approved these rows remain `PRICE_ON_REQUEST` and public UI remains `Ціна уточнюється`.
 
-### WATER Admin production persistence + access control
-- [ ] Approved authenticated Admin access / authorization mechanism.
-- [ ] Server/API persistence for the `BB610_COMMERCIAL_CATALOG` schema; no browser-only/localStorage persistence.
-- [ ] Durable immutable price-history storage with authenticated actor identity.
-- [ ] Atomic/version-conflict-safe save plus rollback/backup path.
-- [ ] Public commercial-data serialization/cache refresh after an approved admin save.
+### WATER Admin production deployment / cutover
+The authenticated persistence/API implementation now exists in `services/water-admin-api/`; remaining work is deployment and production cutover, not another Admin UX redesign.
 
-Current Admin v1 is isolated **REVIEW/EXPORT** at `docs/website/admin/review/v1/` and must not be exposed as an unauthenticated production admin.
+- [ ] Provision durable production PostgreSQL plus backup/restore policy.
+- [ ] Deploy `services/water-admin-api/` behind HTTPS on the approved Admin/API host.
+- [ ] Supply production secrets through deployment secret storage: database credentials, JWT secret, bootstrap credentials; no repository secrets.
+- [ ] Create real Admin users/roles and rotate/remove bootstrap credentials.
+- [ ] Restrict CORS/network access to approved origins.
+- [ ] Run runtime migration/auth/version/audit/rollback/publish acceptance test on the deployed review environment.
+- [ ] Owner separately authorizes public WATER cutover from source-controlled commercial data to API `GET /public/commercial`.
+- [ ] After cutover, verify cache/failure behavior and rollback to last published commercial version.
+
+Architecture: `docs/website/BB610_WATER_ADMIN_PERSISTENCE_ARCHITECTURE_R1.md`.
 
 ## OPTIONAL POLISH
 
