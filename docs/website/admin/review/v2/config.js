@@ -1,0 +1,1 @@
+window.BB610_ADMIN_CONFIG={apiBase:'http://localhost:8080'};
