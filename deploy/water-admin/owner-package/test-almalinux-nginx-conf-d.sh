@@ -130,7 +130,9 @@ done
 ! grep -Eq '^[[:space:]]*http2[[:space:]]+on;' "$FINAL_TEMPLATE"
 grep -Eq 'listen[[:space:]]+443[[:space:]]+ssl[[:space:]]+http2;' "$FINAL_TEMPLATE"
 grep -Eq 'listen[[:space:]]+\[::\]:443[[:space:]]+ssl[[:space:]]+http2;' "$FINAL_TEMPLATE"
-bb610_nginx_tx_apply "$FINAL_TEMPLATE"
+FINAL_CANDIDATE="$TMP/final.conf"
+{ printf '# BB610_WATER_ADMIN_MANAGED\n'; cat "$FINAL_TEMPLATE"; } > "$FINAL_CANDIDATE"
+bb610_nginx_tx_apply "$FINAL_CANDIDATE"
 nginx -t
 MARKET_WITH_FINAL="$(curl -fsS -H 'Host: api.market.bb610.com.ua' http://127.0.0.1/)"
 [ "$MARKET_WITH_FINAL" = 'MARKET-UNCHANGED' ]
