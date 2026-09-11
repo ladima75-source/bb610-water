@@ -13,7 +13,7 @@
 
 Commit-pinned preview:
 
-`https://rawcdn.githack.com/ladima75-source/bb610-water/COMMIT_SHA/docs/website/review/r10/index.html`
+`https://rawcdn.githack.com/ladima75-source/bb610-water/b4f59f3a6e52c014d83233bca613591a5cfa7cc9/docs/website/review/r10/index.html`
 
 Review path:
 
@@ -119,6 +119,6 @@ A final approved agricultural/crop image is still required for HERO. R10 intenti
 
 ## Commit
 
-Final handoff commit: `COMMIT_SHA`
+Implementation + review handoff recorded through commit: `b4f59f3a6e52c014d83233bca613591a5cfa7cc9`.
 
 **STOP CONDITION:** R10 = REVIEW. Do not continue to Screen 4 and do not merge into staging until reviewed.
