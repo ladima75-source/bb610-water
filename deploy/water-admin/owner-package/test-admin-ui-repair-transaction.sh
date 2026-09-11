@@ -6,7 +6,7 @@ REPAIR="$ROOT/deploy/water-admin/owner-package/repair-admin-ui.sh"
 V2="$ROOT/docs/website/admin/review/v2"
 
 [ "$(id -u)" -eq 0 ] || { echo "This regression must run as root (use the CI container)." >&2; exit 2; }
-[ -x "$REPAIR" ] || { echo "repair-admin-ui.sh is missing or not executable" >&2; exit 2; }
+[ -f "$REPAIR" ] || { echo "repair-admin-ui.sh is missing" >&2; exit 2; }
 
 TMP="$(mktemp -d)"
 APP_BASE="$TMP/app"
@@ -31,7 +31,7 @@ cp "$V2/styles.css" "$APP_BASE/admin-ui/styles.css"
 printf "window.BB610_ADMIN_CONFIG={apiBase:'https://api.water.bb610.com.ua'};\n" > "$APP_BASE/admin-ui/config.js"
 
 cat > "$SERVER" <<'PY'
-import http.server, mimetypes, os, pathlib, sys, urllib.parse
+import http.server, mimetypes, pathlib, sys, urllib.parse
 root = pathlib.Path(sys.argv[1])
 port = int(sys.argv[2])
 fail_marker = pathlib.Path(sys.argv[3])
@@ -47,6 +47,13 @@ class H(http.server.BaseHTTPRequestHandler):
         data = candidate.read_bytes()
         ctype = mimetypes.guess_type(candidate.name)[0] or 'application/octet-stream'
         self.send_response(200); self.send_header('Content-Type', ctype); self.send_header('Cache-Control','no-store'); self.end_headers(); self.wfile.write(data)
+    def do_HEAD(self):
+        path = urllib.parse.urlsplit(self.path).path
+        rel = path.lstrip('/') or 'index.html'
+        candidate = root / rel
+        if not candidate.is_file(): candidate = root / 'index.html'
+        ctype = mimetypes.guess_type(candidate.name)[0] or 'application/octet-stream'
+        self.send_response(200); self.send_header('Content-Type', ctype); self.end_headers()
     def log_message(self, fmt, *args): pass
 http.server.ThreadingHTTPServer(('127.0.0.1', port), H).serve_forever()
 PY
