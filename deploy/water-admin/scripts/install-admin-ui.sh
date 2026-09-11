@@ -65,8 +65,12 @@ chmod 0644 "$DEST/app.js"
 grep -Fxq "window.BB610_ADMIN_CONFIG={apiBase:'$PRODUCTION_API_BASE'};" "$DEST/config.js" || {
   echo "Production config.js invariant failed" >&2; exit 6;
 }
-if grep -Eqi 'localhost|127\.0\.0\.1|apiBase:[[:space:]]*["'"']http://' "$DEST/config.js" "$DEST/app.js"; then
-  echo "Production Admin runtime contains forbidden local/plain-HTTP API endpoint" >&2
+if grep -Eqi 'localhost|127\.0\.0\.1' "$DEST/config.js" "$DEST/app.js"; then
+  echo "Production Admin runtime contains forbidden localhost/loopback API endpoint" >&2
+  exit 7
+fi
+if grep -Fq "apiBase:'http://" "$DEST/config.js" "$DEST/app.js" || grep -Fq 'apiBase:"http://' "$DEST/config.js" "$DEST/app.js"; then
+  echo "Production Admin runtime contains forbidden plain-HTTP API endpoint" >&2
   exit 7
 fi
 grep -Fq "apiBase:'$PRODUCTION_API_BASE'" "$DEST/app.js" || {
