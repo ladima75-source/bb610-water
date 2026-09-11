@@ -1,6 +1,6 @@
 # BB610 WATER — WEBSITE COMPLETION REGISTER
 
-Single operational register after **R19 = PASS / RUNTIME ACCEPTED**. Contains unresolved items only.
+Single operational register after **R20 = PASS / READY FOR PRODUCTION DEPLOYMENT**. Contains unresolved items only.
 
 ## REQUIRED BEFORE PRODUCTION
 
@@ -21,30 +21,45 @@ Integration point: `docs/website/staging/data/assets.js` → `pulsNewTask`, `pul
 
 Until approved these rows remain `PRICE_ON_REQUEST` and public UI remains `Ціна уточнюється`.
 
-### WATER Admin production deployment / cutover
-The Admin persistence/auth/version/audit/publication stack passed real non-production PostgreSQL runtime acceptance in R19, including backup/restore and API-failure fallback. No further Admin UX redesign or persistence implementation stage is required before deployment.
+### WATER Admin actual production deployment / cutover
+R19 proved the accepted backend at runtime. R20 prepared and production-like validated the complete deployment package. No further Admin UX redesign, persistence implementation or deployment-package design stage is required before target-host deployment.
 
-Remaining deployment gates:
+Prepared package:
+- `deploy/water-admin/`
+- `docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md`
+- `docs/website/R20_ADMIN_PRODUCTION_DEPLOYMENT_PREP.md`
 
-- [ ] Confirm the production runtime host / VPS capacity and deployment owner.
-- [ ] Provision durable production PostgreSQL and persistent storage.
-- [ ] Configure scheduled backups plus encrypted/off-host retention.
-- [ ] Deploy Admin API behind HTTPS on the approved host.
-- [ ] Deploy the accepted Admin UI behind authenticated/controlled infrastructure.
-- [ ] Inject production DB/JWT/bootstrap values through deployment secret storage; commit no real secrets.
-- [ ] Create named production Admin users/roles and rotate/remove bootstrap access.
-- [ ] Restrict CORS/network exposure to approved origins; do not expose PostgreSQL publicly.
-- [ ] Run the R19 acceptance harness against the actual deployed review/production-like environment.
-- [ ] Run one backup/restore drill on that target environment.
-- [ ] Owner separately authorizes live WATER commercial-data cutover to production `GET /public/commercial`.
-- [ ] Immediately after cutover verify last-known-good/API-failure behavior, 15+6 commercial invariant and rollback path.
+Remaining live deployment gates:
 
-Runtime acceptance evidence:
+- [ ] Confirm the existing BB610 VPS capacity and deployment owner.
+- [ ] Install the pinned accepted R20 release on that VPS.
+- [ ] Provision production persistent paths and private PostgreSQL storage.
+- [ ] Generate/store real production DB/JWT/bootstrap secrets outside Git.
+- [ ] Separately approve/create `admin.water.bb610.com.ua` and `api.water.bb610.com.ua` DNS records.
+- [ ] Issue TLS certificates through the existing BB610 ACME/certificate mechanism.
+- [ ] Activate the prepared Nginx Admin/API configuration and verify HTTPS/CORS/network restrictions.
+- [ ] Bootstrap the real named Admin account, rotate its password and clear bootstrap credentials.
+- [ ] Enable the prepared backup timer and configure protected off-host backup replication.
+- [ ] Run target-host health/login/invariant acceptance and one disposable backup/restore drill.
+- [ ] Owner separately authorizes any live WATER commercial-data cutover to production `GET /public/commercial`.
+- [ ] If cutover is authorized, verify last-known-good/API-failure behavior, 15+6 invariant and public rollback immediately after release.
+
+R20 package already production-like validated:
+- Docker Compose start/build: PASS;
+- PostgreSQL 16: PASS;
+- API migrations/health: PASS;
+- named bootstrap/password rotation: PASS;
+- backup/checksum/restore: PASS;
+- Nginx syntax: PASS;
+- automatic API crash restart: PASS (`RestartCount=1`);
+- final commercial invariant: PASS (21 = 15 APPROVED + 6 PRICE_ON_REQUEST).
+
+References:
 - `docs/website/R19_ADMIN_RUNTIME_ACCEPTANCE.md`
 - `docs/website/BB610_WATER_ADMIN_RUNTIME_TEST_EVIDENCE_R1.md`
-
-Deployment plan:
 - `docs/website/BB610_WATER_ADMIN_PRODUCTION_DEPLOYMENT_PLAN_R1.md`
+- `docs/website/R20_ADMIN_PRODUCTION_DEPLOYMENT_PREP.md`
+- `docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md`
 
 Architecture/operations references:
 - `docs/website/BB610_WATER_ADMIN_SERVER_ARCHITECTURE_R1.md`
