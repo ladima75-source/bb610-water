@@ -25,7 +25,7 @@ fi
 [ "$(id -u)" -eq 0 ] || fail "Run with sudo/root: sudo bash ./repair-admin-ui.sh"
 [ -f "$MANAGED_MARKER" ] || fail "$APP_BASE is not marked as a managed BB610 WATER Admin deployment"
 [ -d "$DEST" ] || fail "Existing Admin UI directory is missing: $DEST"
-command -v python3 >/dev/null 2>&1 || fail "python3 is required for atomic directory exchange"
+command -v python3 >/dev/null 2>&1 || fail "python3 is required for atomic directory exchange and asset verification"
 command -v curl >/dev/null 2>&1 || fail "curl is required for HTTPS verification"
 
 INSTALLER="$PACKAGE_ROOT/deploy/water-admin/scripts/install-admin-ui.sh"
@@ -49,7 +49,7 @@ BACKUP_READY=0
 atomic_exchange(){
   local left="$1" right="$2"
   python3 - "$left" "$right" <<'PY'
-import ctypes, errno, os, sys
+import ctypes, os, sys
 left, right = sys.argv[1:3]
 if os.stat(left).st_dev != os.stat(right).st_dev:
     raise SystemExit("atomic exchange requires both trees on the same filesystem")
@@ -63,6 +63,13 @@ rc = fn(AT_FDCWD, os.fsencode(left), AT_FDCWD, os.fsencode(right), RENAME_EXCHAN
 if rc != 0:
     e = ctypes.get_errno()
     raise OSError(e, os.strerror(e), left, right)
+PY
+}
+
+files_equal(){
+  python3 - "$1" "$2" <<'PY'
+import pathlib, sys
+raise SystemExit(0 if pathlib.Path(sys.argv[1]).read_bytes() == pathlib.Path(sys.argv[2]).read_bytes() else 1)
 PY
 }
 
@@ -99,7 +106,7 @@ fetch_asset_once(){
   if [ "$path" != "/" ] && [ "$path" != "/.bb610-ui-transaction" ]; then
     index_tmp="$(mktemp)"
     curl -fsS --max-time 15 -H 'Cache-Control: no-cache' -o "$index_tmp" "$ADMIN_URL/?bb610_tx=$TX_ID" || { rm -f "$body" "$index_tmp"; return 1; }
-    if cmp -s "$body" "$index_tmp"; then
+    if files_equal "$body" "$index_tmp"; then
       rm -f "$body" "$index_tmp"; return 1
     fi
     rm -f "$index_tmp"
@@ -125,9 +132,6 @@ verify_active_https(){
 }
 
 verify_rollback_https(){
-  # Rollback verification is intentionally conservative: root must be reachable.
-  # The previous UI may be the known broken package and therefore /v1/styles.css
-  # is not required to pass during rollback verification.
   local i
   for i in $(seq 1 "$VERIFY_ATTEMPTS"); do
     if curl -fsS --max-time 15 -H 'Cache-Control: no-cache' "$ADMIN_URL/?bb610_rollback=$TX_ID" >/dev/null; then
@@ -181,27 +185,21 @@ chmod 0644 "$TMP_DEST/.bb610-ui-transaction"
 printf '%s\n' "$PACKAGE_SHA" > "$TMP_DEST/.bb610-admin-ui-package-sha"
 chmod 0644 "$TMP_DEST/.bb610-admin-ui-package-sha"
 
-# Phase 1: complete verification of the staged filesystem tree before switch.
 local_tree_verify "$TMP_DEST" || fail "Staged Admin UI tree verification failed before switch"
 say "Staged Admin UI tree verification PASS"
 
-# Phase 2: one filesystem operation exchanges old active and staged trees.
-# Both paths live below APP_BASE, so this remains on one filesystem.
 atomic_exchange "$DEST" "$TMP_DEST" || fail "Atomic active/staged directory exchange failed"
 SWAPPED=1
 say "Atomic Admin UI switch complete"
 
-# The previous active tree now lives at TMP_DEST; preserve it as rollback target.
 mv "$TMP_DEST" "$BACKUP"
 BACKUP_READY=1
 say "Previous Admin UI preserved at: $BACKUP"
 
-# Phase 3: only now validate what HTTPS actually serves from the active path.
 if ! verify_active_https; then
   fail "Post-switch HTTPS asset verification failed"
 fi
 
-# Phase 4: commit transaction. Keep one timestamped previous tree for owner rollback.
 trap - EXIT INT TERM HUP
 SWAPPED=0
 say "ADMIN UI REPAIR SUCCESS"
