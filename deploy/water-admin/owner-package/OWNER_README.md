@@ -40,6 +40,18 @@ sudo bash ./install-or-update.sh
 
 `DEPLOY`
 
+## Продолжение после остановленного TLS deployment
+
+Если предыдущий OWNER package уже успел поднять WATER PostgreSQL/API и выполнить owner acceptance, но остановился на TLS/ACME, **не удаляйте `/opt/bb610-water-admin`, БД, env, containers или owner account и не начинайте deployment с нуля**.
+
+Скачайте новый accepted OWNER package, распакуйте его в новую временную папку и снова выполните только:
+
+```sh
+sudo bash ./install-or-update.sh
+```
+
+Новый package распознаёт managed WATER installation как UPDATE, сохраняет существующую БД/secrets/owner account, повторно проверяет preflight и продолжает deployment. Не редактируйте `/etc/nginx/conf.d/bb610-water-admin.conf` вручную.
+
 ## Shared VPS safety
 
 WATER Admin рассчитан на совместное размещение с существующим BB610 Market на том же VPS.
@@ -62,27 +74,40 @@ Installer никогда не должен владеть `api.market.bb610.com.
 
 TLS и Nginx выполняются как одна транзакция:
 
-1. сохраняется точное предыдущее состояние WATER Nginx slot;
+1. сохраняется точное состояние WATER Nginx slot на момент начала нового запуска;
 2. existing global `nginx -t` должен быть PASS;
-3. временный ACME candidate проходит safety checks и полный `nginx -t` **до reload**;
-4. Certbot использует isolated webroot и не редактирует чужие Nginx sites;
-5. final WATER candidate проходит checks и `nginx -t` до reload;
-6. только после успешного reload транзакция фиксируется.
+3. временный ACME candidate проходит safety checks и полный `nginx -t` до reload;
+4. candidate reload-ится, но Certbot **ещё не запускается**;
+5. gate создаёт реальный challenge token и ждёт фактическую активацию Nginx candidate;
+6. `LOCAL` probe обязан вернуть exact token/200 для `admin.water...` и `api.water...` через `127.0.0.1`;
+7. `PUBLIC` probe обязан вернуть exact token/200 для обоих DNS names через обычный публичный HTTP route;
+8. только после четырёх успешных probes запускается реальный Certbot;
+9. final WATER candidate проходит checks и `nginx -t` до reload;
+10. только после успешного final reload транзакция фиксируется.
 
-При `ERR`, `INT`, `TERM`, `HUP`, ошибке Certbot или невалидном candidate installer автоматически:
+Nginx reload асинхронный: успешный `systemctl reload nginx` не означает, что первый следующий HTTP request уже обслуживает новый worker. Поэтому ACME gate использует bounded retry и никогда не запускает Certbot, пока challenge path фактически не отвечает token/200.
 
-- возвращает предыдущий WATER Nginx файл либо удаляет новый, если до deployment его не существовало;
+На AlmaLinux/RHEL gate также выполняет `restorecon` для isolated ACME webroot, если `restorecon` доступен.
+
+При `ERR`, `INT`, `TERM`, `HUP`, ошибке probes, Certbot или невалидном candidate installer автоматически:
+
+- возвращает предыдущий WATER Nginx файл либо удаляет новый, если в начале транзакции его не существовало;
 - повторяет `nginx -t`;
 - reload-ит восстановленную конфигурацию;
 - завершает deployment с ошибкой.
 
-CI failure-injection отдельно проверяет:
+Кроме того, `bb610_nginx_tx_apply` сам восстанавливает transaction-start on-disk state при failed `nginx -t`; rollback больше не зависит от наличия внешнего shell trap.
+
+CI regression отдельно проверяет:
 
 - намеренно сломанный final Nginx candidate;
+- прямой вызов failed `bb610_nginx_tx_apply` без caller ERR trap;
 - Certbot failure на втором домене после успешного первого;
-- interruption между TLS и final activation.
-
-Во всех случаях исходный Nginx file должен восстановиться byte-for-byte и оставаться valid/reloaded.
+- interruption между TLS и final activation;
+- AlmaLinux 9.8 distro Nginx с `/etc/nginx/conf.d/*.conf`;
+- фактическую candidate activation после async reload;
+- LOCAL + PUBLIC token/200 до передачи управления Certbot;
+- неизменность соседнего `api.market.bb610.com.ua` server block.
 
 ## Ownership protection
 
@@ -103,18 +128,18 @@ CI failure-injection отдельно проверяет:
 
 - не трогает BB610 Market и другие существующие приложения;
 - не меняет `water.bb610.com.ua` и не подключает публичный WATER-сайт к API;
-- создаёт отдельный WATER Admin runtime;
-- создаёт persistent PostgreSQL storage;
-- генерирует DB/JWT/bootstrap secrets локально на VPS и не печатает их;
+- создаёт/обновляет отдельный WATER Admin runtime;
+- сохраняет существующий managed PostgreSQL storage при update;
+- генерирует DB/JWT/bootstrap secrets только при fresh install и не печатает их;
 - поднимает PostgreSQL 16 + Admin API через Docker Compose;
 - устанавливает принятую Admin v2 UI;
-- создаёт owner/admin `admin.bb610@gmail.com` через secure bootstrap;
-- выполняет acceptance `Login → Roles → Draft → Diff → Publish → Audit → Rollback`;
+- создаёт owner/admin `admin.bb610@gmail.com` только при fresh bootstrap;
+- выполняет initial acceptance `Login → Roles → Draft → Diff → Publish → Audit → Rollback`;
 - возвращает коммерческий каталог к исходному состоянию;
 - удаляет временных acceptance users;
-- просит владельца задать финальный пароль скрытым вводом прямо на VPS;
+- просит владельца задать финальный пароль скрытым вводом только при fresh bootstrap;
 - удаляет bootstrap secret из runtime env;
-- получает TLS через Certbot webroot;
+- получает TLS через Certbot webroot только после LOCAL/PUBLIC readiness probes;
 - атомарно активирует отдельный WATER Nginx config;
 - включает ежедневный backup timer;
 - делает первый backup + SHA-256 + disposable restore drill;
@@ -136,7 +161,7 @@ CI failure-injection отдельно проверяет:
 
 ## Firewall assumption
 
-Installer firewall не редактирует. Для первого Certbot webroot issuance существующий VPS должен принимать обычный HTTP/HTTPS трафик на host Nginx по портам 80/443. Если внешний firewall блокирует ACME challenge, Certbot завершится ошибкой, а Nginx transaction автоматически вернёт исходную конфигурацию.
+Installer firewall не редактирует. Для Certbot webroot issuance существующий VPS должен принимать обычный HTTP трафик на host Nginx по порту 80. Новый PUBLIC probe проверяет это до Certbot; если путь недоступен или возвращает не тот token, транзакция откатывается раньше ACME issuance.
 
 PostgreSQL host port не публикуется. WATER API публикуется только на `127.0.0.1:18080` и снаружи доступен исключительно через Nginx HTTPS.
 
@@ -161,7 +186,7 @@ Production owner/admin:
 
 Review/test accounts не являются production account и не переносятся.
 
-При первом install установщик попросит финальный owner password два раза скрытым вводом. Минимум 16 символов. Значение используется только в памяти процесса для password rotation и не выводится на экран.
+При первом install установщик просит финальный owner password два раза скрытым вводом. Минимум 16 символов. При managed update существующий production password/account сохраняется.
 
 ## После успешного запуска
 
@@ -175,9 +200,9 @@ Review/test accounts не являются production account и не перен
 
 ## Если preflight или deployment остановился
 
-Если это `PREFLIGHT FAILED`, никаких deployment changes ещё не было. Скопируйте только текст блока ошибки без secrets.
+Если это `PREFLIGHT FAILED`, до `DEPLOY` изменений нет.
 
-Если ошибка произошла позже на TLS/Nginx stage, installer должен автоматически сообщить о rollback и восстановить исходное Nginx состояние. Не перезапускайте вручную другие BB610 services.
+Если ошибка произошла на ACME probe/TLS/Nginx stage, installer должен автоматически восстановить WATER Nginx state, существовавший на момент начала этого запуска, и оставить соседний Market Nginx untouched. Не редактируйте Nginx вручную и не перезапускайте другие BB610 services; используйте следующий accepted OWNER package как managed UPDATE.
 
 ## Полный инженерный runbook
 
@@ -185,4 +210,4 @@ Review/test accounts не являются production account и не перен
 
 `docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md`
 
-Для обычной установки владельцу достаточно этого README и одной команды `sudo bash ./install-or-update.sh`.
+Для обычной установки или продолжения managed deployment владельцу достаточно этого README и одной команды `sudo bash ./install-or-update.sh`.
