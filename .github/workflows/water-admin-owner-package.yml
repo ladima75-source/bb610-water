@@ -26,6 +26,8 @@ jobs:
           bash -n deploy/water-admin/owner-package/install-or-update-safe.sh
           bash -n deploy/water-admin/owner-package/nginx-transaction.sh
           bash -n deploy/water-admin/owner-package/test-nginx-failure-injection.sh
+          bash -n deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh
+          bash -n deploy/water-admin/owner-package/bin/certbot
           python3 -m py_compile deploy/water-admin/owner-package/owner-runtime-acceptance.py
           bash -n deploy/water-admin/owner-package/build-owner-package.sh
           head -n 1 deploy/water-admin/systemd/bb610-water-admin-backup.service | grep -Fxq '# BB610_WATER_ADMIN_MANAGED'
@@ -33,12 +35,22 @@ jobs:
           grep -q 'check_managed_dir "$BACKUP_ROOT"' deploy/water-admin/owner-package/install-or-update-safe.sh
           grep -q 'check_managed_file "$SYSTEMD_SERVICE"' deploy/water-admin/owner-package/install-or-update-safe.sh
           grep -q 'check_managed_file "$SYSTEMD_TIMER"' deploy/water-admin/owner-package/install-or-update-safe.sh
+          grep -q 'BB610_REAL_CERTBOT' deploy/water-admin/owner-package/install-or-update.sh
 
       - name: Failure injection — Nginx/TLS transactional rollback
         shell: bash
         run: |
           set -euo pipefail
           bash deploy/water-admin/owner-package/test-nginx-failure-injection.sh
+
+      - name: AlmaLinux 9.8 — nginx conf.d ACME regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -v "$PWD:/src:ro" \
+            almalinux:9.8 \
+            bash -lc 'dnf -y -q install nginx curl >/dev/null && bash /src/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh'
 
       - name: Build owner ZIP
         shell: bash
@@ -63,12 +75,16 @@ jobs:
           test -f "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           test -f "$PKG/deploy/water-admin/owner-package/nginx-transaction.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-nginx-failure-injection.sh"
+          test -f "$PKG/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh"
+          test -x "$PKG/deploy/water-admin/owner-package/bin/certbot"
           test -f "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
           test -f "$PKG/docs/website/admin/review/v2/index.html"
           grep -q 'admin.bb610@gmail.com' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           grep -q 'Public water.bb610.com.ua cutover: NOT ACTIVATED' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           grep -q 'PREFLIGHT PASS' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           grep -q 'bb610_nginx_tx_restore' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
+          grep -q 'LOCAL/' "$PKG/deploy/water-admin/owner-package/bin/certbot"
+          grep -q 'PUBLIC/' "$PKG/deploy/water-admin/owner-package/bin/certbot"
           ! grep -R -E 'F1-PH|F2-PH' "$PKG/services/water-admin-api/seed_catalog.json"
 
       - name: Validate commercial seed invariant
