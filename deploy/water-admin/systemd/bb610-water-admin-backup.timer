@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily BB610 WATER Admin PostgreSQL backup
+
+[Timer]
+OnCalendar=*-*-* 02:35:00 UTC
+Persistent=true
+RandomizedDelaySec=300
+Unit=bb610-water-admin-backup.service
+
+[Install]
+WantedBy=timers.target
