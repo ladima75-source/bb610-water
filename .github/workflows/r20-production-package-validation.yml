@@ -81,6 +81,7 @@ jobs:
         run: |
           set -euo pipefail
           docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml up -d --build
+          rm -f /tmp/r20-health.json
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health.json; then break; fi
             sleep 2
@@ -176,7 +177,9 @@ jobs:
         run: |
           set -euo pipefail
           API_ID="$(docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml ps -q api)"
-          docker exec "$API_ID" sh -c 'kill -9 1' || true
+          HOST_PID="$(docker inspect -f '{{.State.Pid}}' "$API_ID")"
+          test "$HOST_PID" -gt 1
+          sudo kill -9 "$HOST_PID"
           rm -f /tmp/r20-health-after-restart.json
           for i in {1..40}; do
             if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health-after-restart.json; then break; fi
