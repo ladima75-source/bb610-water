@@ -30,6 +30,7 @@ jobs:
           bash -n deploy/water-admin/owner-package/test-nginx-failure-injection.sh
           bash -n deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh
           bash -n deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh
+          bash -n deploy/water-admin/owner-package/test-admin-ui-repair-transaction.sh
           bash -n deploy/water-admin/owner-package/bin/certbot
           python3 -m py_compile deploy/water-admin/owner-package/owner-runtime-acceptance.py
           bash -n deploy/water-admin/owner-package/build-owner-package.sh
@@ -82,6 +83,7 @@ jobs:
           test -f "$PKG/deploy/water-admin/owner-package/test-nginx-failure-injection.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh"
+          test -f "$PKG/deploy/water-admin/owner-package/test-admin-ui-repair-transaction.sh"
           test -x "$PKG/deploy/water-admin/owner-package/bin/certbot"
           test -f "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
           test -f "$PKG/docs/website/admin/review/v1/styles.css"
@@ -106,6 +108,20 @@ jobs:
           unzip -q "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip" -d "$EXTRACT"
           PKG="$EXTRACT/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
           bash "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh" "$PKG"
+
+      - name: OWNER artifact — broken production UI repair transaction regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXTRACT="$RUNNER_TEMP/owner-repair-extracted"
+          rm -rf "$EXTRACT"
+          mkdir -p "$EXTRACT"
+          unzip -q "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip" -d "$EXTRACT"
+          PKG="$EXTRACT/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
+          docker run --rm \
+            -v "$PKG:/pkg:ro" \
+            almalinux:9.8 \
+            bash -lc 'dnf -y -q install python3 >/dev/null && command -v curl >/dev/null && bash /pkg/deploy/water-admin/owner-package/test-admin-ui-repair-transaction.sh'
 
       - name: Validate commercial seed invariant
         shell: bash
