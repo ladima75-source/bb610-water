@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bb610_water_admin}
+      POSTGRES_USER: ${POSTGRES_USER:-bb610}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - bb610-water-admin-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bb610} -d ${POSTGRES_DB:-bb610_water_admin}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      BB610_ADMIN_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bb610}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bb610_water_admin}
+      BB610_ADMIN_JWT_SECRET: ${BB610_ADMIN_JWT_SECRET}
+      BB610_ADMIN_BOOTSTRAP_EMAIL: ${BB610_ADMIN_BOOTSTRAP_EMAIL}
+      BB610_ADMIN_BOOTSTRAP_PASSWORD: ${BB610_ADMIN_BOOTSTRAP_PASSWORD}
+      BB610_ADMIN_CORS_ORIGINS: ${BB610_ADMIN_CORS_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+    ports:
+      - "8080:8080"
+volumes:
+  bb610-water-admin-db:
