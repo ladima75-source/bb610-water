@@ -35,6 +35,10 @@ API binds only to host loopback (`127.0.0.1:18080`). PostgreSQL has no published
 - `systemd/*` — daily persistent backup schedule template.
 - `public-cutover/public-commercial-endpoint.js.disabled` — prepared but inactive future live-data switch.
 
+Owner/admin bootstrap policy:
+
+- `docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md`
+
 ## Commercial invariant
 
 Every seed/restore/deployment acceptance must prove:
@@ -53,7 +57,10 @@ Every seed/restore/deployment acceptance must prove:
 - CORS exact Admin origin;
 - application login throttling retained and Nginx adds `/auth/token` rate limiting;
 - production secrets only in `/etc/bb610-water-admin/admin.env` mode `0600` or stronger secret storage;
-- bootstrap login must be a real named person, not a generic shared account;
+- primary production owner/admin is created only through secure bootstrap using an owner-approved login;
+- review/test/CI credentials are test-only and must never be migrated or reused in production;
+- the real owner/admin password is supplied/set separately by the owner and must never appear in repository, frontend, documentation, review previews, screenshots or logs;
+- bootstrap credentials must be cleared after owner login verification and password set/rotation;
 - generated bootstrap/JWT/database secrets must never be written to Git or logs;
 - backup directory/files mode `0700/0600` with off-host replication hook;
 - container logs use bounded JSON rotation.
@@ -69,6 +76,9 @@ docker compose \
   up -d --build
 ```
 
+Before this command is used for production bootstrap, the owner-approved login and owner-supplied one-time bootstrap secret must exist only in protected production secret storage. Review/test credentials are not valid production inputs.
+
 The API image runs Alembic migrations before Uvicorn startup, as already accepted in R18/R19.
 
 Full operator procedure: `docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md`.
+Mandatory owner/bootstrap rules: `docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md`.
