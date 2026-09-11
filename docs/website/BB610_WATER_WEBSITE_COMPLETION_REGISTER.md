@@ -1,6 +1,6 @@
 # BB610 WATER — WEBSITE COMPLETION REGISTER
 
-Single operational register after Admin persistence implementation. Contains unresolved items only.
+Single operational register after TASK 18 Admin server persistence/auth implementation. Contains unresolved items only.
 
 ## REQUIRED BEFORE PRODUCTION
 
@@ -22,18 +22,22 @@ Integration point: `docs/website/staging/data/assets.js` → `pulsNewTask`, `pul
 Until approved these rows remain `PRICE_ON_REQUEST` and public UI remains `Ціна уточнюється`.
 
 ### WATER Admin production deployment / cutover
-The authenticated persistence/API implementation now exists in `services/water-admin-api/`; remaining work is deployment and production cutover, not another Admin UX redesign.
+Server/auth/version/audit/publish/rollback implementation exists in `services/water-admin-api/`. Remaining Admin work is deployment/runtime acceptance and owner-approved live cutover, not another UX redesign.
 
-- [ ] Provision durable production PostgreSQL plus backup/restore policy.
-- [ ] Deploy `services/water-admin-api/` behind HTTPS on the approved Admin/API host.
-- [ ] Supply production secrets through deployment secret storage: database credentials, JWT secret, bootstrap credentials; no repository secrets.
-- [ ] Create real Admin users/roles and rotate/remove bootstrap credentials.
-- [ ] Restrict CORS/network access to approved origins.
-- [ ] Run runtime migration/auth/version/audit/rollback/publish acceptance test on the deployed review environment.
-- [ ] Owner separately authorizes public WATER cutover from source-controlled commercial data to API `GET /public/commercial`.
-- [ ] After cutover, verify cache/failure behavior and rollback to last published commercial version.
+- [ ] Provision durable production PostgreSQL with scheduled backup and tested restore.
+- [ ] Deploy Admin API behind HTTPS on the approved host.
+- [ ] Inject production DB/JWT/bootstrap secrets through deployment secret storage.
+- [ ] Create named real Admin users/roles and rotate/remove bootstrap access.
+- [ ] Restrict CORS/network exposure to approved origins.
+- [ ] Run non-production runtime acceptance: migration, login/logout/throttle, roles, draft save, publish diff, publish, immutable audit, stale-write conflict, rollback.
+- [ ] Run database backup/restore drill and compare published checksum/version after recovery.
+- [ ] Owner separately authorizes live WATER commercial-data cutover to `GET /public/commercial`.
+- [ ] After cutover verify last-known-good/API-failure behavior and commercial rollback.
 
-Architecture: `docs/website/BB610_WATER_ADMIN_PERSISTENCE_ARCHITECTURE_R1.md`.
+References:
+- `docs/website/BB610_WATER_ADMIN_SERVER_ARCHITECTURE_R1.md`
+- `docs/website/BB610_WATER_ADMIN_DEPLOYMENT_R1.md`
+- `docs/website/BB610_WATER_ADMIN_BACKUP_RECOVERY_R1.md`
 
 ## OPTIONAL POLISH
 
