@@ -50,7 +50,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/src:ro" \
             almalinux:9.8 \
-            bash -lc 'dnf -y -q install nginx curl >/dev/null && bash /src/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh'
+            bash -lc 'dnf -y -q install nginx >/dev/null && command -v curl >/dev/null && bash /src/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh'
 
       - name: Build owner ZIP
         shell: bash
