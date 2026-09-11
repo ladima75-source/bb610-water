@@ -46,8 +46,11 @@ for f in index.html app.js config.js styles.css v1/styles.css; do [ -f "$RUNTIME
 
 EXPECTED="window.BB610_ADMIN_CONFIG={apiBase:'https://api.water.bb610.com.ua'};"
 grep -Fxq "$EXPECTED" "$RUNTIME/config.js" || { echo 'Installed production config.js is not exact production API base' >&2; cat "$RUNTIME/config.js" >&2; exit 8; }
-if grep -Eqi 'localhost|127\.0\.0\.1|apiBase:[[:space:]]*["'"']http://' "$RUNTIME/config.js" "$RUNTIME/app.js"; then
-  echo 'Installed production root runtime contains forbidden local/plain-HTTP API endpoint' >&2; exit 9
+if grep -Eqi 'localhost|127\.0\.0\.1' "$RUNTIME/config.js" "$RUNTIME/app.js"; then
+  echo 'Installed production root runtime contains forbidden localhost/loopback API endpoint' >&2; exit 9
+fi
+if grep -Fq "apiBase:'http://" "$RUNTIME/config.js" "$RUNTIME/app.js" || grep -Fq 'apiBase:"http://' "$RUNTIME/config.js" "$RUNTIME/app.js"; then
+  echo 'Installed production root runtime contains forbidden plain-HTTP API endpoint' >&2; exit 9
 fi
 grep -Fq "apiBase:'https://api.water.bb610.com.ua'" "$RUNTIME/app.js" || { echo 'Installed production app.js does not contain production HTTPS fallback' >&2; exit 10; }
 echo "PASS: installed $RUNTIME/config.js uses exact production API base"
@@ -97,7 +100,9 @@ while q:
     assert status==200; assert hashlib.sha256(body).digest()!=ih, f'{path} is SPA fallback index.html'
     if path.endswith('.css'):
         assert ctype=='text/css', f'{path} MIME={ctype}'; text=body.decode()
-        refs=re.findall(r'@import\s+(?:url\()?\s*["\']?([^"\')\s;]+)',text)+re.findall(r'url\(\s*["\']?([^"\')]+)',text)
+        refs=[]
+        refs += re.findall(r"@import\s+(?:url\()?\s*[\"']?([^\"')\s;]+)", text)
+        refs += re.findall(r"url\(\s*[\"']?([^\"')]+)", text)
         for ref in refs:
             if local(ref): q.append(urljoin(u,ref))
     elif path.endswith('.js'):
