@@ -25,6 +25,7 @@ jobs:
           set -euo pipefail
           bash -n deploy/water-admin/owner-package/install-or-update.sh
           bash -n deploy/water-admin/owner-package/install-or-update-safe.sh
+          bash -n deploy/water-admin/owner-package/repair-admin-ui.sh
           bash -n deploy/water-admin/owner-package/nginx-transaction.sh
           bash -n deploy/water-admin/owner-package/test-nginx-failure-injection.sh
           bash -n deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh
@@ -70,11 +71,13 @@ jobs:
           PKG="$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
           test -f "$PKG/OWNER_README.md"
           test -x "$PKG/install-or-update.sh"
+          test -x "$PKG/repair-admin-ui.sh"
           test -f "$PKG/PACKAGE_COMMIT_SHA"
           test -f "$PKG/services/water-admin-api/app.py"
           test -f "$PKG/deploy/water-admin/docker-compose.production.yml"
           test -f "$PKG/deploy/water-admin/nginx/bb610-water-admin.conf"
           test -f "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
+          test -f "$PKG/deploy/water-admin/owner-package/repair-admin-ui.sh"
           test -f "$PKG/deploy/water-admin/owner-package/nginx-transaction.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-nginx-failure-injection.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh"
