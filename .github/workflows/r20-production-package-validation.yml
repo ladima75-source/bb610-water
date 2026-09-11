@@ -1,0 +1,220 @@
+name: R20 Production Deployment Package Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'deploy/water-admin/**'
+      - '.github/workflows/r20-production-package-validation.yml'
+      - 'docs/website/R20_ADMIN_PRODUCTION_DEPLOYMENT_PREP.md'
+      - 'docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md'
+  workflow_dispatch:
+
+jobs:
+  validate-production-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate masked production-like secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          DB_PASS="$(openssl rand -hex 24)"
+          JWT_SECRET="$(openssl rand -hex 48)"
+          BOOT_PASS="$(openssl rand -base64 30 | tr -d '\n')"
+          ROTATED_PASS="$(openssl rand -base64 30 | tr -d '\n')"
+          echo "::add-mask::$DB_PASS"
+          echo "::add-mask::$JWT_SECRET"
+          echo "::add-mask::$BOOT_PASS"
+          echo "::add-mask::$ROTATED_PASS"
+          cat > /tmp/r20.env <<EOF
+          POSTGRES_DB=bb610_water_admin
+          POSTGRES_USER=bb610_water_admin
+          POSTGRES_PASSWORD=$DB_PASS
+          BB610_ADMIN_JWT_SECRET=$JWT_SECRET
+          BB610_ADMIN_JWT_ISSUER=bb610-water-admin-r20-validation
+          BB610_ADMIN_JWT_TTL_MIN=60
+          BB610_ADMIN_LOGIN_MAX_FAILURES=5
+          BB610_ADMIN_LOGIN_BLOCK_MIN=15
+          BB610_ADMIN_BOOTSTRAP_EMAIL=r20-owner@example.test
+          BB610_ADMIN_BOOTSTRAP_PASSWORD=$BOOT_PASS
+          BB610_ADMIN_CORS_ORIGINS=https://admin.water.bb610.com.ua
+          BB610_ADMIN_API_PORT=18080
+          BB610_ADMIN_DATA_ROOT=/tmp/r20-data
+          BB610_ADMIN_BACKUP_ROOT=/tmp/r20-backups
+          EOF
+          chmod 600 /tmp/r20.env
+          echo "R20_BOOT_PASS=$BOOT_PASS" >> "$GITHUB_ENV"
+          echo "R20_ROTATED_PASS=$ROTATED_PASS" >> "$GITHUB_ENV"
+
+      - name: Static package checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f deploy/water-admin/docker-compose.production.yml
+          test -f deploy/water-admin/.env.production.example
+          test -f deploy/water-admin/nginx/bb610-water-admin.conf
+          test -f deploy/water-admin/scripts/backup.sh
+          test -f deploy/water-admin/scripts/restore-disposable.sh
+          test -f deploy/water-admin/scripts/rotate-admin-password.sh
+          test -f deploy/water-admin/systemd/bb610-water-admin-backup.timer
+          test -f deploy/water-admin/public-cutover/public-commercial-endpoint.js.disabled
+          ! grep -R -E 'F1-PH|F2-PH' services/water-admin-api/seed_catalog.json deploy/water-admin/.env.production.example
+          grep -q "public-commercial-endpoint.js.disabled" deploy/water-admin/README.md
+          sh -n deploy/water-admin/scripts/install-admin-ui.sh
+          sh -n deploy/water-admin/scripts/backup.sh
+          sh -n deploy/water-admin/scripts/restore-disposable.sh
+          sh -n deploy/water-admin/scripts/rotate-admin-password.sh
+          docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml config >/tmp/r20-compose-rendered.yml
+
+      - name: Prepare production-like persistent paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r20-data/postgres /tmp/r20-backups /tmp/r20-admin-ui
+          chmod 700 /tmp/r20-data /tmp/r20-backups
+
+      - name: Start production package
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml up -d --build
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health.json; then break; fi
+            sleep 2
+          done
+          cat /tmp/r20-health.json
+          docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml ps
+
+      - name: Verify seed commercial invariant
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS http://127.0.0.1:18080/public/commercial >/tmp/r20-public.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/r20-public.json'))
+          rows=d['catalog']['rows']
+          assert len(rows)==21, len(rows)
+          assert sum(r['priceState']=='APPROVED' for r in rows)==15
+          assert sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)==6
+          assert not any(r['modelId'] in ('F1-PH','F2-PH') for r in rows)
+          p=[r for r in rows if r['modelId'] in ('F1-P','F2-P')]
+          assert len(p)==6 and all(r['prices']=={'base':None,'hmi':None} for r in p)
+          print({'version':d['version'],'rows':21,'approved':15,'priceOnRequest':6,'checksum':d['checksum']})
+          PY
+
+      - name: Install accepted Admin v2 static UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          sh deploy/water-admin/scripts/install-admin-ui.sh docs/website/admin/review/v2 /tmp/r20-admin-ui https://api.water.bb610.com.ua
+          grep -q "https://api.water.bb610.com.ua" /tmp/r20-admin-ui/config.js
+          test -s /tmp/r20-admin-ui/index.html
+          test -s /tmp/r20-admin-ui/app.js
+          test -s /tmp/r20-admin-ui/styles.css
+
+      - name: Verify named bootstrap and rotate password
+        shell: bash
+        env:
+          BB610_ADMIN_ENV_FILE: /tmp/r20.env
+          BB610_ADMIN_COMPOSE_FILE: deploy/water-admin/docker-compose.production.yml
+          BB610_ADMIN_NEW_PASSWORD: ${{ env.R20_ROTATED_PASS }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, requests
+          r=requests.post('http://127.0.0.1:18080/auth/token',data={'username':'r20-owner@example.test','password':os.environ['R20_BOOT_PASS']},timeout=10)
+          assert r.status_code==200, r.text
+          print('named bootstrap login PASS')
+          PY
+          sh deploy/water-admin/scripts/rotate-admin-password.sh r20-owner@example.test
+          python - <<'PY'
+          import os, requests
+          old=requests.post('http://127.0.0.1:18080/auth/token',data={'username':'r20-owner@example.test','password':os.environ['R20_BOOT_PASS']},timeout=10)
+          assert old.status_code==401, old.text
+          new=requests.post('http://127.0.0.1:18080/auth/token',data={'username':'r20-owner@example.test','password':os.environ['R20_ROTATED_PASS']},timeout=10)
+          assert new.status_code==200, new.text
+          print('named admin password rotation PASS')
+          PY
+
+      - name: Backup and separate restore drill
+        shell: bash
+        env:
+          BB610_ADMIN_ENV_FILE: /tmp/r20.env
+          BB610_ADMIN_COMPOSE_FILE: deploy/water-admin/docker-compose.production.yml
+        run: |
+          set -euo pipefail
+          FILE="$(sh deploy/water-admin/scripts/backup.sh)"
+          test -s "$FILE"
+          sha256sum -c "$FILE.sha256"
+          sh deploy/water-admin/scripts/restore-disposable.sh "$FILE" | tee /tmp/r20-restore.txt
+          grep -q 'Disposable restore PASS' /tmp/r20-restore.txt
+          grep -q 'APPROVED: 15' /tmp/r20-restore.txt
+          grep -q 'PRICE_ON_REQUEST: 6' /tmp/r20-restore.txt
+          RESTORE_DB="$(awk '/^Database:/ {print $2}' /tmp/r20-restore.txt)"
+          docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml exec -T db dropdb -U bb610_water_admin "$RESTORE_DB"
+
+      - name: Validate Nginx HTTPS template syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/certs/admin.water.bb610.com.ua /tmp/certs/api.water.bb610.com.ua
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=admin.water.bb610.com.ua' -keyout /tmp/certs/admin.water.bb610.com.ua/privkey.pem -out /tmp/certs/admin.water.bb610.com.ua/fullchain.pem >/dev/null 2>&1
+          cp /tmp/certs/admin.water.bb610.com.ua/privkey.pem /tmp/certs/api.water.bb610.com.ua/privkey.pem
+          cp /tmp/certs/admin.water.bb610.com.ua/fullchain.pem /tmp/certs/api.water.bb610.com.ua/fullchain.pem
+          docker run --rm \
+            -v "$PWD/deploy/water-admin/nginx/bb610-water-admin.conf:/etc/nginx/conf.d/default.conf:ro" \
+            -v "/tmp/certs:/etc/letsencrypt/live:ro" \
+            nginx:1.27-alpine nginx -t
+
+      - name: Verify API restart policy behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          API_ID="$(docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml ps -q api)"
+          docker kill "$API_ID"
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health-after-restart.json; then break; fi
+            sleep 2
+          done
+          cat /tmp/r20-health-after-restart.json
+
+      - name: Final invariant and package boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS http://127.0.0.1:18080/public/commercial >/tmp/r20-final-public.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/r20-final-public.json'))
+          rows=d['catalog']['rows']
+          assert len(rows)==21
+          assert sum(r['priceState']=='APPROVED' for r in rows)==15
+          assert sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)==6
+          assert all(r['prices']=={'base':None,'hmi':None} for r in rows if r['modelId'] in ('F1-P','F2-P'))
+          print('R20 final commercial invariant PASS')
+          PY
+          test -f deploy/water-admin/public-cutover/public-commercial-endpoint.js.disabled
+
+      - name: Upload R20 validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r20-production-package-validation
+          path: |
+            /tmp/r20-health.json
+            /tmp/r20-health-after-restart.json
+            /tmp/r20-public.json
+            /tmp/r20-final-public.json
+            /tmp/r20-compose-rendered.yml
+            /tmp/r20-restore.txt
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Stop production-like stack
+        if: always()
+        shell: bash
+        run: docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml down -v || true
