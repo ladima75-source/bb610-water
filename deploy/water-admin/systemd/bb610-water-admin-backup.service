@@ -1,0 +1,18 @@
+[Unit]
+Description=BB610 WATER Admin PostgreSQL backup
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+Environment=BB610_ADMIN_ENV_FILE=/etc/bb610-water-admin/admin.env
+Environment=BB610_ADMIN_COMPOSE_FILE=/opt/bb610-water-admin/app/deploy/water-admin/docker-compose.production.yml
+ExecStart=/opt/bb610-water-admin/app/deploy/water-admin/scripts/backup.sh
+User=root
+Group=root
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups/bb610-water-admin /run /tmp
