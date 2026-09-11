@@ -81,11 +81,22 @@ bb610_nginx_tx_apply "$TMP/acme.conf"
 
 PROBE=alma-candidate-active
 printf '%s\n' "$PROBE" > "$ACME_ROOT/.well-known/acme-challenge/$PROBE"
-echo 'ALMA TEST: direct candidate token probes'
-ADMIN_BODY="$(curl -fsS --resolve "$ADMIN_DOMAIN:80:127.0.0.1" "http://$ADMIN_DOMAIN/.well-known/acme-challenge/$PROBE")"
-API_BODY="$(curl -fsS --resolve "$API_DOMAIN:80:127.0.0.1" "http://$API_DOMAIN/.well-known/acme-challenge/$PROBE")"
-[ "$ADMIN_BODY" = "$PROBE" ]
-[ "$API_BODY" = "$PROBE" ]
+echo 'ALMA TEST: wait until reloaded candidate is observably active'
+probe_candidate(){
+  local domain="$1" body i
+  for i in $(seq 1 40); do
+    body="$(curl -fsS --resolve "$domain:80:127.0.0.1" "http://$domain/.well-known/acme-challenge/$PROBE" 2>/dev/null || true)"
+    if [ "$body" = "$PROBE" ]; then
+      echo "ALMA TEST: $domain active after attempt $i"
+      return 0
+    fi
+    sleep 0.1
+  done
+  echo "ALMA TEST: $domain never served candidate token" >&2
+  return 1
+}
+probe_candidate "$ADMIN_DOMAIN"
+probe_candidate "$API_DOMAIN"
 rm -f "$ACME_ROOT/.well-known/acme-challenge/$PROBE"
 MARKET_AFTER="$(curl -fsS -H 'Host: api.market.bb610.com.ua' http://127.0.0.1/)"
 [ "$MARKET_AFTER" = 'MARKET-UNCHANGED' ]
