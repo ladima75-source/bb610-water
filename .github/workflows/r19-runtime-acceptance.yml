@@ -55,8 +55,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "BB610_ADMIN_JWT_SECRET=$(openssl rand -hex 48)" >> "$GITHUB_ENV"
-          echo "BB610_ADMIN_BOOTSTRAP_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> "$GITHUB_ENV"
+          JWT_SECRET="$(openssl rand -hex 48)"
+          BOOTSTRAP_PASSWORD="$(openssl rand -base64 36 | tr -d '\n')"
+          echo "::add-mask::$JWT_SECRET"
+          echo "::add-mask::$BOOTSTRAP_PASSWORD"
+          echo "BB610_ADMIN_JWT_SECRET=$JWT_SECRET" >> "$GITHUB_ENV"
+          echo "BB610_ADMIN_BOOTSTRAP_PASSWORD=$BOOTSTRAP_PASSWORD" >> "$GITHUB_ENV"
 
       - name: Install runtime dependencies
         shell: bash
