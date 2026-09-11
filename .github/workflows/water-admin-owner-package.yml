@@ -98,7 +98,7 @@ jobs:
           grep -q 'PUBLIC/' "$PKG/deploy/water-admin/owner-package/bin/certbot"
           ! grep -R -E 'F1-PH|F2-PH' "$PKG/services/water-admin-api/seed_catalog.json"
 
-      - name: OWNER artifact — Admin UI recursive asset and browser smoke
+      - name: OWNER artifact — production Admin runtime assets and authenticated browser smoke
         shell: bash
         run: |
           set -euo pipefail
@@ -107,7 +107,7 @@ jobs:
           mkdir -p "$EXTRACT"
           unzip -q "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip" -d "$EXTRACT"
           PKG="$EXTRACT/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
-          bash "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh" "$PKG"
+          sudo -E bash "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh" "$PKG"
 
       - name: OWNER artifact — broken production UI repair transaction regression
         shell: bash
