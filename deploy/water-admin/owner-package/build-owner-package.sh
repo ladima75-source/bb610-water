@@ -19,8 +19,9 @@ cp "$ROOT/docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md" "$PKG/docs/we
 cp "$ROOT/docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md" "$PKG/docs/website/"
 cp "$ROOT/deploy/water-admin/owner-package/OWNER_README.md" "$PKG/OWNER_README.md"
 cp "$ROOT/deploy/water-admin/owner-package/install-or-update.sh" "$PKG/install-or-update.sh"
+cp "$ROOT/deploy/water-admin/owner-package/repair-admin-ui.sh" "$PKG/repair-admin-ui.sh"
 printf '%s\n' "$SHA" > "$PKG/PACKAGE_COMMIT_SHA"
-chmod 0755 "$PKG/install-or-update.sh"
+chmod 0755 "$PKG/install-or-update.sh" "$PKG/repair-admin-ui.sh"
 chmod 0755 "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
 chmod 0755 "$PKG/deploy/water-admin/owner-package/bin/certbot"
 chmod 0755 "$PKG/deploy/water-admin/scripts/"*.sh
