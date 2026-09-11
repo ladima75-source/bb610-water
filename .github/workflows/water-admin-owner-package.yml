@@ -6,6 +6,7 @@ on:
     paths:
       - 'deploy/water-admin/**'
       - 'services/water-admin-api/**'
+      - 'docs/website/admin/review/v1/**'
       - 'docs/website/admin/review/v2/**'
       - 'docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md'
       - 'docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md'
@@ -27,6 +28,7 @@ jobs:
           bash -n deploy/water-admin/owner-package/nginx-transaction.sh
           bash -n deploy/water-admin/owner-package/test-nginx-failure-injection.sh
           bash -n deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh
+          bash -n deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh
           bash -n deploy/water-admin/owner-package/bin/certbot
           python3 -m py_compile deploy/water-admin/owner-package/owner-runtime-acceptance.py
           bash -n deploy/water-admin/owner-package/build-owner-package.sh
@@ -76,9 +78,13 @@ jobs:
           test -f "$PKG/deploy/water-admin/owner-package/nginx-transaction.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-nginx-failure-injection.sh"
           test -f "$PKG/deploy/water-admin/owner-package/test-almalinux-nginx-conf-d.sh"
+          test -f "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh"
           test -x "$PKG/deploy/water-admin/owner-package/bin/certbot"
           test -f "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
+          test -f "$PKG/docs/website/admin/review/v1/styles.css"
           test -f "$PKG/docs/website/admin/review/v2/index.html"
+          test -f "$PKG/docs/website/admin/review/v2/styles.css"
+          grep -Fq "@import url('../v1/styles.css');" "$PKG/docs/website/admin/review/v2/styles.css"
           grep -q 'admin.bb610@gmail.com' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           grep -q 'Public water.bb610.com.ua cutover: NOT ACTIVATED' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
           grep -q 'PREFLIGHT PASS' "$PKG/deploy/water-admin/owner-package/install-or-update-safe.sh"
@@ -86,6 +92,17 @@ jobs:
           grep -q 'LOCAL/' "$PKG/deploy/water-admin/owner-package/bin/certbot"
           grep -q 'PUBLIC/' "$PKG/deploy/water-admin/owner-package/bin/certbot"
           ! grep -R -E 'F1-PH|F2-PH' "$PKG/services/water-admin-api/seed_catalog.json"
+
+      - name: OWNER artifact — Admin UI recursive asset and browser smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXTRACT="$RUNNER_TEMP/owner-artifact-extracted"
+          rm -rf "$EXTRACT"
+          mkdir -p "$EXTRACT"
+          unzip -q "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip" -d "$EXTRACT"
+          PKG="$EXTRACT/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
+          bash "$PKG/deploy/water-admin/owner-package/test-admin-ui-owner-artifact.sh" "$PKG"
 
       - name: Validate commercial seed invariant
         shell: bash
