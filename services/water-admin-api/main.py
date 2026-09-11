@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from pwdlib import PasswordHash
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, create_engine, select
+from sqlalchemy import Boolean, DateTime, Integer, JSON, String, Text, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 DATABASE_URL = os.getenv("BB610_ADMIN_DATABASE_URL", "sqlite:///./water_admin_review.db")
@@ -90,7 +90,7 @@ class UserCreate(BaseModel):
     role: Literal["viewer", "editor", "admin"]
 
 app = FastAPI(title="BB610 WATER Admin API", version="1.0")
-app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_credentials=False, allow_methods=["GET","POST"], allow_headers=["Authorization","Content-Type"])
+app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_credentials=False, allow_methods=["GET", "POST"], allow_headers=["Authorization", "Content-Type"])
 
 
 def db_session():
@@ -169,34 +169,76 @@ def public_projection(catalog: dict[str, Any]) -> dict[str, Any]:
 def validate_catalog(catalog: dict[str, Any]) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
-    required_models = {"I","F1","F1-P","F1-PE","F2","F2-P","F2-PE"}
-    required_zones = {"Z4(8)","Z8(12)","Z12(16)"}
+    required_models = {"I", "F1", "F1-P", "F1-PE", "F2", "F2-P", "F2-PE"}
+    required_zones = {"Z4(8)", "Z8(12)", "Z12(16)"}
     model_ids = {m.get("id") for m in catalog.get("models", [])}
     zone_ids = {z.get("id") for z in catalog.get("zones", [])}
-    if not required_models.issubset(model_ids): errors.append("Missing required model codes")
-    if not required_zones.issubset(zone_ids): errors.append("Missing required zone codes")
+    if not required_models.issubset(model_ids):
+        errors.append("Missing required model codes")
+    if not required_zones.issubset(zone_ids):
+        errors.append("Missing required zone codes")
     seen: set[str] = set()
     for r in catalog.get("rows", []):
         key = f'{r.get("modelId")}|{r.get("zoneId")}'
-        if key in seen: errors.append(f"Duplicate row {key}")
+        if key in seen:
+            errors.append(f"Duplicate row {key}")
         seen.add(key)
-        if r.get("modelId") not in model_ids or r.get("zoneId") not in zone_ids: errors.append(f"Unknown row reference {key}")
+        if r.get("modelId") not in model_ids or r.get("zoneId") not in zone_ids:
+            errors.append(f"Unknown row reference {key}")
         state = r.get("priceState")
         base = (r.get("prices") or {}).get("base")
         hmi = (r.get("prices") or {}).get("hmi")
-        if state not in {"APPROVED","PRICE_ON_REQUEST"}: errors.append(f"Invalid priceState for {key}")
+        if state not in {"APPROVED", "PRICE_ON_REQUEST"}:
+            errors.append(f"Invalid priceState for {key}")
         for label, value in (("base", base), ("hmi", hmi)):
-            if value is not None and (not isinstance(value, int) or value < 0): errors.append(f"{key} {label} must be a non-negative integer UAH amount")
-        if state == "APPROVED" and (base is None or hmi is None): errors.append(f"{key} APPROVED requires both prices")
-        if base is not None and hmi is not None and hmi < base: warnings.append(f"{key}: HMI price is lower than base price")
+            if value is not None and (not isinstance(value, int) or value < 0):
+                errors.append(f"{key} {label} must be a non-negative integer UAH amount")
+        if state == "APPROVED" and (base is None or hmi is None):
+            errors.append(f"{key} APPROVED requires both prices")
+        if base is not None and hmi is not None and hmi < base:
+            warnings.append(f"{key}: HMI price is lower than base price")
     expected = {f"{m}|{z}" for m in required_models for z in required_zones}
     missing = expected - seen
-    if missing: errors.append("Missing model-zone rows: " + ", ".join(sorted(missing)))
+    if missing:
+        errors.append("Missing model-zone rows: " + ", ".join(sorted(missing)))
     return errors, warnings
 
 
 def add_audit(db: Session, event_type: str, actor: str, version: int | None, payload: dict[str, Any]):
     db.add(AuditEvent(event_type=event_type, actor=actor, version=version, payload=payload))
+
+
+def audit_catalog_diff(db: Session, old: dict[str, Any], new: dict[str, Any], actor: str, version: int):
+    old_rows = {(r["modelId"], r["zoneId"]): r for r in old.get("rows", [])}
+    new_rows = {(r["modelId"], r["zoneId"]): r for r in new.get("rows", [])}
+    for key, nr in new_rows.items():
+        orow = old_rows.get(key)
+        if not orow:
+            add_audit(db, "ROW_CREATE", actor, version, {"modelId": key[0], "zoneId": key[1], "new": nr})
+            continue
+        if bool(orow.get("active")) != bool(nr.get("active")):
+            add_audit(db, "AVAILABILITY_CHANGE", actor, version, {"modelId": key[0], "zoneId": key[1], "old": bool(orow.get("active")), "new": bool(nr.get("active"))})
+        for option in ("base", "hmi"):
+            old_value = (orow.get("prices") or {}).get(option)
+            new_value = (nr.get("prices") or {}).get(option)
+            old_state = orow.get("priceState")
+            new_state = nr.get("priceState")
+            if old_value != new_value or old_state != new_state:
+                add_audit(db, "PRICE_CHANGE", actor, version, {
+                    "modelId": key[0], "zoneId": key[1], "option": option,
+                    "oldValue": old_value, "newValue": new_value,
+                    "oldState": old_state, "newState": new_state
+                })
+    old_models = {m["id"]: m for m in old.get("models", [])}
+    for nm in new.get("models", []):
+        om = old_models.get(nm["id"])
+        if om != nm:
+            add_audit(db, "MODEL_CHANGE", actor, version, {"modelId": nm["id"], "old": om, "new": nm})
+    old_zones = {z["id"]: z for z in old.get("zones", [])}
+    for nz in new.get("zones", []):
+        oz = old_zones.get(nz["id"])
+        if oz != nz:
+            add_audit(db, "ZONE_CHANGE", actor, version, {"zoneId": nz["id"], "old": oz, "new": nz})
 
 
 def bootstrap():
@@ -205,7 +247,8 @@ def bootstrap():
         if not db.scalar(select(CatalogVersion).limit(1)):
             seed = json.loads(SEED_PATH.read_text(encoding="utf-8"))
             row = CatalogVersion(version=1, parent_version=None, snapshot=seed, checksum=checksum(seed), created_by="system:seed", note="R17 PASS seed")
-            db.add(row); db.flush()
+            db.add(row)
+            db.flush()
             db.add(Publication(version=1, published_by="system:seed"))
             add_audit(db, "SEED", "system:seed", 1, {"checksum": row.checksum})
         if BOOTSTRAP_EMAIL and BOOTSTRAP_PASSWORD and not db.scalar(select(User).where(User.email == BOOTSTRAP_EMAIL)):
@@ -239,64 +282,83 @@ def create_user(body: UserCreate, actor: User = Depends(require_role("admin")), 
     if db.scalar(select(User).where(User.email == body.email)):
         raise HTTPException(409, "User already exists")
     user = User(email=body.email, password_hash=password_hash.hash(body.password), role=body.role, active=True)
-    db.add(user); add_audit(db, "USER_CREATE", actor.email, None, {"email": body.email, "role": body.role}); db.commit()
+    db.add(user)
+    add_audit(db, "USER_CREATE", actor.email, None, {"email": body.email, "role": body.role})
+    db.commit()
     return {"ok": True}
 
 @app.get("/admin/catalog")
-def get_catalog(user: User = Depends(require_role("viewer","editor","admin")), db: Session = Depends(db_session)):
+def get_catalog(user: User = Depends(require_role("viewer", "editor", "admin")), db: Session = Depends(db_session)):
     latest = latest_version(db)
     pub = db.scalar(select(Publication).order_by(Publication.id.desc()).limit(1))
     return {"version": latest.version, "publishedVersion": pub.version if pub else None, "checksum": latest.checksum, "catalog": latest.snapshot}
 
 @app.get("/admin/versions")
-def versions(user: User = Depends(require_role("viewer","editor","admin")), db: Session = Depends(db_session)):
+def versions(user: User = Depends(require_role("viewer", "editor", "admin")), db: Session = Depends(db_session)):
     rows = db.scalars(select(CatalogVersion).order_by(CatalogVersion.version.desc()).limit(100)).all()
     return [{"version": r.version, "parentVersion": r.parent_version, "createdBy": r.created_by, "createdAt": r.created_at, "checksum": r.checksum, "note": r.note} for r in rows]
 
 @app.get("/admin/audit")
-def audit(user: User = Depends(require_role("viewer","editor","admin")), db: Session = Depends(db_session)):
+def audit(user: User = Depends(require_role("viewer", "editor", "admin")), db: Session = Depends(db_session)):
     rows = db.scalars(select(AuditEvent).order_by(AuditEvent.id.desc()).limit(500)).all()
     return [{"id": r.id, "type": r.event_type, "actor": r.actor, "version": r.version, "payload": r.payload, "createdAt": r.created_at} for r in rows]
 
 @app.post("/admin/catalog/versions")
-def save_version(body: SaveRequest, actor: User = Depends(require_role("editor","admin")), db: Session = Depends(db_session)):
+def save_version(body: SaveRequest, actor: User = Depends(require_role("editor", "admin")), db: Session = Depends(db_session)):
     latest = latest_version(db)
     if body.baseVersion != latest.version:
         raise HTTPException(409, {"message": "Catalog changed since it was loaded", "latestVersion": latest.version})
     errors, warnings = validate_catalog(body.catalog)
-    if errors: raise HTTPException(422, {"errors": errors, "warnings": warnings})
-    if warnings and not body.confirmWarnings: raise HTTPException(409, {"message": "Confirmation required", "warnings": warnings})
+    if errors:
+        raise HTTPException(422, {"errors": errors, "warnings": warnings})
+    if warnings and not body.confirmWarnings:
+        raise HTTPException(409, {"message": "Confirmation required", "warnings": warnings})
     new_version = latest.version + 1
-    snap = body.catalog.copy(); snap["history"] = []
+    snap = json.loads(json.dumps(body.catalog))
+    snap["history"] = []
     row = CatalogVersion(version=new_version, parent_version=latest.version, snapshot=snap, checksum=checksum(snap), created_by=actor.email, note=body.note)
-    db.add(row); add_audit(db, "CATALOG_SAVE", actor.email, new_version, {"parentVersion": latest.version, "checksum": row.checksum, "warnings": warnings, "note": body.note}); db.commit()
+    db.add(row)
+    audit_catalog_diff(db, latest.snapshot, snap, actor.email, new_version)
+    add_audit(db, "CATALOG_SAVE", actor.email, new_version, {"parentVersion": latest.version, "checksum": row.checksum, "warnings": warnings, "note": body.note})
+    db.commit()
     return {"ok": True, "version": new_version, "checksum": row.checksum, "warnings": warnings}
 
 @app.post("/admin/catalog/rollback/{target_version}")
 def rollback(target_version: int, body: RollbackRequest, actor: User = Depends(require_role("admin")), db: Session = Depends(db_session)):
     latest = latest_version(db)
-    if body.baseVersion != latest.version: raise HTTPException(409, {"message":"Catalog changed since it was loaded", "latestVersion": latest.version})
+    if body.baseVersion != latest.version:
+        raise HTTPException(409, {"message": "Catalog changed since it was loaded", "latestVersion": latest.version})
     target = db.scalar(select(CatalogVersion).where(CatalogVersion.version == target_version))
-    if not target: raise HTTPException(404, "Target version not found")
+    if not target:
+        raise HTTPException(404, "Target version not found")
     new_version = latest.version + 1
     snap = json.loads(json.dumps(target.snapshot))
     row = CatalogVersion(version=new_version, parent_version=latest.version, snapshot=snap, checksum=checksum(snap), created_by=actor.email, note=f"{body.note}: v{target_version}")
-    db.add(row); add_audit(db, "CATALOG_ROLLBACK", actor.email, new_version, {"fromVersion": latest.version, "targetVersion": target_version, "checksum": row.checksum}); db.commit()
+    db.add(row)
+    audit_catalog_diff(db, latest.snapshot, snap, actor.email, new_version)
+    add_audit(db, "CATALOG_ROLLBACK", actor.email, new_version, {"fromVersion": latest.version, "targetVersion": target_version, "checksum": row.checksum})
+    db.commit()
     return {"ok": True, "version": new_version, "rolledBackFrom": target_version}
 
 @app.post("/admin/catalog/publish/{version}")
 def publish(version: int, actor: User = Depends(require_role("admin")), db: Session = Depends(db_session)):
     target = db.scalar(select(CatalogVersion).where(CatalogVersion.version == version))
-    if not target: raise HTTPException(404, "Version not found")
+    if not target:
+        raise HTTPException(404, "Version not found")
     errors, warnings = validate_catalog(target.snapshot)
-    if errors: raise HTTPException(422, {"errors": errors, "warnings": warnings})
-    db.add(Publication(version=version, published_by=actor.email)); add_audit(db, "CATALOG_PUBLISH", actor.email, version, {"checksum": target.checksum, "warnings": warnings}); db.commit()
+    if errors:
+        raise HTTPException(422, {"errors": errors, "warnings": warnings})
+    db.add(Publication(version=version, published_by=actor.email))
+    add_audit(db, "CATALOG_PUBLISH", actor.email, version, {"checksum": target.checksum, "warnings": warnings})
+    db.commit()
     return {"ok": True, "publishedVersion": version, "checksum": target.checksum}
 
 @app.get("/public/commercial")
 def public_commercial(db: Session = Depends(db_session)):
     pub = db.scalar(select(Publication).order_by(Publication.id.desc()).limit(1))
-    if not pub: raise HTTPException(503, "No published catalog")
+    if not pub:
+        raise HTTPException(503, "No published catalog")
     version = db.scalar(select(CatalogVersion).where(CatalogVersion.version == pub.version))
-    if not version: raise HTTPException(500, "Published catalog version is missing")
+    if not version:
+        raise HTTPException(500, "Published catalog version is missing")
     return {"version": version.version, "checksum": version.checksum, "catalog": public_projection(version.snapshot)}
