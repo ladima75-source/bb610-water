@@ -5,7 +5,6 @@ REAL_CERTBOT="${BB610_REAL_CERTBOT:-}"
 [ -n "$REAL_CERTBOT" ] || { echo 'BB610 certbot gate: BB610_REAL_CERTBOT is not set' >&2; exit 91; }
 [ -x "$REAL_CERTBOT" ] || { echo "BB610 certbot gate: real certbot is not executable: $REAL_CERTBOT" >&2; exit 92; }
 
-# Non-issuance calls used by preflight must behave exactly like the real binary.
 case " ${*:-} " in
   *' --version '*) exec "$REAL_CERTBOT" "$@" ;;
 esac
@@ -16,7 +15,6 @@ args=("$@")
 for ((i=0; i<${#args[@]}; i++)); do
   case "${args[$i]}" in
     certonly) IS_WEBROOT_CERTONLY=1 ;;
-    --webroot) : ;;
     -w|--webroot-path)
       if (( i + 1 < ${#args[@]} )); then WEBROOT="${args[$((i+1))]}"; fi
       ;;
@@ -34,7 +32,7 @@ if [ "$IS_WEBROOT_CERTONLY" -eq 1 ] && [ -n "$WEBROOT" ]; then
   chmod 0644 "$TOKEN_FILE"
 
   # AlmaLinux/RHEL SELinux: restore the standard /var/www context before Nginx
-  # is asked to serve the challenge. This is a no-op on systems without SELinux.
+  # is asked to serve the challenge. No-op on systems without restorecon.
   if command -v restorecon >/dev/null 2>&1; then
     restorecon -RF "$WEBROOT" >/dev/null 2>&1 || {
       rm -f "$TOKEN_FILE"
@@ -46,35 +44,43 @@ if [ "$IS_WEBROOT_CERTONLY" -eq 1 ] && [ -n "$WEBROOT" ]; then
   cleanup(){ rm -f "$TOKEN_FILE"; }
   trap cleanup EXIT INT TERM HUP
 
-  probe_exact(){
-    local label="$1" url="$2" resolve_arg="${3:-}" body
+  probe_once(){
+    local url="$1" resolve_arg="${2:-}" body
     if [ -n "$resolve_arg" ]; then
-      body="$(curl -fsS --max-time 10 --resolve "$resolve_arg" "$url")" || {
-        echo "BB610 ACME gate: $label probe failed: $url" >&2
-        return 1
-      }
+      body="$(curl -fsS --max-time 4 --resolve "$resolve_arg" "$url" 2>/dev/null)" || return 1
     else
-      body="$(curl -fsS --max-time 12 "$url")" || {
-        echo "BB610 ACME gate: $label probe failed: $url" >&2
-        return 1
-      }
+      body="$(curl -fsS --max-time 6 "$url" 2>/dev/null)" || return 1
     fi
-    [ "$body" = "$TOKEN" ] || {
-      echo "BB610 ACME gate: $label probe returned unexpected content for $url" >&2
-      return 1
-    }
+    [ "$body" = "$TOKEN" ]
+  }
+
+  # Nginx reload is asynchronous. A successful `systemctl reload nginx` only
+  # confirms that the HUP was accepted; old workers may still answer the first
+  # requests. Wait until the candidate is observably active before Certbot.
+  probe_until_ready(){
+    local label="$1" url="$2" resolve_arg="${3:-}" attempts="${4:-30}" delay="${5:-0.5}"
+    local i
+    for ((i=1; i<=attempts; i++)); do
+      if probe_once "$url" "$resolve_arg"; then
+        echo "BB610 ACME gate PASS: $label token/200 after attempt $i" >&2
+        return 0
+      fi
+      sleep "$delay"
+    done
+    echo "BB610 ACME gate FAILED: $label did not return exact token/200: $url" >&2
+    return 1
   }
 
   for domain in "$ADMIN_DOMAIN" "$API_DOMAIN"; do
     URL="http://$domain/.well-known/acme-challenge/$TOKEN"
-    probe_exact "LOCAL/$domain" "$URL" "$domain:80:127.0.0.1" || exit 94
+    probe_until_ready "LOCAL/$domain" "$URL" "$domain:80:127.0.0.1" 30 0.25 || exit 94
   done
   for domain in "$ADMIN_DOMAIN" "$API_DOMAIN"; do
     URL="http://$domain/.well-known/acme-challenge/$TOKEN"
-    probe_exact "PUBLIC/$domain" "$URL" || exit 95
+    probe_until_ready "PUBLIC/$domain" "$URL" "" 20 0.5 || exit 95
   done
 
-  echo "BB610 ACME gate PASS: local + public token/200 verified for $ADMIN_DOMAIN and $API_DOMAIN" >&2
+  echo "BB610 ACME gate READY: local + public token/200 verified for $ADMIN_DOMAIN and $API_DOMAIN; invoking real Certbot" >&2
 fi
 
 exec "$REAL_CERTBOT" "$@"
