@@ -1,0 +1,78 @@
+name: Build WATER Admin Owner Package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'deploy/water-admin/**'
+      - 'services/water-admin-api/**'
+      - 'docs/website/admin/review/v2/**'
+      - 'docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md'
+      - 'docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md'
+      - '.github/workflows/water-admin-owner-package.yml'
+  workflow_dispatch:
+
+jobs:
+  build-owner-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate owner installer syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n deploy/water-admin/owner-package/install-or-update.sh
+          python3 -m py_compile deploy/water-admin/owner-package/owner-runtime-acceptance.py
+          bash -n deploy/water-admin/owner-package/build-owner-package.sh
+
+      - name: Build owner ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash deploy/water-admin/owner-package/build-owner-package.sh "$RUNNER_TEMP/owner-dist"
+          test -s "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip"
+          test -s "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip.sha256"
+          unzip -t "$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip"
+
+      - name: Validate packaged structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          PKG="$RUNNER_TEMP/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
+          test -f "$PKG/OWNER_README.md"
+          test -x "$PKG/install-or-update.sh"
+          test -f "$PKG/PACKAGE_COMMIT_SHA"
+          test -f "$PKG/services/water-admin-api/app.py"
+          test -f "$PKG/deploy/water-admin/docker-compose.production.yml"
+          test -f "$PKG/deploy/water-admin/nginx/bb610-water-admin.conf"
+          test -f "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
+          test -f "$PKG/docs/website/admin/review/v2/index.html"
+          grep -q 'admin.bb610@gmail.com' "$PKG/install-or-update.sh"
+          grep -q 'water.bb610.com.ua cutover: NOT ACTIVATED' "$PKG/install-or-update.sh"
+          grep -q 'PREFLIGHT PASS' "$PKG/install-or-update.sh"
+          ! grep -R -E 'F1-PH|F2-PH' "$PKG/services/water-admin-api/seed_catalog.json"
+
+      - name: Validate commercial seed invariant
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p=json.load(open('services/water-admin-api/seed_catalog.json'))
+          rows=p['rows']
+          assert len(rows)==21
+          assert sum(r['priceState']=='APPROVED' for r in rows)==15
+          assert sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)==6
+          assert all(r['prices']=={'base':None,'hmi':None} for r in rows if r['modelId'] in ('F1-P','F2-P'))
+          print('OWNER package seed invariant PASS')
+          PY
+
+      - name: Upload owner deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE
+          path: |
+            ${{ runner.temp }}/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip
+            ${{ runner.temp }}/owner-dist/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip.sha256
+          retention-days: 90
+          if-no-files-found: error
