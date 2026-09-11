@@ -4,15 +4,22 @@ set -Eeuxo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HELPER="$ROOT/nginx-transaction.sh"
 GATE="$ROOT/bin/certbot"
+FINAL_TEMPLATE="$ROOT/../nginx/bb610-water-admin.conf"
 [ -f "$HELPER" ] || { echo 'transaction helper missing' >&2; exit 2; }
 [ -f "$GATE" ] || { echo 'certbot gate missing' >&2; exit 2; }
+[ -f "$FINAL_TEMPLATE" ] || { echo 'final nginx template missing' >&2; exit 2; }
 
 echo 'ALMA TEST: verify distro nginx layout'
 grep -q '^ID="\?almalinux"\?' /etc/os-release || { echo 'Not running on AlmaLinux' >&2; exit 3; }
-nginx -V 2>&1 | grep -q 'nginx version' || true
-[ -f /etc/nginx/nginx.conf ] || { echo '/etc/nginx/nginx.conf missing' >&2; exit 4; }
+NGINX_VERSION="$(nginx -v 2>&1)"
+echo "ALMA TEST: $NGINX_VERSION"
+case "$NGINX_VERSION" in
+  *'nginx/1.20.1'*) : ;;
+  *) echo "Expected AlmaLinux distro Nginx 1.20.1, got: $NGINX_VERSION" >&2; exit 4 ;;
+esac
+[ -f /etc/nginx/nginx.conf ] || { echo '/etc/nginx/nginx.conf missing' >&2; exit 5; }
 grep -Eq 'include[[:space:]]+/etc/nginx/conf\.d/\*\.conf;' /etc/nginx/nginx.conf || {
-  echo 'Alma nginx.conf does not include /etc/nginx/conf.d/*.conf' >&2; exit 5;
+  echo 'Alma nginx.conf does not include /etc/nginx/conf.d/*.conf' >&2; exit 6;
 }
 
 ADMIN_DOMAIN=admin.water.bb610.com.ua
@@ -21,7 +28,7 @@ CONF=/etc/nginx/conf.d/bb610-water-admin.conf
 MARKET_CONF=/etc/nginx/conf.d/bb610-market-neighbor.conf
 ACME_ROOT=/var/www/bb610-water-admin-acme
 TMP="$(mktemp -d)"
-trap 'nginx -s stop >/dev/null 2>&1 || true; rm -rf "$TMP"; rm -f "$CONF" "$MARKET_CONF"' EXIT
+trap 'nginx -s stop >/dev/null 2>&1 || true; rm -rf "$TMP"; rm -f "$CONF" "$MARKET_CONF"; rm -rf /etc/letsencrypt/live/admin.water.bb610.com.ua /etc/letsencrypt/live/api.water.bb610.com.ua' EXIT
 
 rm -f /etc/nginx/conf.d/default.conf
 cat > "$MARKET_CONF" <<'EOF'
@@ -109,13 +116,33 @@ echo 'ALMA TEST: run production ACME gate before fake real Certbot'
 bash "$GATE" certonly --webroot -w "$ACME_ROOT" --non-interactive -d "$ADMIN_DOMAIN"
 grep -Fxq REAL_CERTBOT_CALLED "$TMP/certbot.log"
 
+echo 'ALMA TEST: validate production final template with Nginx 1.20.1'
+for domain in "$ADMIN_DOMAIN" "$API_DOMAIN"; do
+  certdir="/etc/letsencrypt/live/$domain"
+  mkdir -p "$certdir"
+  openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+    -subj "/CN=$domain" \
+    -keyout "$certdir/privkey.pem" \
+    -out "$certdir/fullchain.pem" >/dev/null 2>&1
+  chmod 0600 "$certdir/privkey.pem"
+  chmod 0644 "$certdir/fullchain.pem"
+done
+! grep -Eq '^[[:space:]]*http2[[:space:]]+on;' "$FINAL_TEMPLATE"
+grep -Eq 'listen[[:space:]]+443[[:space:]]+ssl[[:space:]]+http2;' "$FINAL_TEMPLATE"
+grep -Eq 'listen[[:space:]]+\[::\]:443[[:space:]]+ssl[[:space:]]+http2;' "$FINAL_TEMPLATE"
+bb610_nginx_tx_apply "$FINAL_TEMPLATE"
+nginx -t
+MARKET_WITH_FINAL="$(curl -fsS -H 'Host: api.market.bb610.com.ua' http://127.0.0.1/)"
+[ "$MARKET_WITH_FINAL" = 'MARKET-UNCHANGED' ]
+
 echo 'ALMA TEST: commit transaction and re-check Market'
 bb610_nginx_tx_commit
 nginx -t
 MARKET_FINAL="$(curl -fsS -H 'Host: api.market.bb610.com.ua' http://127.0.0.1/)"
 [ "$MARKET_FINAL" = 'MARKET-UNCHANGED' ]
 
-echo "AlmaLinux nginx version: $(nginx -v 2>&1)"
+echo "AlmaLinux nginx version: $NGINX_VERSION"
 echo 'PASS: AlmaLinux /etc/nginx/conf.d/*.conf candidate activation'
 echo 'PASS: LOCAL + PUBLIC ACME token/200 gate before real Certbot'
+echo 'PASS: production final template parses on Nginx 1.20.1 with listen ... ssl http2 syntax'
 echo 'PASS: existing api.market.bb610.com.ua neighbor remained unchanged'
