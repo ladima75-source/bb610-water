@@ -8,11 +8,13 @@ PKG="$OUT_DIR/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE"
 ZIP="$OUT_DIR/BB610_WATER_ADMIN_OWNER_DEPLOYMENT_PACKAGE.zip"
 
 rm -rf "$PKG" "$ZIP"
-mkdir -p "$PKG/services" "$PKG/deploy" "$PKG/docs/website/admin/review" "$PKG/docs/website"
+mkdir -p "$PKG/services" "$PKG/deploy" "$PKG/docs/website/admin" "$PKG/docs/website"
 
 cp -a "$ROOT/services/water-admin-api" "$PKG/services/"
 cp -a "$ROOT/deploy/water-admin" "$PKG/deploy/"
-cp -a "$ROOT/docs/website/admin/review/v2" "$PKG/docs/website/admin/review/"
+# Admin v2 inherits approved assets from review/v1. Package the complete review
+# tree so production installation can preserve all relative asset dependencies.
+cp -a "$ROOT/docs/website/admin/review" "$PKG/docs/website/admin/"
 cp "$ROOT/docs/website/BB610_WATER_ADMIN_PRODUCTION_RUNBOOK_R1.md" "$PKG/docs/website/"
 cp "$ROOT/docs/website/BB610_WATER_ADMIN_OWNER_BOOTSTRAP_POLICY_R1.md" "$PKG/docs/website/"
 cp "$ROOT/deploy/water-admin/owner-package/OWNER_README.md" "$PKG/OWNER_README.md"
