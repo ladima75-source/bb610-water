@@ -1,6 +1,6 @@
 # BB610 WATER — WEBSITE COMPLETION REGISTER
 
-Single operational register after R16 staging promotion. Contains unresolved items only.
+Single operational register after R17 WATER Admin v1. Contains unresolved items only.
 
 ## REQUIRED BEFORE PRODUCTION
 
@@ -19,7 +19,16 @@ Integration point: `docs/website/staging/data/assets.js` → `pulsNewTask`, `pul
 - [ ] F2-P × Z8(12): without HMI / with HMI.
 - [ ] F2-P × Z12(16): without HMI / with HMI.
 
-Integration point: `docs/website/staging/data/commercial.js` only. Until approved, UI remains `Ціна уточнюється`.
+Canonical integration point: `docs/website/staging/data/commercial.js` → `BB610_COMMERCIAL_CATALOG`. Until approved, rows remain `PRICE_ON_REQUEST` and public UI shows `Ціна уточнюється`.
+
+### WATER Admin production persistence + access control
+- [ ] Approved authenticated Admin access / authorization mechanism.
+- [ ] Server/API persistence for the `BB610_COMMERCIAL_CATALOG` schema; no browser-only/localStorage persistence.
+- [ ] Durable immutable price-history storage with authenticated actor identity.
+- [ ] Atomic/version-conflict-safe save plus rollback/backup path.
+- [ ] Public commercial-data serialization/cache refresh after an approved admin save.
+
+Current Admin v1 is isolated **REVIEW/EXPORT** at `docs/website/admin/review/v1/` and must not be exposed as an unauthenticated production admin.
 
 ## OPTIONAL POLISH
 
