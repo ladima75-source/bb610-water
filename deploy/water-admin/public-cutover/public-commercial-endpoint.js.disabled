@@ -1,0 +1,3 @@
+// FUTURE OWNER-APPROVED CUTOVER ONLY.
+// Do not load this file on live water.bb610.com.ua during TASK 20.
+window.BB610_PUBLIC_COMMERCIAL_ENDPOINT='https://api.water.bb610.com.ua/public/commercial';
