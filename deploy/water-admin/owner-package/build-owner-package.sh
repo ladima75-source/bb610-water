@@ -20,6 +20,7 @@ cp "$ROOT/deploy/water-admin/owner-package/install-or-update.sh" "$PKG/install-o
 printf '%s\n' "$SHA" > "$PKG/PACKAGE_COMMIT_SHA"
 chmod 0755 "$PKG/install-or-update.sh"
 chmod 0755 "$PKG/deploy/water-admin/owner-package/owner-runtime-acceptance.py"
+chmod 0755 "$PKG/deploy/water-admin/owner-package/bin/certbot"
 chmod 0755 "$PKG/deploy/water-admin/scripts/"*.sh
 
 (
