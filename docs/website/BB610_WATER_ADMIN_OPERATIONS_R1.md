@@ -1,73 +1,123 @@
 # BB610 WATER — ADMIN OPERATIONS R1
 
-- **Admin v1 mode:** REVIEW / EXPORT
-- **Admin path:** `docs/website/admin/review/v1/index.html`
-- **Canonical commercial source:** `docs/website/staging/data/commercial.js`
+- **Admin UX:** R17 PASS, preserved in R18
+- **Review Admin path:** `docs/website/admin/review/v2/`
+- **Server implementation:** `services/water-admin-api/`
+- **Persistence:** PostgreSQL + immutable versions/audit
+- **Live production WATER site:** unchanged
+
+## Login / logout
+
+1. Open the deployed/review Admin v2 URL.
+2. Sign in with your named account.
+3. Role is shown in the header/workspace.
+4. Use `Вийти` to revoke the current bearer session immediately.
+5. Tokens expire automatically according to server TTL.
+
+Repeated invalid login attempts are throttled server-side. No password or token is stored in repository/frontend source.
+
+## Roles
+
+- `viewer` — view catalog, versions and audit only;
+- `editor` — viewer + save draft versions;
+- `admin` — editor + publish, rollback and user creation.
 
 ## Change a price
 
-1. Open WATER Admin v1.
-2. Select the model on the left.
-3. Edit `Без HMI` and/or `З HMI` in the required zone row.
-4. Keep `APPROVED` only when both prices are approved numeric UAH values.
-5. Review the buyer preview and validation messages.
-6. Click `Зберегти зміни` to commit the change to the current review session and generate history entries.
-7. Export the canonical payload/change-set. In current REVIEW/EXPORT mode this export must be applied through the repository/server workflow; browser edits do not persist after reload.
+1. Select the model on the left.
+2. Edit `Без HMI` and/or `З HMI` in the required zone row.
+3. Keep `APPROVED` only when both prices are approved integer UAH values.
+4. Review Buyer preview.
+5. Click `Зберегти draft`.
+6. Server validates and creates a new immutable draft version.
+7. Public data does **not** change yet.
+
+If another operator saved first, stale save is rejected and Admin must refresh/review.
 
 ## Set `Ціна уточнюється`
 
-For the model/zone row change price state to `Ціна уточнюється` (`PRICE_ON_REQUEST`). Numeric base/HMI values are cleared in the review editor. Public output maps this state to `Ціна уточнюється`.
+Change the row state to `PRICE_ON_REQUEST` / `Ціна уточнюється`.
 
-Do not enter guessed prices. F1-P and F2-P are initially in this state for all zones.
+Numeric base/HMI values are cleared by the editor. Public output maps this state to `Ціна уточнюється`.
 
-## Hide / show a configuration
+Do not guess F1-P/F2-P prices.
 
-Toggle `Активна` on the model/zone row. The canonical contract exports row availability. When applied to staging data, the public dialogue configurator disables that unavailable model/zone path instead of showing a dead selection.
+## Hide / show
 
-Model-level active/hidden status is edited through `Редагувати модель`.
+Toggle `Активна` on the model×zone row.
 
-## HMI pricing
+Model-level visibility is in `Редагувати модель`.
 
-Each commercial row has two option prices:
-- `base` = without local HMI;
-- `hmi` = with local HMI.
+Hidden configuration remains in canonical history/data but public projection marks it unavailable. Dialogue configurator must not expose a dead selection path.
 
-The buyer preview has an HMI toggle. The public configurator uses the same two values. HMI lower than base produces a warning and requires explicit confirmation in Admin review mode.
+## HMI
+
+Each row has:
+- `base` — without local HMI;
+- `hmi` — with local HMI.
+
+HMI lower than base causes warning. Server requires explicit confirmation before draft save/publish proceeds.
 
 ## Buyer preview
 
-The preview uses the same model capabilities, zone description, UAH pricing state and HMI semantics as the public catalog contract. It is intended to catch commercial mistakes before export.
+Buyer preview uses the same model capabilities, zone semantics and price state as canonical data. It is for review before draft save/publish.
 
-## Price history
+## Save draft
 
-After `Зберегти зміни`, every base/HMI price or price-state change creates a history entry with model, zone, option, old/new value, old/new state, timestamp and actor. Select `Історія` on a zone row to review entries. Normal Admin UI does not edit history.
+`Зберегти draft` creates a new immutable catalog version.
 
-Current review actor is `review-admin`. Production must use authenticated user identity.
+Every changed price/state/availability/model/zone field receives an append-only server audit event with actor, role, timestamp, version and old/new data.
 
-## Unsaved changes
+Draft save alone never changes `/public/commercial`.
 
-The admin visibly marks unsaved edits. `Скасувати зміни` restores the last review-session save. Switching model with unsaved changes asks for confirmation. Browser navigation/reload also receives unsaved-change protection.
+## Publish diff and publish
 
-## How changes reach the public site now
+Admin role only.
 
-Current persistence mode is **REVIEW/EXPORT**, because the repository does not yet expose a safe authenticated write API for WATER Admin.
+1. Save the draft first.
+2. Click `Переглянути diff і опублікувати`.
+3. Admin requests server `publish-diff` comparing current published snapshot with latest draft.
+4. Review model/zone/field old → new changes.
+5. Confirm publish.
+6. Server checks that draft version has not changed since review.
+7. Server creates a new immutable **published** version.
+8. `/public/commercial` atomically switches to that published version.
 
-Workflow:
-1. edit + validate + preview in Admin;
-2. save inside the review session to generate history;
-3. export full canonical payload and/or change-set;
-4. authorized implementation step updates the canonical server/repository source;
-5. public staging reads the generated adapter from that same source.
+No repository/source edit is required for the commercial data change once production cutover is approved.
 
-Do not use localStorage as production persistence.
+## Price/history audit
 
-## Required before production Admin deployment
+Use `Історія` on a row or review the audit panel.
 
-- authenticated login/SSO or another approved project auth mechanism;
-- authorization limiting catalog/pricing writes;
-- server/API validation of the same schema;
-- durable catalog + immutable price-history storage;
-- authenticated actor in history;
-- atomic save/version conflict handling;
-- backup/rollback and audit access;
-- no secrets in frontend source.
+Normal Admin UI cannot edit/delete audit events.
+
+Events include PRICE_CHANGE, AVAILABILITY_CHANGE, MODEL_CHANGE, ZONE_CHANGE, DRAFT_SAVE, PUBLISH and ROLLBACK, each with authenticated actor/role/time.
+
+## Versions / rollback
+
+Admin role only.
+
+`Rollback + publish` does not overwrite an old version. It creates a new version copied from the selected historical snapshot and publishes the new version. The rollback itself is audited.
+
+## Server unavailable behavior
+
+Admin writes are unavailable when API is down; no browser-local write fallback is used.
+
+Public staging behavior is different: it tries the published API snapshot, then browser last-known-good published snapshot, then the accepted source-controlled seed fallback. It never invents/zeros prices.
+
+## Review environment
+
+1. Create private `.env` from `services/water-admin-api/.env.example`.
+2. Run `docker compose --env-file .env -f docker-compose.review.yml up --build` inside `services/water-admin-api/`.
+3. Check `http://localhost:8080/health`.
+4. From repository root run a static server on port 8000.
+5. Open `http://localhost:8000/docs/website/admin/review/v2/`.
+
+## Before production activation
+
+Follow:
+- `BB610_WATER_ADMIN_SERVER_ARCHITECTURE_R1.md`;
+- `BB610_WATER_ADMIN_DEPLOYMENT_R1.md`;
+- `BB610_WATER_ADMIN_BACKUP_RECOVERY_R1.md`.
+
+Production WATER public-site cutover remains a separate owner-approved gate.
