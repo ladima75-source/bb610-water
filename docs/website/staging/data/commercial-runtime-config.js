@@ -1,1 +1,0 @@
-window.BB610_PUBLIC_COMMERCIAL_ENDPOINT='http://localhost:8080/public/commercial';
