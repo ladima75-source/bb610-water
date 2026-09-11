@@ -85,6 +85,7 @@ jobs:
             if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health.json; then break; fi
             sleep 2
           done
+          test -s /tmp/r20-health.json
           cat /tmp/r20-health.json
           docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml ps
 
@@ -170,22 +171,31 @@ jobs:
             -v "/tmp/certs:/etc/letsencrypt/live:ro" \
             nginx:1.27-alpine nginx -t
 
-      - name: Verify API restart policy behavior
+      - name: Verify API crash restart policy behavior
         shell: bash
         run: |
           set -euo pipefail
           API_ID="$(docker compose --env-file /tmp/r20.env -f deploy/water-admin/docker-compose.production.yml ps -q api)"
-          docker kill "$API_ID"
-          for i in {1..30}; do
+          docker exec "$API_ID" sh -c 'kill -9 1' || true
+          rm -f /tmp/r20-health-after-restart.json
+          for i in {1..40}; do
             if curl -fsS http://127.0.0.1:18080/health >/tmp/r20-health-after-restart.json; then break; fi
             sleep 2
           done
+          test -s /tmp/r20-health-after-restart.json
+          RESTART_COUNT="$(docker inspect -f '{{.RestartCount}}' "$API_ID")"
+          test "$RESTART_COUNT" -ge 1
+          echo "restartCount=$RESTART_COUNT"
           cat /tmp/r20-health-after-restart.json
 
       - name: Final invariant and package boundary
         shell: bash
         run: |
           set -euo pipefail
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:18080/health >/dev/null; then break; fi
+            sleep 1
+          done
           curl -fsS http://127.0.0.1:18080/public/commercial >/tmp/r20-final-public.json
           python - <<'PY'
           import json
@@ -195,6 +205,7 @@ jobs:
           assert sum(r['priceState']=='APPROVED' for r in rows)==15
           assert sum(r['priceState']=='PRICE_ON_REQUEST' for r in rows)==6
           assert all(r['prices']=={'base':None,'hmi':None} for r in rows if r['modelId'] in ('F1-P','F2-P'))
+          assert not any(r['modelId'] in ('F1-PH','F2-PH') for r in rows)
           print('R20 final commercial invariant PASS')
           PY
           test -f deploy/water-admin/public-cutover/public-commercial-endpoint.js.disabled
