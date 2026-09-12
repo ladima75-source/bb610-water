@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
       - 'docs/website/staging/**'
       - '.github/scripts/r22-live-validation.mjs'
       - '.github/workflows/r22-live-validation.yml'
