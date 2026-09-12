@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const base='http://127.0.0.1:4173/';
+const base='http://127.0.0.1:4173/docs/website/staging/';
 const checks=[]; const pass=(name,detail='PASS')=>{checks.push({name,ok:true,detail}); console.log(`PASS: ${name} — ${detail}`)};
 const fail=(name,detail)=>{checks.push({name,ok:false,detail}); console.error(`FAIL: ${name} — ${detail}`)};
 const browser=await chromium.launch({headless:true});
