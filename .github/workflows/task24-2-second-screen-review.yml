@@ -1,4 +1,4 @@
-name: TASK 24.2.6 Second Screen Width Review
+name: TASK 24.2.7 Second Screen Centered Width Review
 on:
   push:
     branches: [review/task24-2-6-width-fit]
@@ -15,6 +15,6 @@ jobs:
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
       - name: Serve repository root
-        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/task24-2-6-http.log 2>&1 &
-      - name: Validate second screen width and fit
-        run: node .github/scripts/task24-2-second-screen-review.mjs
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/task24-2-7-http.log 2>&1 &
+      - name: Validate centered editorial width
+        run: node .github/scripts/task24-2-7-centered-width-review.mjs
