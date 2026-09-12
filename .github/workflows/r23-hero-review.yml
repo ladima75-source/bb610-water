@@ -1,7 +1,7 @@
 name: R23 Hero Review
 on:
   push:
-    branches: [review/r23-hero-header-correction, review/r23-1-hero-wordmark-fix, review/r23-2-hero-horizontal-logo]
+    branches: [review/r23-hero-header-correction, review/r23-1-hero-wordmark-fix, review/r23-2-hero-horizontal-logo, review/r23-3-hero-approved-horizontal-logo]
 permissions:
   contents: read
 jobs:
