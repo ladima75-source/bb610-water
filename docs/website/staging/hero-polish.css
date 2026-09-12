@@ -18,12 +18,8 @@
 .hero-title-lead{max-width:690px}
 .hero-title-promise{margin-top:14px;max-width:740px}
 .hero-promise-line{display:block;white-space:nowrap}
-/* Keep the logo inside the sentence but allow the following phrase to wrap as a unit when it no longer fits. */
 .hero-promise-brandline{white-space:normal}
 .hero-promise-copy{display:inline-block;white-space:nowrap}
-/* Measured from the approved 450×121 WEBP: blue BB letter body = y 40..78 (39 px),
-   horizontal visible wordmark ≈ x 38..431. The line box is therefore sized from the LETTERS,
-   while leaf/drop are allowed to extend optically outside without changing headline line-height. */
 .hero-inline-logo{display:inline-block;position:relative;overflow:visible;height:.72em;aspect-ratio:394/39;line-height:1;vertical-align:-.035em;margin-right:.18em}
 .hero-inline-logo img{position:absolute;display:block;width:114.213%;height:auto;max-width:none;left:-9.645%;top:-102.564%;object-fit:contain;pointer-events:none}
 .hero-lead{margin-top:24px}
