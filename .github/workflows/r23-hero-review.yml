@@ -1,7 +1,7 @@
 name: R23 Hero Review
 on:
   push:
-    branches: [review/r23-hero-polish]
+    branches: [review/r23-hero-header-correction]
 permissions:
   contents: read
 jobs:
