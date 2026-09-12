@@ -1,0 +1,20 @@
+name: TASK 24.2 Second Screen Review
+on:
+  push:
+    branches: [review/task24-2-product-description]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve repository root
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/task24-2-http.log 2>&1 &
+      - name: Validate second screen
+        run: node .github/scripts/task24-2-second-screen-review.mjs
