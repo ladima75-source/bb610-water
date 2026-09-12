@@ -1,0 +1,26 @@
+name: R22 Live WATER Validation
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/r22-live-validation.mjs'
+      - '.github/workflows/r22-live-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Allow Pages propagation
+        run: sleep 15
+      - name: Validate live water.bb610.com.ua
+        run: node .github/scripts/r22-live-validation.mjs
