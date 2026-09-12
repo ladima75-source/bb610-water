@@ -19,15 +19,16 @@ try{
     const title=q('#hero-title')?.getBoundingClientRect();
     const queue=q('.queue-shell')?.getBoundingClientRect();
     const groups=qa('#hero-title .hero-title-group').map(x=>x.getBoundingClientRect());
-    const mark=q('.hero-official-wordmark')?.getBoundingClientRect();
-    const markImg=q('.hero-official-wordmark img');
+    const mark=q('.hero-brand-wordmark'); const markRect=mark?.getBoundingClientRect();
     return {
       sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
       logoH:logo?.height||0,logoW:logo?.width||0,headerH:header?.height||0,
       heroBtnH:qa('.hero-actions .btn').map(x=>x.getBoundingClientRect().height),
       headerCtaH:q('.header-cta')?.getBoundingClientRect().height||0,
-      wordmarkH:mark?.height||0,wordmarkSrc:markImg?.currentSrc||markImg?.src||'',headerLogoSrc:q('.brand-asset img')?.currentSrc||q('.brand-asset img')?.src||'',
-      gap1:groups[0]&&mark?mark.top-groups[0].bottom:0,gap2:groups[1]&&mark?groups[1].top-mark.bottom:0,
+      markText:mark?.textContent?.replace(/\s+/g,' ').trim()||'',markW:markRect?.width||0,markH:markRect?.height||0,
+      markImgCount:mark?.querySelectorAll('img').length||0,markWhiteSpace:mark?getComputedStyle(mark).whiteSpace:'',
+      bbColor:q('.hero-brand-bb')?getComputedStyle(q('.hero-brand-bb')).color:'',n610Color:q('.hero-brand-610')?getComputedStyle(q('.hero-brand-610')).color:'',waterColor:q('.hero-brand-water')?getComputedStyle(q('.hero-brand-water')).color:'',
+      gap1:groups[0]&&markRect?markRect.top-groups[0].bottom:0,gap2:groups[1]&&markRect?groups[1].top-markRect.bottom:0,
       queueAlign:title&&queue?Math.abs(queue.top-title.top):999,
       blocks:document.querySelectorAll('#hero-blocks .irrig-block').length,
       heroBg:getComputedStyle(q('.hero')).backgroundImage
@@ -45,7 +46,8 @@ try{
     metrics.logoW>=110&&metrics.logoH>=50?pass('mobile official logo size',`${metrics.logoW.toFixed(1)}×${metrics.logoH.toFixed(1)}`):fail('mobile official logo size',`${metrics.logoW}×${metrics.logoH}`);
     metrics.heroBtnH.length===2&&metrics.heroBtnH.every(h=>h>=60)?pass('mobile HERO CTA size',metrics.heroBtnH.join(',')):fail('mobile HERO CTA size',metrics.heroBtnH.join(','));
   }
-  metrics.wordmarkH>0&&metrics.wordmarkSrc===metrics.headerLogoSrc?pass(`${label} HERO uses official WATER asset`,metrics.wordmarkSrc):fail(`${label} HERO uses official WATER asset`,`${metrics.wordmarkSrc} / ${metrics.headerLogoSrc}`);
+  metrics.markText==='BB610WATER'&&metrics.markImgCount===0&&metrics.markWhiteSpace==='nowrap'?pass(`${label} inline HERO brand wordmark`,`${metrics.markText} ${metrics.markW.toFixed(1)}×${metrics.markH.toFixed(1)}`):fail(`${label} inline HERO brand wordmark`,`${metrics.markText} img=${metrics.markImgCount} ws=${metrics.markWhiteSpace}`);
+  metrics.bbColor!==metrics.n610Color&&metrics.n610Color!==metrics.waterColor?pass(`${label} brand color separation`,`${metrics.bbColor} / ${metrics.n610Color} / ${metrics.waterColor}`):fail(`${label} brand color separation`,`${metrics.bbColor} / ${metrics.n610Color} / ${metrics.waterColor}`);
   metrics.blocks>=3?pass(`${label} HERO demo card mass`,`${metrics.blocks} blocks`):fail(`${label} HERO demo card mass`,`${metrics.blocks} blocks`);
   /radial-gradient/.test(metrics.heroBg)?pass(`${label} HERO atmosphere`,'CSS radial gradients active'):fail(`${label} HERO atmosphere`,metrics.heroBg);
   consoleErrors.length?fail(`${label} console`,consoleErrors.join(' | ')):pass(`${label} console`,'none');
@@ -55,4 +57,4 @@ try{
  }
 } finally { await browser.close(); }
 if(checks.some(x=>!x.ok)) process.exit(1);
-console.log('R23 HERO / HEADER CORRECTION PASS');
+console.log('R23.1 HERO BRAND WORDMARK FIX PASS');
