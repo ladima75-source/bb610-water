@@ -1,0 +1,171 @@
+{
+  "base": "http://127.0.0.1:4173/docs/website/staging/",
+  "results": [
+    {
+      "name": "desktop console errors",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "desktop JS errors",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "desktop broken HTTP resources",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "desktop broken images",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "navigation anchors",
+      "status": "PASS",
+      "detail": "all targets present"
+    },
+    {
+      "name": "commercial 7 models × 3 zones",
+      "status": "PASS",
+      "detail": "{\"rows\":21,\"por\":6,\"models\":7,\"zones\":3}"
+    },
+    {
+      "name": "commercial PRICE_ON_REQUEST rows",
+      "status": "PASS",
+      "detail": "count=6"
+    },
+    {
+      "name": "rendered commercial matrix",
+      "status": "PASS",
+      "detail": "{\"rows\":7,\"cols\":4,\"por\":6}"
+    },
+    {
+      "name": "configurator F1-P selection",
+      "status": "PASS",
+      "detail": "BB610 WATER F1-P / Z8(12)"
+    },
+    {
+      "name": "F1-P price on request",
+      "status": "PASS",
+      "detail": "Ціна за запитом"
+    },
+    {
+      "name": "F1-P CTA",
+      "status": "PASS",
+      "detail": "Запросити ціну"
+    },
+    {
+      "name": "configurator F2-P selection",
+      "status": "PASS",
+      "detail": "BB610 WATER F2-P / Z8(12)"
+    },
+    {
+      "name": "F2-P price on request",
+      "status": "PASS",
+      "detail": "Ціна за запитом"
+    },
+    {
+      "name": "PULS graceful review state",
+      "status": "PASS",
+      "detail": "no null/broken placeholder language"
+    },
+    {
+      "name": "public runtime has no localhost/dev endpoint",
+      "status": "PASS",
+      "detail": "clean"
+    },
+    {
+      "name": "no page overflow 1024px",
+      "status": "PASS",
+      "detail": "1024/1024"
+    },
+    {
+      "name": "console errors 1024px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "JS errors 1024px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "no page overflow 768px",
+      "status": "PASS",
+      "detail": "768/768"
+    },
+    {
+      "name": "console errors 768px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "JS errors 768px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "mobile menu 768px",
+      "status": "PASS",
+      "detail": "opens"
+    },
+    {
+      "name": "mobile menu closes 768px",
+      "status": "PASS",
+      "detail": "closes after navigation"
+    },
+    {
+      "name": "no page overflow 390px",
+      "status": "PASS",
+      "detail": "390/390"
+    },
+    {
+      "name": "console errors 390px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "JS errors 390px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "mobile menu 390px",
+      "status": "PASS",
+      "detail": "opens"
+    },
+    {
+      "name": "mobile menu closes 390px",
+      "status": "PASS",
+      "detail": "closes after navigation"
+    },
+    {
+      "name": "no page overflow 360px",
+      "status": "PASS",
+      "detail": "360/360"
+    },
+    {
+      "name": "console errors 360px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "JS errors 360px",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "name": "mobile menu 360px",
+      "status": "PASS",
+      "detail": "opens"
+    },
+    {
+      "name": "mobile menu closes 360px",
+      "status": "PASS",
+      "detail": "closes after navigation"
+    }
+  ],
+  "failures": []
+}
