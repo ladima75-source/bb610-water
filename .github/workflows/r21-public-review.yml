@@ -1,0 +1,72 @@
+name: R21 Public Website Review
+
+on:
+  push:
+    branches:
+      - review/r21-public-website-completion
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rendered-review:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r21 screenshots]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout review branch
+        uses: actions/checkout@v4
+        with:
+          ref: review/r21-public-website-completion
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static staging server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/r21-http.log 2>&1 &
+          echo $! > /tmp/r21-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/docs/website/staging/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/r21-http.log
+          exit 1
+
+      - name: Render and validate staging
+        env:
+          R21_BASE_URL: http://127.0.0.1:4173/docs/website/staging/
+        run: node .github/scripts/r21-public-review.mjs
+
+      - name: Upload review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: R21_PUBLIC_WEBSITE_REVIEW
+          path: |
+            docs/website/review/r21/screenshots
+            docs/website/review/r21/VALIDATION.md
+            docs/website/review/r21/validation.json
+          if-no-files-found: warn
+
+      - name: Commit review screenshots and validation
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/website/review/r21
+          if git diff --cached --quiet; then
+            echo "Review evidence already current"
+            exit 0
+          fi
+          git commit -m "R21 add rendered review evidence [r21 screenshots]"
+          git push origin HEAD:review/r21-public-website-completion
