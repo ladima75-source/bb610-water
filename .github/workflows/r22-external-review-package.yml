@@ -1,0 +1,53 @@
+name: R22 External Review Package
+
+on:
+  push:
+    branches:
+      - review/r22-external-review-staging
+    paths:
+      - 'docs/website/staging/**'
+      - 'docs/website/review/**'
+      - 'assets/extracted/**'
+      - 'deploy/water-public-review/**'
+      - '.github/workflows/r22-external-review-package.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact review commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build owner review package
+        run: |
+          bash deploy/water-public-review/build-review-package.sh "$RUNNER_TEMP/r22-public-review"
+      - name: Package self-check
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/r22-public-review"
+          sha256sum -c SHA256SUMS
+          test -s site-root.tar.gz
+          tar -tzf site-root.tar.gz | grep -qx 'docs/website/staging/index.html'
+          tar -tzf site-root.tar.gz | grep -qx 'docs/website/staging/styles.css'
+          tar -tzf site-root.tar.gz | grep -qx 'docs/website/staging/app.js'
+          tar -tzf site-root.tar.gz | grep -qx 'docs/website/staging/data/commercial.js'
+          tar -tzf site-root.tar.gz | grep -qx 'assets/extracted/02_ae24f7eff9c5.webp'
+          if tar -xOzf site-root.tar.gz docs/website/staging/data/commercial.js | grep -Ei 'localhost|127\.0\.0\.1'; then
+            echo 'Forbidden dev endpoint in packaged public commercial runtime' >&2
+            exit 1
+          fi
+          bash -n install-or-update-review.sh
+          grep -q 'review.water.bb610.com.ua' install-or-update-review.sh
+          grep -q '173.242.53.156' install-or-update-review.sh
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: BB610_WATER_R22_EXTERNAL_REVIEW_PACKAGE
+          path: ${{ runner.temp }}/r22-public-review/
+          if-no-files-found: error
+          retention-days: 30
