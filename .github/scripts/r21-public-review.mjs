@@ -1,6 +1,5 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
-import path from 'node:path';
 
 const base = process.env.R21_BASE_URL || 'http://127.0.0.1:4173/docs/website/staging/';
 const out = 'docs/website/review/r21/screenshots';
@@ -13,7 +12,7 @@ const assert=(cond,name,detail='')=>cond?pass(name,detail||'PASS'):fail(name,det
 
 const browser=await chromium.launch({headless:true});
 async function open(viewport){
-  const context=await browser.newContext({viewportSize:viewport,deviceScaleFactor:1});
+  const context=await browser.newContext({viewport,deviceScaleFactor:1});
   const page=await context.newPage();
   const consoleErrors=[]; const pageErrors=[]; const badResponses=[];
   page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
