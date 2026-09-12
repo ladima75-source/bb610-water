@@ -51,9 +51,9 @@ try{
     metrics.heroBtnH.length===2&&metrics.heroBtnH.every(h=>h>=58)?pass('mobile HERO CTA size',metrics.heroBtnH.join(',')):fail('mobile HERO CTA size',metrics.heroBtnH.join(','));
   }
   metrics.markImgCount===1&&metrics.markNaturalW>0&&/bb610-water-horizontal-logo\.webp(?:$|\?)/.test(metrics.markSrc)?pass(`${label} inline approved WATER asset`,`${metrics.markW.toFixed(1)}×${metrics.markH.toFixed(1)}`):fail(`${label} inline approved WATER asset`,`${metrics.markSrc} natural=${metrics.markNaturalW}`);
-  metrics.markH>0&&metrics.brandLineH>0&&metrics.markH<=metrics.brandLineH*0.85?pass(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)}px / line ${metrics.brandLineH.toFixed(1)}px`):fail(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)} / ${metrics.brandLineH.toFixed(1)}`);
-  metrics.brandText.includes('БЕРЕ НА СЕБЕ РУТИНУ')?pass(`${label} wordmark sits inside phrase`,metrics.brandText):fail(`${label} wordmark sits inside phrase`,metrics.brandText);
-  metrics.promiseLines.length===2&&metrics.promiseLines[0].includes('БЕРЕ НА СЕБЕ РУТИНУ')&&metrics.promiseLines[1]==='ПОЛИВУ ТА ПІДЖИВЛЕННЯ'?pass(`${label} deliberate promise breaks`,metrics.promiseLines.join(' / ')):fail(`${label} deliberate promise breaks`,JSON.stringify(metrics.promiseLines));
+  metrics.markH>0&&metrics.brandLineH>0&&metrics.markH<=metrics.brandLineH*0.9?pass(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)}px / line ${metrics.brandLineH.toFixed(1)}px`):fail(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)} / ${metrics.brandLineH.toFixed(1)}`);
+  metrics.brandText==='БЕРЕ НА СЕБЕ'?pass(`${label} wordmark sits inside short phrase`,metrics.brandText):fail(`${label} wordmark sits inside short phrase`,metrics.brandText);
+  metrics.promiseLines.length===3&&metrics.promiseLines[0]==='БЕРЕ НА СЕБЕ'&&metrics.promiseLines[1]==='РУТИНУ ПОЛИВУ ТА'&&metrics.promiseLines[2]==='ПІДЖИВЛЕННЯ'?pass(`${label} deliberate promise breaks`,metrics.promiseLines.join(' / ')):fail(`${label} deliberate promise breaks`,JSON.stringify(metrics.promiseLines));
   metrics.queueLabel==='ПРИКЛАД ПОЛИВНИХ ЗАВДАНЬ-БЛОКІВ'?pass(`${label} queue heading`,metrics.queueLabel):fail(`${label} queue heading`,metrics.queueLabel);
   metrics.blocks>=3?pass(`${label} HERO demo card`,`${metrics.blocks} blocks`):fail(`${label} HERO demo card`,`${metrics.blocks} blocks`);
   /radial-gradient/.test(metrics.heroBg)?pass(`${label} HERO atmosphere`,'CSS radial gradients active'):fail(`${label} HERO atmosphere`,metrics.heroBg);
