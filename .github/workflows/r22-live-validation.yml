@@ -23,7 +23,7 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
       - name: Allow Pages propagation
-        run: sleep 15
+        run: sleep 50
       - name: Validate live water.bb610.com.ua
         run: node .github/scripts/r22-live-validation.mjs
       - name: Upload TASK 23 live screenshots
