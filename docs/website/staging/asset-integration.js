@@ -1,1 +1,1 @@
-(()=>{const base=document.createElement('script');base.src='asset-integration-base.js';base.async=false;document.head.appendChild(base);const task=document.createElement('script');task.src='task24-3-product-modules.js';task.async=false;document.head.appendChild(task)})();
+(()=>{const x=new XMLHttpRequest();x.open('GET','asset-integration-base.js',false);x.send(null);if(x.status>=200&&x.status<300)(0,eval)(x.responseText);const task=document.createElement('script');task.src='task24-3-product-modules.js';task.async=false;document.head.appendChild(task)})();
