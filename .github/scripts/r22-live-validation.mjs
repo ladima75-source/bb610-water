@@ -38,6 +38,9 @@ assert(hero.queue==='ПРИКЛАД ПОЛИВНИХ ЗАВДАНЬ-БЛОКІВ
 assert(hero.inlineLogo>0,'TASK 23 inline WATER logo live',String(hero.inlineLogo));
 assert(hero.heroBottom<=835,'TASK 23 desktop hero compactness',`${hero.heroBottom.toFixed(1)}px`);
 assert(hero.promise.length===3,'TASK 23 promise structure live',hero.promise.join(' / '));
+const overflow=await p.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
+assert(overflow[0]<=overflow[1]+1,'desktop overflow',overflow.join('/'));
+await p.screenshot({path:'artifacts/task23/live-desktop-1440.png',fullPage:false});
 const catalog=await p.evaluate(()=>({rows:window.BB610_COMMERCIAL_CATALOG?.rows?.length,por:window.BB610_COMMERCIAL_CATALOG?.rows?.filter(r=>r.priceState==='PRICE_ON_REQUEST').length,models:window.R121_COMMERCIAL?.versions?.length,zones:window.R121_COMMERCIAL?.zones?.length}));
 assert(catalog.rows===21&&catalog.por===6&&catalog.models===7&&catalog.zones===3,'commercial fallback 21/15/6',JSON.stringify(catalog));
 await p.locator('[data-ec="0"]').click();
@@ -45,9 +48,6 @@ assert((await p.locator('#config-code').textContent()).includes('F1-P'),'F1-P co
 assert((await p.locator('#config-price').textContent()).includes('Ціна за запитом'),'F1-P PRICE_ON_REQUEST live',await p.locator('#config-price').textContent());
 const runtime=await p.evaluate(async()=>Promise.all(['/app.js','/data/commercial.js','/data/content.js'].map(x=>fetch(`${x}?task23=${Date.now()}`).then(r=>r.text()))).then(x=>x.join('\n')));
 assert(!/localhost|127\.0\.0\.1/i.test(runtime),'no localhost/dev endpoints','clean');
-const overflow=await p.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
-assert(overflow[0]<=overflow[1]+1,'desktop overflow',overflow.join('/'));
-await p.screenshot({path:'artifacts/task23/live-desktop-1440.png',fullPage:false});
 await desktop.context.close();
 
 const laptop=await open(1280,800); const l=laptop.page;
