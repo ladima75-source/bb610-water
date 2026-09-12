@@ -1,4 +1,4 @@
-/* TASK 24.2.7 — CENTERED EDITORIAL WIDTH / VIEWPORT FIT. Scope: #workday only. */
+/* TASK 24.2.8 — JUSTIFIED EDITORIAL TEXT. Scope: #workday only. */
 #workday.product-description{padding:36px 0 40px;background:linear-gradient(180deg,rgba(9,22,28,.985),rgba(10,25,31,.985));}
 #workday.product-description .product-desc-shell{display:block;width:min(1200px,calc(100vw - 96px))!important;max-width:none!important;margin-left:auto!important;margin-right:auto!important;}
 #workday.product-description .product-desc-heading{margin:0 0 18px;}
@@ -11,7 +11,7 @@
 #workday.product-description .product-desc-intro p,
 #workday.product-description .product-desc-column p,
 #workday.product-description .product-desc-emphasis p,
-#workday.product-description .product-desc-close{margin:0;color:var(--text-2);font-size:16px;line-height:1.44;font-weight:400;}
+#workday.product-description .product-desc-close{width:100%;max-width:none;margin:0;color:var(--text-2);font-size:16px;line-height:1.44;font-weight:400;text-align:justify;text-align-last:left;text-justify:inter-word;hyphens:auto;overflow-wrap:normal;}
 #workday.product-description .product-desc-intro p+p,
 #workday.product-description .product-desc-column p+p{margin-top:8px;}
 #workday.product-description .product-desc-columns{margin-top:8px;}
@@ -40,7 +40,7 @@
   #workday.product-description .product-desc-intro p,
   #workday.product-description .product-desc-column p,
   #workday.product-description .product-desc-emphasis p,
-  #workday.product-description .product-desc-close{font-size:15px;line-height:1.58;}
+  #workday.product-description .product-desc-close{font-size:15px;line-height:1.58;text-align:left;text-align-last:auto;hyphens:manual;overflow-wrap:anywhere;}
   #workday.product-description .product-desc-intro p+p,
   #workday.product-description .product-desc-column p+p{margin-top:13px;}
   #workday.product-description .product-desc-columns{margin-top:13px;}
