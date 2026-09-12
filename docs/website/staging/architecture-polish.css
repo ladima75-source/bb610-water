@@ -1,13 +1,45 @@
-/* Architecture screen refinement. HERO + workday are frozen. */
-#architecture .section-head{align-items:start}
-#architecture .arch-items{align-items:stretch}
-#architecture .arch-items article{display:grid;grid-template-rows:96px auto;align-content:start;height:100%}
-#architecture .arch-items article>div:first-child{min-height:0;display:grid;align-content:start;gap:8px}
-#architecture .arch-items article>div:first-child span{max-width:100%;line-height:1.45}
-#architecture .module-media{display:grid;grid-template-rows:280px 32px;gap:10px;margin:18px 0 0;min-width:0}
-#architecture .module-media img{width:100%;height:280px;aspect-ratio:auto;object-fit:contain;padding:14px}
-#architecture .module-media figcaption{display:flex;align-items:center;min-width:0;margin:0;padding:0;font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#architecture .architecture-note{margin-top:28px}
-@media(max-width:1180px){#architecture .arch-items article{grid-template-rows:104px auto}#architecture .module-media{grid-template-rows:250px 32px}#architecture .module-media img{height:250px}}
-@media(max-width:1024px){#architecture .arch-items article{grid-template-rows:auto auto}#architecture .module-media{grid-template-rows:220px auto}#architecture .module-media img{height:220px}#architecture .module-media figcaption{white-space:normal;overflow:visible;text-overflow:clip;min-height:32px}}
-@media(max-width:600px){#architecture .module-media{grid-template-rows:auto auto}#architecture .module-media img{height:auto;aspect-ratio:4/3}#architecture .module-media figcaption{min-height:0}}
+/* TASK 24.3 — THIRD SCREEN / PRODUCT MODULES. Scope: #architecture only. */
+#architecture{padding:76px 0 82px;background:var(--bg-2);}
+#architecture .architecture24-shell{width:min(1200px,calc(100% - 80px));margin-inline:auto;}
+#architecture .architecture24-head{max-width:980px;margin-bottom:38px;}
+#architecture .architecture24-head h2{max-width:980px;margin:0;font-size:clamp(40px,3.5vw,52px);line-height:1.04;letter-spacing:-.022em;}
+#architecture .architecture24-subhead{margin:14px 0 0;color:#eef9fc;font-size:clamp(20px,1.8vw,25px);line-height:1.3;font-weight:600;}
+#architecture .architecture24-intro{max-width:920px;margin:15px 0 0;color:var(--text-2);font-size:16px;line-height:1.58;}
+#architecture .architecture24-modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:start;}
+#architecture .architecture24-module{min-width:0;}
+#architecture .architecture24-module figure{margin:0 0 18px;}
+#architecture .architecture24-module img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f5f5f4;border:1px solid rgba(190,220,230,.18);border-radius:10px;}
+#architecture .architecture24-module figcaption{margin-top:8px;color:var(--text-3);font-size:11px;line-height:1.35;}
+#architecture .architecture24-module .architecture24-code{display:block;margin-bottom:8px;color:var(--water);font-size:12px;font-weight:800;letter-spacing:.12em;}
+#architecture .architecture24-module h3{margin:0;color:var(--text-1);font-size:20px;line-height:1.25;}
+#architecture .architecture24-module p{margin:10px 0 0;color:var(--text-2);font-size:15px;line-height:1.58;}
+#architecture .architecture24-software{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:38px;padding-top:24px;border-top:1px solid var(--line);}
+#architecture .architecture24-software p{margin:0;color:var(--text-2);font-size:16px;line-height:1.55;}
+#architecture .architecture24-software strong{color:#fff;}
+#architecture .architecture24-summary{margin:26px 0 0;color:#eef9fc;font-size:18px;line-height:1.45;font-weight:600;}
+#architecture .architecture24-boundary{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line);}
+#architecture .architecture24-boundary p{margin:0;color:var(--text-2);font-size:14px;line-height:1.55;}
+#architecture .architecture24-boundary strong{color:var(--text-1);}
+@media(max-width:1024px){
+  #architecture{padding:68px 0 74px;}
+  #architecture .architecture24-shell{width:min(100% - 56px,1200px);}
+  #architecture .architecture24-modules{gap:20px;}
+  #architecture .architecture24-module h3{font-size:18px;}
+  #architecture .architecture24-module p{font-size:14px;}
+}
+@media(max-width:720px){
+  #architecture{padding:54px 0 60px;}
+  #architecture .architecture24-shell{width:calc(100% - 40px);}
+  #architecture .architecture24-head{margin-bottom:30px;}
+  #architecture .architecture24-head h2{font-size:clamp(34px,9vw,42px);line-height:1.04;}
+  #architecture .architecture24-subhead{font-size:19px;}
+  #architecture .architecture24-intro{font-size:15px;line-height:1.58;}
+  #architecture .architecture24-modules{grid-template-columns:1fr;gap:34px;}
+  #architecture .architecture24-module figure{margin-bottom:16px;}
+  #architecture .architecture24-module img{aspect-ratio:4/3;}
+  #architecture .architecture24-module h3{font-size:20px;}
+  #architecture .architecture24-module p{font-size:15px;}
+  #architecture .architecture24-software,#architecture .architecture24-boundary{grid-template-columns:1fr;gap:14px;}
+  #architecture .architecture24-software{margin-top:34px;}
+  #architecture .architecture24-summary{font-size:17px;}
+}
