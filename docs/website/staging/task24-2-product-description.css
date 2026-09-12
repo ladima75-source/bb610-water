@@ -1,39 +1,47 @@
-/* TASK 24.2.2 — SECOND SCREEN COMPOSITION CORRECTION. Scope: #workday only. */
-#workday.product-description{padding:54px 0 58px;background:linear-gradient(180deg,rgba(9,22,28,.985),rgba(10,25,31,.985));}
-#workday.product-description .product-desc-shell{display:block;max-width:1180px}
-#workday.product-description .product-desc-heading{max-width:900px;margin-bottom:20px}
-#workday.product-description .eyebrow{margin:0 0 9px;color:var(--water);letter-spacing:.08em}
-#workday.product-description h2{margin:0;max-width:840px;font-size:clamp(38px,4vw,58px);line-height:.98;letter-spacing:-.025em}
-#workday.product-description .product-desc-intro{max-width:960px;margin-bottom:26px}
-#workday.product-description .product-desc-intro p{margin:0;color:var(--text-2);font-size:16px;line-height:1.56}
-#workday.product-description .product-desc-intro p+p{margin-top:10px}
-#workday.product-description .product-desc-lead strong{color:#f4fbfd;font-size:19px;line-height:1.4;font-weight:800}
-#workday.product-description .product-desc-intro strong,#workday.product-description .product-desc-column strong{color:#eef9fc;font-weight:750}
-#workday.product-description .product-desc-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:52px;align-items:start}
-#workday.product-description .product-desc-column{min-width:0}
-#workday.product-description .product-desc-column p{margin:0;color:var(--text-2);font-size:15px;line-height:1.52}
-#workday.product-description .product-desc-column p+p{margin-top:11px}
-#workday.product-description .product-name{color:#fff;font-weight:850;letter-spacing:.015em}
-#workday.product-description .product-desc-emphasis{margin-top:28px;padding:20px 24px 20px 26px;border-left:3px solid var(--water);background:linear-gradient(90deg,rgba(34,199,238,.10),rgba(34,199,238,.025) 58%,rgba(34,199,238,0));}
-#workday.product-description .product-desc-emphasis strong{display:block;color:#fff;font-size:clamp(25px,2.35vw,36px);line-height:1.04;letter-spacing:-.02em}
-#workday.product-description .product-desc-emphasis p{margin:9px 0 0;max-width:980px;color:var(--text-2);font-size:15px;line-height:1.5;font-weight:600}
-#workday.product-description .product-desc-close{margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);color:#f2fbfd;font-size:17px;font-weight:820;line-height:1.35}
+/* TASK 24.2.3 — EDITORIAL / BOOK PAGE LAYOUT. Scope: #workday only. */
+#workday.product-description{padding:64px 0 72px;background:linear-gradient(180deg,rgba(9,22,28,.985),rgba(10,25,31,.985));}
+#workday.product-description .product-desc-shell{display:block;max-width:860px;margin-inline:auto;}
+#workday.product-description .product-desc-heading{margin:0 0 28px;}
+#workday.product-description .eyebrow{display:none;}
+#workday.product-description h2{margin:0;max-width:860px;font-size:clamp(40px,3.6vw,54px);line-height:1.02;letter-spacing:-.025em;}
+#workday.product-description .product-desc-intro,
+#workday.product-description .product-desc-columns,
+#workday.product-description .product-desc-column{display:block;max-width:860px;margin:0;}
+#workday.product-description .product-desc-column-right{margin-top:16px;}
+#workday.product-description .product-desc-intro p,
+#workday.product-description .product-desc-column p,
+#workday.product-description .product-desc-emphasis p,
+#workday.product-description .product-desc-close{margin:0;color:var(--text-2);font-size:17px;line-height:1.68;font-weight:400;}
+#workday.product-description .product-desc-intro p+p,
+#workday.product-description .product-desc-column p+p{margin-top:16px;}
+#workday.product-description .product-desc-columns{margin-top:16px;}
+#workday.product-description .product-desc-lead strong{font-size:19px;line-height:1.55;font-weight:800;color:#f4fbfd;}
+#workday.product-description strong{color:#eef9fc;font-weight:750;}
+#workday.product-description .product-name{color:#fff;font-weight:850;letter-spacing:.01em;}
+#workday.product-description .product-desc-emphasis{margin:20px 0 0;padding:0;border:0;background:none;}
+#workday.product-description .product-desc-emphasis strong{display:inline;color:#eef9fc;font-size:17px;line-height:1.68;letter-spacing:0;font-weight:800;}
+#workday.product-description .product-desc-emphasis p{display:inline;margin:0 0 0 .35em;}
+#workday.product-description .product-desc-close{margin-top:20px;padding:0;border:0;color:#eef9fc;font-weight:800;}
 @media(max-width:980px){
-  #workday.product-description{padding:50px 0 54px}
-  #workday.product-description .product-desc-columns{gap:34px}
+  #workday.product-description{padding:56px 0 62px;}
+  #workday.product-description .product-desc-shell{max-width:820px;}
 }
 @media(max-width:720px){
-  #workday.product-description{padding:42px 0 46px}
-  #workday.product-description .product-desc-heading{margin-bottom:18px}
-  #workday.product-description h2{font-size:clamp(34px,9.3vw,44px)}
-  #workday.product-description .product-desc-intro{margin-bottom:22px}
-  #workday.product-description .product-desc-intro p{font-size:15px;line-height:1.58}
-  #workday.product-description .product-desc-lead strong{font-size:18px;line-height:1.4}
-  #workday.product-description .product-desc-columns{grid-template-columns:1fr;gap:18px}
-  #workday.product-description .product-desc-column p{font-size:15px;line-height:1.58}
-  #workday.product-description .product-desc-column p+p{margin-top:12px}
-  #workday.product-description .product-desc-emphasis{margin-top:24px;padding:18px 0 18px 19px}
-  #workday.product-description .product-desc-emphasis strong{font-size:clamp(24px,7.1vw,31px)}
-  #workday.product-description .product-desc-emphasis p{font-size:14px;line-height:1.5;padding-right:8px}
-  #workday.product-description .product-desc-close{margin-top:21px;padding-top:17px;font-size:16px}
+  #workday.product-description{padding:44px 0 50px;}
+  #workday.product-description .product-desc-shell{max-width:none;}
+  #workday.product-description .product-desc-heading{margin-bottom:23px;}
+  #workday.product-description h2{font-size:clamp(34px,9.3vw,44px);line-height:1.03;}
+  #workday.product-description .product-desc-intro p,
+  #workday.product-description .product-desc-column p,
+  #workday.product-description .product-desc-emphasis p,
+  #workday.product-description .product-desc-close{font-size:15px;line-height:1.63;}
+  #workday.product-description .product-desc-lead strong{font-size:17px;line-height:1.5;}
+  #workday.product-description .product-desc-intro p+p,
+  #workday.product-description .product-desc-column p+p{margin-top:14px;}
+  #workday.product-description .product-desc-columns{margin-top:14px;}
+  #workday.product-description .product-desc-column-right{margin-top:14px;}
+  #workday.product-description .product-desc-emphasis{margin-top:18px;}
+  #workday.product-description .product-desc-emphasis strong{font-size:15px;line-height:1.63;}
+  #workday.product-description .product-desc-emphasis p{font-size:15px;line-height:1.63;}
+  #workday.product-description .product-desc-close{margin-top:18px;}
 }
