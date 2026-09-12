@@ -35,8 +35,8 @@ const hero=await p.evaluate(()=>({
 }));
 assert(hero.queue==='ПРИКЛАД ПОЛИВНИХ ЗАВДАНЬ-БЛОКІВ','TASK 23 queue title live',hero.queue);
 assert(hero.inlineLogo>0,'TASK 23 inline WATER logo live',String(hero.inlineLogo));
-assert(hero.brandText.includes('БЕРЕ НА СЕБЕ РУТИНУ'),'TASK 23 logo is inside headline phrase',hero.brandText);
-assert(hero.promise.length===2,'TASK 23 promise structure live',hero.promise.join(' / '));
+assert(hero.brandText==='БЕРЕ НА СЕБЕ','TASK 23 logo is inside short headline phrase',hero.brandText);
+assert(hero.promise.length===3&&hero.promise[0]==='БЕРЕ НА СЕБЕ'&&hero.promise[1]==='РУТИНУ ПОЛИВУ ТА'&&hero.promise[2]==='ПІДЖИВЛЕННЯ','TASK 23 promise structure live',hero.promise.join(' / '));
 assert(hero.heroBottom>=895&&hero.heroBottom<=905,'TASK 23 desktop HERO fills viewport',`${hero.heroBottom.toFixed(1)}px`);
 assert(hero.nextTop>=895,'TASK 23 next section below fold',`${hero.nextTop.toFixed(1)}px`);
 const overflow=await p.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
