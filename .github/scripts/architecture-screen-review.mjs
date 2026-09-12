@@ -22,8 +22,8 @@ for (const [name,width,height] of cases){
     const eyebrow=section?.querySelector('.eyebrow')?.textContent?.trim()||'';
     const note=document.querySelector('#arch-zone-note')?.textContent?.trim()||'';
     const cards=[...document.querySelectorAll('#arch-items article')];
-    const imgs=cards.map(c=>c.querySelector('.module-media img')?.getBoundingClientRect()).filter(Boolean).map(r=>({top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}));
-    const caps=cards.map(c=>c.querySelector('.module-media figcaption')?.getBoundingClientRect()).filter(Boolean).map(r=>({top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}));
+    const imgs=cards.map(c=>c.querySelector('.module-media img')?.getBoundingClientRect()).filter(Boolean).map(r=>({top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height,width:r.width}));
+    const caps=cards.map(c=>c.querySelector('.module-media figcaption')?.getBoundingClientRect()).filter(Boolean).map(r=>({top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height,width:r.width}));
     const body=document.documentElement;
     return {eyebrow,note,count:cards.length,imgs,caps,overflow:body.scrollWidth-body.clientWidth};
   });
@@ -31,11 +31,12 @@ for (const [name,width,height] of cases){
   check(data.note.includes('до 16 логічних зон')&&!data.note.includes('36'),`${name} 16-zone note`,data.note);
   check(data.count===3,`${name} architecture cards`,String(data.count));
   if(width>1024){
-    const tops=data.imgs.map(x=>x.top), bottoms=data.imgs.map(x=>x.bottom), capTops=data.caps.map(x=>x.top), capRights=data.caps.map(x=>x.right);
+    const tops=data.imgs.map(x=>x.top), bottoms=data.imgs.map(x=>x.bottom), capTops=data.caps.map(x=>x.top);
+    const edgeDiffs=data.caps.map((c,i)=>({left:Math.abs(c.left-data.imgs[i].left),right:Math.abs(c.right-data.imgs[i].right)}));
     check(Math.max(...tops)-Math.min(...tops)<=2,`${name} media top alignment`,tops.map(x=>x.toFixed(1)).join('/'));
     check(Math.max(...bottoms)-Math.min(...bottoms)<=2,`${name} media bottom alignment`,bottoms.map(x=>x.toFixed(1)).join('/'));
     check(Math.max(...capTops)-Math.min(...capTops)<=2,`${name} caption line alignment`,capTops.map(x=>x.toFixed(1)).join('/'));
-    check(Math.max(...capRights)-Math.min(...capRights)<=2,`${name} caption right-edge alignment`,capRights.map(x=>x.toFixed(1)).join('/'));
+    check(edgeDiffs.every(x=>x.left<=1&&x.right<=1),`${name} caption/media edge alignment`,edgeDiffs.map(x=>`${x.left.toFixed(1)}/${x.right.toFixed(1)}`).join(' | '));
   }
   check(data.overflow<=1,`${name} no horizontal overflow`,String(data.overflow));
   check(consoleErrors.length===0,`${name} console`,consoleErrors.join(' | '));
