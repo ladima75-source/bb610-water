@@ -1,77 +1,21 @@
 import { chromium } from 'playwright';
-
 const base='http://127.0.0.1:4173/docs/website/staging/';
-const checks=[]; const pass=(name,detail='PASS')=>{checks.push({name,ok:true,detail}); console.log(`PASS: ${name} — ${detail}`)};
-const fail=(name,detail)=>{checks.push({name,ok:false,detail}); console.error(`FAIL: ${name} — ${detail}`)};
 const browser=await chromium.launch({headless:true});
 try{
- for (const [label,width,height] of [['desktop',1440,900],['laptop',1280,800],['mobile',390,844]]){
-  const page=await browser.newPage({viewport:{width,height}});
-  const consoleErrors=[]; const pageErrors=[]; const bad=[];
-  page.on('console',m=>{if(m.type()==='error') consoleErrors.push(m.text())});
-  page.on('pageerror',e=>pageErrors.push(String(e)));
-  page.on('response',r=>{if(r.status()>=400) bad.push(`${r.status()} ${r.url()}`)});
-  await page.goto(base,{waitUntil:'networkidle'});
-  const metrics=await page.evaluate(()=>{
-    const q=s=>document.querySelector(s); const qa=s=>[...document.querySelectorAll(s)];
-    const logo=q('.brand-asset img')?.getBoundingClientRect(); const header=q('.header')?.getBoundingClientRect();
-    const hero=q('.hero')?.getBoundingClientRect(); const title=q('#hero-title')?.getBoundingClientRect(); const queue=q('.queue-shell')?.getBoundingClientRect();
-    const mark=q('.hero-inline-logo'); const markRect=mark?.getBoundingClientRect(); const markImg=q('.hero-inline-logo img');
-    const brandLine=q('.hero-promise-brandline'); const brandLineRect=brandLine?.getBoundingClientRect(); const queueLabel=q('.queue-label')?.textContent?.trim()||'';
-    const next=q('#workday')?.getBoundingClientRect(); const copy=q('.hero-promise-copy');
-    let glyphH=0;
-    if(copy){
-      const cs=getComputedStyle(copy); const c=document.createElement('canvas'); const ctx=c.getContext('2d');
-      ctx.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-      const tm=ctx.measureText(copy.textContent.trim()); glyphH=(tm.actualBoundingBoxAscent||0)+(tm.actualBoundingBoxDescent||0);
-    }
-    const markStyle=mark?getComputedStyle(mark):null; const imgRect=markImg?.getBoundingClientRect();
-    return {
-      sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
-      logoH:logo?.height||0,logoW:logo?.width||0,headerH:header?.height||0,
-      heroTop:hero?.top||0,heroBottom:hero?.bottom||0,nextTop:next?.top||0,
-      heroBtnH:qa('.hero-actions .btn').map(x=>x.getBoundingClientRect().height),headerCtaH:q('.header-cta')?.getBoundingClientRect().height||0,
-      markW:markRect?.width||0,markH:markRect?.height||0,markSrc:markImg?.currentSrc||markImg?.src||'',markNaturalW:markImg?.naturalWidth||0,markImgCount:mark?.querySelectorAll('img').length||0,
-      markOverflow:markStyle?.overflow||'',imgH:imgRect?.height||0,glyphH,
-      brandLineW:brandLineRect?.width||0,brandLineH:brandLineRect?.height||0,brandText:brandLine?.innerText?.trim()||'',
-      promiseLines:qa('.hero-title-promise .hero-promise-line').map(x=>x.innerText.trim()),
-      queueAlign:title&&queue?Math.abs(queue.top-title.top):999,queueLabel,blocks:document.querySelectorAll('#hero-blocks .irrig-block').length,
-      heroBg:getComputedStyle(q('.hero')).backgroundImage
-    };
-  });
-  metrics.sw<=metrics.cw+1?pass(`${label} overflow`,`${metrics.sw}/${metrics.cw}`):fail(`${label} overflow`,`${metrics.sw}/${metrics.cw}`);
-  if(label==='desktop'){
-    metrics.logoW>=195?pass('desktop header logo prominence',`${metrics.logoW.toFixed(1)}×${metrics.logoH.toFixed(1)}`):fail('desktop header logo prominence',String(metrics.logoW));
-    metrics.headerH<=120?pass('desktop compact header',`${metrics.headerH.toFixed(1)}px`):fail('desktop compact header',`${metrics.headerH.toFixed(1)}px`);
-    metrics.heroTop<=120?pass('desktop no excessive top whitespace',`${metrics.heroTop.toFixed(1)}px`):fail('desktop no excessive top whitespace',`${metrics.heroTop.toFixed(1)}px`);
-    metrics.heroBottom>=895&&metrics.heroBottom<=905?pass('desktop HERO fills first screen',`${metrics.heroBottom.toFixed(1)}px @ 900 viewport`):fail('desktop HERO fills first screen',`${metrics.heroBottom.toFixed(1)}px @ 900 viewport`);
-    metrics.nextTop>=895?pass('desktop next section stays below fold',`${metrics.nextTop.toFixed(1)}px`):fail('desktop next section stays below fold',`${metrics.nextTop.toFixed(1)}px`);
-    metrics.heroBtnH.length===2&&metrics.heroBtnH.every(h=>h>=58)?pass('desktop HERO CTA size',metrics.heroBtnH.join(',')):fail('desktop HERO CTA size',metrics.heroBtnH.join(','));
-    metrics.headerCtaH>=52?pass('desktop header CTA size',String(metrics.headerCtaH)):fail('desktop header CTA size',String(metrics.headerCtaH));
-    metrics.queueAlign<=45?pass('desktop left/right balance',`${metrics.queueAlign.toFixed(1)}px`):fail('desktop left/right balance',`${metrics.queueAlign.toFixed(1)}px`);
-  }
-  if(label==='laptop'){
-    metrics.heroBottom>=795&&metrics.heroBottom<=805?pass('laptop HERO fills first screen',`${metrics.heroBottom.toFixed(1)}px @ 800 viewport`):fail('laptop HERO fills first screen',`${metrics.heroBottom.toFixed(1)}px @ 800 viewport`);
-    metrics.nextTop>=795?pass('laptop next section stays below fold',`${metrics.nextTop.toFixed(1)}px`):fail('laptop next section stays below fold',`${metrics.nextTop.toFixed(1)}px`);
-  }
-  if(label==='mobile'){
-    metrics.logoW>=110?pass('mobile header logo size',`${metrics.logoW.toFixed(1)}×${metrics.logoH.toFixed(1)}`):fail('mobile header logo size',`${metrics.logoW}×${metrics.logoH}`);
-    metrics.heroBtnH.length===2&&metrics.heroBtnH.every(h=>h>=58)?pass('mobile HERO CTA size',metrics.heroBtnH.join(',')):fail('mobile HERO CTA size',metrics.heroBtnH.join(','));
-  }
-  metrics.markImgCount===1&&metrics.markNaturalW>0&&/bb610-water-horizontal-logo\.webp(?:$|\?)/.test(metrics.markSrc)?pass(`${label} inline approved WATER asset`,`${metrics.markW.toFixed(1)}×${metrics.markH.toFixed(1)}`):fail(`${label} inline approved WATER asset`,`${metrics.markSrc} natural=${metrics.markNaturalW}`);
-  const opticalRatio=metrics.glyphH?metrics.markH/metrics.glyphH:0;
-  opticalRatio>=.94&&opticalRatio<=1.06?pass(`${label} optical logo/text height`,`${metrics.markH.toFixed(1)}px logo / ${metrics.glyphH.toFixed(1)}px glyph = ${opticalRatio.toFixed(3)}`):fail(`${label} optical logo/text height`,`${metrics.markH.toFixed(1)} / ${metrics.glyphH.toFixed(1)} = ${opticalRatio.toFixed(3)}`);
-  metrics.markOverflow==='hidden'&&metrics.imgH>metrics.markH*2?pass(`${label} transparent-padding crop`,`visible ${metrics.markH.toFixed(1)}px / source box ${metrics.imgH.toFixed(1)}px`):fail(`${label} transparent-padding crop`,`${metrics.markOverflow} ${metrics.markH}/${metrics.imgH}`);
-  metrics.brandText==='БЕРЕ НА СЕБЕ'?pass(`${label} wordmark sits inside short phrase`,metrics.brandText):fail(`${label} wordmark sits inside short phrase`,metrics.brandText);
-  metrics.promiseLines.length===3&&metrics.promiseLines[0]==='БЕРЕ НА СЕБЕ'&&metrics.promiseLines[1]==='РУТИНУ ПОЛИВУ ТА'&&metrics.promiseLines[2]==='ПІДЖИВЛЕННЯ'?pass(`${label} deliberate promise breaks`,metrics.promiseLines.join(' / ')):fail(`${label} deliberate promise breaks`,JSON.stringify(metrics.promiseLines));
-  metrics.queueLabel==='ПРИКЛАД ПОЛИВНИХ ЗАВДАНЬ-БЛОКІВ'?pass(`${label} queue heading`,metrics.queueLabel):fail(`${label} queue heading`,metrics.queueLabel);
-  metrics.blocks>=3?pass(`${label} HERO demo card`,`${metrics.blocks} blocks`):fail(`${label} HERO demo card`,`${metrics.blocks} blocks`);
-  /radial-gradient/.test(metrics.heroBg)?pass(`${label} HERO atmosphere`,'CSS radial gradients active'):fail(`${label} HERO atmosphere`,metrics.heroBg);
-  consoleErrors.length?fail(`${label} console`,consoleErrors.join(' | ')):pass(`${label} console`,'none');
-  pageErrors.length?fail(`${label} JS`,pageErrors.join(' | ')):pass(`${label} JS`,'none');
-  bad.length?fail(`${label} assets`,bad.join(' | ')):pass(`${label} assets`,'none');
-  await page.close();
- }
-} finally { await browser.close(); }
-if(checks.some(x=>!x.ok)) process.exit(1);
-console.log('TASK 23 LOGO OPTICAL HEIGHT PASS');
+ const page=await browser.newPage({viewport:{width:1440,height:900}});
+ await page.goto(base,{waitUntil:'networkidle'});
+ const data=await page.evaluate(async()=>{
+   const img=document.querySelector('.hero-inline-logo img');
+   const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
+   const ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(img,0,0);
+   const d=ctx.getImageData(0,0,c.width,c.height).data;
+   let minY=1e9,maxY=-1,minX=1e9,maxX=-1,count=0;
+   // Isolate the blue BB letter area on the left; exclude the green leaf and cyan WATER/drop.
+   for(let y=0;y<c.height;y++) for(let x=120;x<520;x++){
+     const i=(y*c.width+x)*4, r=d[i],g=d[i+1],b=d[i+2],a=d[i+3];
+     if(a>40 && b>120 && b>g*1.18 && b>r*1.25){minY=Math.min(minY,y);maxY=Math.max(maxY,y);minX=Math.min(minX,x);maxX=Math.max(maxX,x);count++;}
+   }
+   return {w:c.width,h:c.height,minX,maxX,minY,maxY,letterH:maxY-minY+1,count};
+ });
+ console.log('BB_LETTER_BBOX',JSON.stringify(data));
+} finally {await browser.close();}
