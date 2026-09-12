@@ -1,7 +1,7 @@
 name: HOW IT WORKS Screen 4 Review
 on:
   push:
-    branches: [review/how-it-works-screen-4-refine]
+    branches: [review/how-it-works-screen-4-refine, review/screen4-flow-images-fix]
 permissions:
   contents: read
 jobs:
