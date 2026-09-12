@@ -18,13 +18,21 @@ try{
     const hero=q('.hero')?.getBoundingClientRect(); const title=q('#hero-title')?.getBoundingClientRect(); const queue=q('.queue-shell')?.getBoundingClientRect();
     const mark=q('.hero-inline-logo'); const markRect=mark?.getBoundingClientRect(); const markImg=q('.hero-inline-logo img');
     const brandLine=q('.hero-promise-brandline'); const brandLineRect=brandLine?.getBoundingClientRect(); const queueLabel=q('.queue-label')?.textContent?.trim()||'';
-    const next=q('#workday')?.getBoundingClientRect();
+    const next=q('#workday')?.getBoundingClientRect(); const copy=q('.hero-promise-copy');
+    let glyphH=0;
+    if(copy){
+      const cs=getComputedStyle(copy); const c=document.createElement('canvas'); const ctx=c.getContext('2d');
+      ctx.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const tm=ctx.measureText(copy.textContent.trim()); glyphH=(tm.actualBoundingBoxAscent||0)+(tm.actualBoundingBoxDescent||0);
+    }
+    const markStyle=mark?getComputedStyle(mark):null; const imgRect=markImg?.getBoundingClientRect();
     return {
       sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
       logoH:logo?.height||0,logoW:logo?.width||0,headerH:header?.height||0,
       heroTop:hero?.top||0,heroBottom:hero?.bottom||0,nextTop:next?.top||0,
       heroBtnH:qa('.hero-actions .btn').map(x=>x.getBoundingClientRect().height),headerCtaH:q('.header-cta')?.getBoundingClientRect().height||0,
       markW:markRect?.width||0,markH:markRect?.height||0,markSrc:markImg?.currentSrc||markImg?.src||'',markNaturalW:markImg?.naturalWidth||0,markImgCount:mark?.querySelectorAll('img').length||0,
+      markOverflow:markStyle?.overflow||'',imgH:imgRect?.height||0,glyphH,
       brandLineW:brandLineRect?.width||0,brandLineH:brandLineRect?.height||0,brandText:brandLine?.innerText?.trim()||'',
       promiseLines:qa('.hero-title-promise .hero-promise-line').map(x=>x.innerText.trim()),
       queueAlign:title&&queue?Math.abs(queue.top-title.top):999,queueLabel,blocks:document.querySelectorAll('#hero-blocks .irrig-block').length,
@@ -51,7 +59,9 @@ try{
     metrics.heroBtnH.length===2&&metrics.heroBtnH.every(h=>h>=58)?pass('mobile HERO CTA size',metrics.heroBtnH.join(',')):fail('mobile HERO CTA size',metrics.heroBtnH.join(','));
   }
   metrics.markImgCount===1&&metrics.markNaturalW>0&&/bb610-water-horizontal-logo\.webp(?:$|\?)/.test(metrics.markSrc)?pass(`${label} inline approved WATER asset`,`${metrics.markW.toFixed(1)}×${metrics.markH.toFixed(1)}`):fail(`${label} inline approved WATER asset`,`${metrics.markSrc} natural=${metrics.markNaturalW}`);
-  metrics.markH>0&&metrics.brandLineH>0&&metrics.markH<=metrics.brandLineH*0.9?pass(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)}px / line ${metrics.brandLineH.toFixed(1)}px`):fail(`${label} wordmark matches headline line`,`${metrics.markH.toFixed(1)} / ${metrics.brandLineH.toFixed(1)}`);
+  const opticalRatio=metrics.glyphH?metrics.markH/metrics.glyphH:0;
+  opticalRatio>=.94&&opticalRatio<=1.06?pass(`${label} optical logo/text height`,`${metrics.markH.toFixed(1)}px logo / ${metrics.glyphH.toFixed(1)}px glyph = ${opticalRatio.toFixed(3)}`):fail(`${label} optical logo/text height`,`${metrics.markH.toFixed(1)} / ${metrics.glyphH.toFixed(1)} = ${opticalRatio.toFixed(3)}`);
+  metrics.markOverflow==='hidden'&&metrics.imgH>metrics.markH*2?pass(`${label} transparent-padding crop`,`visible ${metrics.markH.toFixed(1)}px / source box ${metrics.imgH.toFixed(1)}px`):fail(`${label} transparent-padding crop`,`${metrics.markOverflow} ${metrics.markH}/${metrics.imgH}`);
   metrics.brandText==='БЕРЕ НА СЕБЕ'?pass(`${label} wordmark sits inside short phrase`,metrics.brandText):fail(`${label} wordmark sits inside short phrase`,metrics.brandText);
   metrics.promiseLines.length===3&&metrics.promiseLines[0]==='БЕРЕ НА СЕБЕ'&&metrics.promiseLines[1]==='РУТИНУ ПОЛИВУ ТА'&&metrics.promiseLines[2]==='ПІДЖИВЛЕННЯ'?pass(`${label} deliberate promise breaks`,metrics.promiseLines.join(' / ')):fail(`${label} deliberate promise breaks`,JSON.stringify(metrics.promiseLines));
   metrics.queueLabel==='ПРИКЛАД ПОЛИВНИХ ЗАВДАНЬ-БЛОКІВ'?pass(`${label} queue heading`,metrics.queueLabel):fail(`${label} queue heading`,metrics.queueLabel);
@@ -64,4 +74,4 @@ try{
  }
 } finally { await browser.close(); }
 if(checks.some(x=>!x.ok)) process.exit(1);
-console.log('TASK 23 R2 HERO INLINE FIX PASS');
+console.log('TASK 23 LOGO OPTICAL HEIGHT PASS');
