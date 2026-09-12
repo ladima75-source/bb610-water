@@ -1,0 +1,8 @@
+/* TASK 24.1 — PRODUCT IDENTIFICATION / HERO COPY. HERO only. */
+.hero-product-id{margin:0 0 18px;max-width:760px}
+.hero-product-id strong{display:block;color:var(--text);font-size:18px;line-height:1.32;font-weight:800;letter-spacing:.01em}
+.hero-product-id span{display:block;margin-top:4px;color:var(--text-2);font-size:15px;line-height:1.42;font-weight:500}
+@media(min-width:1025px) and (max-height:900px){.hero-product-id{margin-bottom:14px}.hero-product-id strong{font-size:17px}.hero-product-id span{font-size:14px}}
+@media(min-width:1025px) and (max-height:820px){.hero-product-id{margin-bottom:11px}.hero-product-id strong{font-size:16px}.hero-product-id span{font-size:13px}}
+@media(max-width:820px){.hero-product-id{margin-bottom:14px}.hero-product-id strong{font-size:16px}.hero-product-id span{font-size:14px}}
+@media(max-width:600px){.hero-product-id{margin-bottom:12px}.hero-product-id strong{font-size:15px;line-height:1.35}.hero-product-id span{font-size:13px;line-height:1.4}}
