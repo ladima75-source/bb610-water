@@ -75,11 +75,11 @@
       </div>
       <div class="architecture2431-software" aria-label="Програмне керування BB610 WATER">
         <article class="architecture2431-soft">
-          <div class="architecture2431-soft-logo"><img src="assets/bb610-puls-horizontal.webp" alt="BB610 PULS" loading="eager" decoding="async"></div>
+          <div class="architecture2431-soft-logo"><img src="assets/bb610-puls-horizontal.svg" alt="BB610 PULS" loading="eager" decoding="async"></div>
           <p>Windows — налаштування та контроль у реальному часі.</p>
         </article>
         <article class="architecture2431-soft">
-          <div class="architecture2431-soft-logo"><img src="assets/bb610-puls-mobile-horizontal.webp" alt="BB610 PULS MOBILE" loading="eager" decoding="async"></div>
+          <div class="architecture2431-soft-logo"><img src="assets/bb610-puls-mobile-horizontal.svg" alt="BB610 PULS MOBILE" loading="eager" decoding="async"></div>
           <p>Mobile — керування з будь-якого місця.</p>
         </article>
       </div>
