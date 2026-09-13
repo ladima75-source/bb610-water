@@ -4,43 +4,44 @@
     const s=document.createElement('style');
     s.id='task24-3-1-style';
     s.textContent=`
-#architecture{padding:26px 0 24px!important}
-#architecture .architecture2431-shell{width:min(1180px,calc(100% - 40px));margin:0 auto;display:grid;gap:12px}
-.architecture2431-head{text-align:center;display:grid;gap:6px;margin:0 auto 2px}
+#architecture{padding:22px 0 20px!important}
+#architecture .architecture2431-shell{width:min(1180px,calc(100% - 40px));margin:0 auto;display:grid;gap:11px}
+.architecture2431-head{text-align:center;display:grid;gap:5px;margin:0 auto 2px}
 .architecture2431-head h2{margin:0;font-size:clamp(30px,2.5vw,40px);line-height:1.04;letter-spacing:-.025em}
 .architecture2431-subhead{margin:0;color:var(--text-2);font-size:18px;line-height:1.3}
 .architecture2431-modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.architecture2431-module{min-width:0;padding:12px 14px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg-3);text-align:center;display:grid;grid-template-rows:176px auto auto;gap:7px;align-items:center}
-.architecture2431-media{height:176px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:10px;background:#eef2f3}
-.architecture2431-media img{display:block;width:100%;height:100%;object-fit:contain;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
-.architecture2431-module[data-module="CONTROL"] .architecture2431-media img{transform:scale(1.06)}
-.architecture2431-module[data-module="HYDRAULIC"] .architecture2431-media img{transform:scale(1.24)}
-.architecture2431-module[data-module="ZONE"] .architecture2431-media img{transform:scale(1.27)}
+.architecture2431-module{min-width:0;padding:11px 14px 13px;border:1px solid var(--line);border-radius:14px;background:var(--bg-3);text-align:center;display:grid;grid-template-rows:176px auto auto;gap:7px;align-items:center}
+.architecture2431-media{height:176px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:10px;background:#d9e0e2}
+.architecture2431-media img{display:block;width:auto;height:auto;object-fit:contain;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;image-rendering:auto}
+.architecture2431-module[data-module="CONTROL"] .architecture2431-media img{max-width:240px;max-height:160px}
+.architecture2431-module[data-module="HYDRAULIC"] .architecture2431-media img,
+.architecture2431-module[data-module="ZONE"] .architecture2431-media img{width:120px;height:90px;max-width:120px;max-height:90px;transform:none!important}
 .architecture2431-module h3{margin:0;font-size:19px;line-height:1.1;letter-spacing:.045em}
 .architecture2431-module p{margin:0 auto;max-width:330px;color:var(--text-2);font-size:14px;line-height:1.32}
 .architecture2431-software{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.architecture2431-soft{min-width:0;padding:8px 16px 10px;border:1px solid var(--line);border-radius:14px;background:var(--bg-3);text-align:center;display:grid;gap:2px;justify-items:center}
-.architecture2431-soft-logo{height:78px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.architecture2431-soft-logo img{display:block;height:68px;width:auto;max-width:94%;object-fit:contain}
-.architecture2431-soft p{margin:0;color:var(--text-2);font-size:13px;line-height:1.32}
-.architecture2431-boundary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg-1)}
-.architecture2431-boundary p{margin:0;color:var(--text-2);font-size:12.5px;line-height:1.35}
+.architecture2431-soft{min-width:0;padding:6px 16px 9px;border:1px solid var(--line);border-radius:14px;background:var(--bg-3);text-align:center;display:grid;gap:1px;justify-items:center}
+.architecture2431-soft-logo{height:94px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.architecture2431-soft-logo img{display:block;height:88px;width:auto;max-width:92%;object-fit:contain}
+.architecture2431-soft p{margin:0;color:var(--text-2);font-size:13.5px;line-height:1.3}
+.architecture2431-boundary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;padding:12px 15px;border:1px solid var(--line);border-radius:12px;background:var(--bg-1)}
+.architecture2431-boundary p{margin:0;color:var(--text-2);font-size:14px;line-height:1.38}
 .architecture2431-boundary strong{color:var(--text-1)}
 @media(max-width:900px){
-  #architecture{padding:34px 0 30px!important}
+  #architecture{padding:30px 0 28px!important}
   #architecture .architecture2431-shell{width:min(calc(100% - 28px),620px);gap:14px}
   .architecture2431-head{gap:8px}
   .architecture2431-head h2{font-size:clamp(28px,9vw,38px)}
   .architecture2431-subhead{font-size:16px}
   .architecture2431-modules,.architecture2431-software,.architecture2431-boundary{grid-template-columns:1fr}
-  .architecture2431-module{grid-template-rows:210px auto auto;padding:12px 12px 15px}
-  .architecture2431-media{height:210px}
-  .architecture2431-module[data-module="CONTROL"] .architecture2431-media img{transform:scale(1.06)}
-  .architecture2431-module[data-module="HYDRAULIC"] .architecture2431-media img{transform:scale(1.16)}
-  .architecture2431-module[data-module="ZONE"] .architecture2431-media img{transform:scale(1.18)}
-  .architecture2431-soft-logo{height:80px}
-  .architecture2431-soft-logo img{height:auto;max-height:70px;max-width:100%}
-  .architecture2431-boundary{gap:7px}
+  .architecture2431-module{grid-template-rows:178px auto auto;padding:12px 12px 15px}
+  .architecture2431-media{height:178px}
+  .architecture2431-module[data-module="CONTROL"] .architecture2431-media img{max-width:240px;max-height:158px}
+  .architecture2431-module[data-module="HYDRAULIC"] .architecture2431-media img,
+  .architecture2431-module[data-module="ZONE"] .architecture2431-media img{width:120px;height:90px;max-width:120px;max-height:90px}
+  .architecture2431-soft-logo{height:84px}
+  .architecture2431-soft-logo img{height:78px;max-width:96%}
+  .architecture2431-boundary{gap:8px;padding:12px 14px}
+  .architecture2431-boundary p{font-size:13.5px}
 }
 `;
     document.head.appendChild(s);
