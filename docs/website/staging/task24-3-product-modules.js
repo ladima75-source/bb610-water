@@ -1,49 +1,64 @@
 (()=>{
   const injectStyles=()=>{
-    if(document.getElementById('task24-3-3-style'))return;
+    if(document.getElementById('task24-3-4-style')) return;
     const s=document.createElement('style');
-    s.id='task24-3-3-style';
+    s.id='task24-3-4-style';
     s.textContent=`
-#architecture{padding:20px 0 18px!important}
-#architecture .architecture2433-shell{width:min(1180px,calc(100% - 40px));margin:0 auto;display:grid;gap:12px}
-.architecture2433-head{text-align:center;display:grid;gap:5px;margin:0 auto 2px}
-.architecture2433-head h2{margin:0;font-size:clamp(30px,2.5vw,40px);line-height:1.04;letter-spacing:-.025em}
-.architecture2433-subhead{margin:0;color:var(--text-2);font-size:18px;line-height:1.3}
-.architecture2433-modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;align-items:start}
-.architecture2433-module{min-width:0;text-align:center;display:grid;grid-template-rows:168px auto auto;gap:7px;align-items:center;padding:0 6px;background:transparent;border:0;border-radius:0}
-.architecture2433-media{height:168px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent;border:0;border-radius:0;padding:0}
-.architecture2433-media img{display:block;width:auto;height:auto;object-fit:contain;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;image-rendering:auto;transform-origin:center center}
-.architecture2433-module[data-module="CONTROL"] .architecture2433-media img{width:218px;max-width:92%;max-height:160px}
-.architecture2433-module[data-module="HYDRAULIC"] .architecture2433-media img{width:186px;max-width:88%;height:auto;clip-path:inset(5% 5% 5% 5%);transform:scale(1.12)}
-.architecture2433-module[data-module="ZONE"] .architecture2433-media img{width:190px;max-width:88%;height:auto;clip-path:inset(5% 5% 5% 5%);transform:scale(1.12)}
-.architecture2433-module h3{margin:0;font-size:19px;line-height:1.08;letter-spacing:.045em}
-.architecture2433-module p{margin:0 auto;max-width:330px;color:var(--text-2);font-size:14px;line-height:1.3}
-.architecture2433-software{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:34px;align-items:end;padding:3px 36px 0}
-.architecture2433-soft{min-width:0;text-align:center;display:grid;gap:4px;justify-items:center;background:transparent;border:0;padding:0}
-.architecture2433-soft-logo{height:58px;width:100%;display:flex;align-items:center;justify-content:center;overflow:visible}
-.architecture2433-soft-logo img{display:block;height:54px;width:auto;max-width:92%;object-fit:contain;background:transparent!important;border:0!important;box-shadow:none!important}
-.architecture2433-soft p{margin:0;color:var(--text-2);font-size:13.5px;line-height:1.3}
-.architecture2433-boundary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px;padding:10px 0 0;border-top:1px solid var(--line);background:transparent}
-.architecture2433-boundary p{margin:0;color:var(--text-2);font-size:14px;line-height:1.38}
-.architecture2433-boundary strong{color:var(--text-1)}
-@media(max-width:900px){
-  #architecture{padding:28px 0 26px!important}
-  #architecture .architecture2433-shell{width:min(calc(100% - 28px),620px);gap:16px}
-  .architecture2433-head{gap:8px}
-  .architecture2433-head h2{font-size:clamp(28px,9vw,38px)}
-  .architecture2433-subhead{font-size:16px}
-  .architecture2433-modules,.architecture2433-software,.architecture2433-boundary{grid-template-columns:1fr}
-  .architecture2433-modules{gap:18px}
-  .architecture2433-module{grid-template-rows:172px auto auto;padding:0}
-  .architecture2433-media{height:172px}
-  .architecture2433-module[data-module="CONTROL"] .architecture2433-media img{width:220px;max-width:88%;max-height:162px}
-  .architecture2433-module[data-module="HYDRAULIC"] .architecture2433-media img{width:188px;max-width:80%;transform:scale(1.1)}
-  .architecture2433-module[data-module="ZONE"] .architecture2433-media img{width:192px;max-width:80%;transform:scale(1.1)}
-  .architecture2433-software{gap:14px;padding:2px 0 0}
-  .architecture2433-soft-logo{height:56px}
-  .architecture2433-soft-logo img{height:50px;max-width:96%}
-  .architecture2433-boundary{gap:8px;padding-top:10px}
-  .architecture2433-boundary p{font-size:13.5px}
+#architecture{padding:22px 0 18px!important}
+#architecture .architecture2434-shell{width:min(1280px,calc(100% - 40px));margin:0 auto;display:grid;gap:14px}
+.architecture2434-hero{display:grid;grid-template-columns:minmax(360px,0.92fr) minmax(520px,1.28fr);gap:28px;align-items:center;min-height:430px}
+.architecture2434-copy{display:grid;gap:16px;align-self:center;max-width:510px}
+.architecture2434-head{display:grid;gap:8px}
+.architecture2434-head h2{margin:0;font-size:clamp(32px,2.8vw,48px);line-height:1.02;letter-spacing:-.03em}
+.architecture2434-subhead{margin:0;color:var(--text-2);font-size:19px;line-height:1.32;max-width:500px}
+.architecture2434-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.architecture2434-list li{margin:0;color:var(--text-2);font-size:16px;line-height:1.38}
+.architecture2434-list strong{color:var(--text-1);font-size:17px}
+.architecture2434-visual{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center}
+.architecture2434-stage{position:relative;width:100%;max-width:700px;height:100%;min-height:420px}
+.architecture2434-module{position:absolute;display:block;pointer-events:none;filter:drop-shadow(0 12px 28px rgba(0,0,0,.34))}
+.architecture2434-module img{display:block;width:100%;height:auto;object-fit:contain;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}
+.architecture2434-module--control{width:46%;left:2%;top:18%;z-index:3}
+.architecture2434-module--hydraulic{width:39%;left:38%;top:12%;z-index:2}
+.architecture2434-module--zone{width:39%;left:57%;top:31%;z-index:1}
+.architecture2434-module--hydraulic img,.architecture2434-module--zone img{mix-blend-mode:multiply}
+.architecture2434-software{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start;padding-top:2px}
+.architecture2434-soft{display:grid;gap:6px;justify-items:start;min-width:0}
+.architecture2434-soft--right{justify-items:end;text-align:right}
+.architecture2434-soft-logo{height:56px;display:flex;align-items:flex-end;max-width:100%}
+.architecture2434-soft-logo img{display:block;height:52px;width:auto;max-width:100%;object-fit:contain}
+.architecture2434-soft p{margin:0;color:var(--text-2);font-size:13px;line-height:1.35}
+.architecture2434-boundary{padding-top:2px}
+.architecture2434-boundary p{margin:0;color:var(--text-2);font-size:13.5px;line-height:1.35}
+.architecture2434-boundary strong{color:var(--text-1)}
+@media (max-width:1100px){
+  #architecture .architecture2434-shell{width:min(calc(100% - 32px),1080px)}
+  .architecture2434-hero{grid-template-columns:minmax(320px,.94fr) minmax(440px,1.1fr);gap:24px;min-height:400px}
+  .architecture2434-visual,.architecture2434-stage{min-height:390px}
+  .architecture2434-module--control{width:45%;left:1%;top:19%}
+  .architecture2434-module--hydraulic{width:38%;left:39%;top:13%}
+  .architecture2434-module--zone{width:38%;left:59%;top:31%}
+}
+@media (max-width:900px){
+  #architecture{padding:30px 0 26px!important}
+  #architecture .architecture2434-shell{width:min(calc(100% - 28px),620px);gap:18px}
+  .architecture2434-hero{grid-template-columns:1fr;gap:18px;min-height:auto}
+  .architecture2434-copy{max-width:none;gap:14px}
+  .architecture2434-head{gap:10px}
+  .architecture2434-head h2{font-size:clamp(30px,9vw,40px)}
+  .architecture2434-subhead{font-size:17px;max-width:none}
+  .architecture2434-list li{font-size:15px}
+  .architecture2434-list strong{font-size:16px}
+  .architecture2434-visual{min-height:320px}
+  .architecture2434-stage{min-height:320px;max-width:540px;margin:0 auto}
+  .architecture2434-module--control{width:47%;left:0;top:17%}
+  .architecture2434-module--hydraulic{width:39%;left:38%;top:12%}
+  .architecture2434-module--zone{width:39%;left:58%;top:30%}
+  .architecture2434-software{grid-template-columns:1fr;gap:14px;padding-top:0}
+  .architecture2434-soft,.architecture2434-soft--right{justify-items:center;text-align:center}
+  .architecture2434-soft-logo{justify-content:center;height:52px}
+  .architecture2434-soft-logo img{height:46px}
+  .architecture2434-boundary p{text-align:center;font-size:13.5px}
 }
 `;
     document.head.appendChild(s);
@@ -51,48 +66,53 @@
 
   const render=()=>{
     const section=document.querySelector('#architecture');
-    if(!section)return;
+    if(!section) return;
     injectStyles();
-    section.setAttribute('aria-labelledby','architecture2433-title');
-    section.innerHTML=`<div class="architecture2433-shell">
-      <header class="architecture2433-head">
-        <h2 id="architecture2433-title">З ЧОГО СКЛАДАЄТЬСЯ BB610 WATER</h2>
-        <p class="architecture2433-subhead">Три фізичні модулі та програмне керування працюють як одна система.</p>
-      </header>
-      <div class="architecture2433-modules">
-        <article class="architecture2433-module" data-module="CONTROL">
-          <div class="architecture2433-media"><img src="assets/промышленный_контроллер_bb610_water.png" alt="CONTROL — модуль керування системою BB610 WATER" loading="eager" decoding="async"></div>
-          <h3>CONTROL</h3>
-          <p>Керування, автоматика та логіка системи.</p>
-        </article>
-        <article class="architecture2433-module" data-module="HYDRAULIC">
-          <div class="architecture2433-media"><img src="assets/промышленный_блок_гидравлического_фертигационного.png" alt="HYDRAULIC — гідравлічний модуль BB610 WATER" loading="eager" decoding="async"></div>
-          <h3>HYDRAULIC</h3>
-          <p>Полив, фертигація, дозування та контроль параметрів.</p>
-        </article>
-        <article class="architecture2433-module" data-module="ZONE">
-          <div class="architecture2433-media"><img src="assets/промышленный_коллектор_управления_поливом.png" alt="ZONE — модуль керування зонами BB610 WATER" loading="eager" decoding="async"></div>
-          <h3>ZONE</h3>
-          <p>Розподіл подачі води по окремих зонах.</p>
-        </article>
-      </div>
-      <div class="architecture2433-software" aria-label="Програмне керування BB610 WATER">
-        <article class="architecture2433-soft">
-          <div class="architecture2433-soft-logo"><img src="assets/bb610-puls-horizontal.svg" alt="BB610 PULS" loading="eager" decoding="async"></div>
-          <p>Windows — налаштування та контроль у реальному часі.</p>
-        </article>
-        <article class="architecture2433-soft">
-          <div class="architecture2433-soft-logo"><img src="assets/bb610-puls-mobile-horizontal.svg" alt="BB610 PULS MOBILE" loading="eager" decoding="async"></div>
-          <p>Mobile — керування з будь-якого місця.</p>
-        </article>
-      </div>
-      <div class="architecture2433-boundary" aria-label="Межі системи BB610 WATER">
-        <p><strong>Поза системою:</strong> джерело води, насос подачі, первинна фільтрація.</p>
-        <p><strong>У складі BB610 WATER:</strong> керування, дозування, контроль, зони та програмне забезпечення.</p>
-      </div>
-    </div>`;
+    section.setAttribute('aria-labelledby','architecture2434-title');
+    section.innerHTML=`
+      <div class="architecture2434-shell">
+        <div class="architecture2434-hero">
+          <div class="architecture2434-copy">
+            <header class="architecture2434-head">
+              <h2 id="architecture2434-title">З ЧОГО СКЛАДАЄТЬСЯ BB610 WATER</h2>
+              <p class="architecture2434-subhead">Три фізичні модулі та програмне керування працюють як одна система.</p>
+            </header>
+            <ul class="architecture2434-list" aria-label="Основні модулі BB610 WATER">
+              <li><strong>CONTROL</strong> — керування, автоматика та логіка.</li>
+              <li><strong>HYDRAULIC</strong> — полив, фертигація, дозування та контроль параметрів.</li>
+              <li><strong>ZONE</strong> — розподіл води по окремих зонах.</li>
+            </ul>
+          </div>
+          <div class="architecture2434-visual" aria-label="Архітектура продукту BB610 WATER">
+            <div class="architecture2434-stage">
+              <figure class="architecture2434-module architecture2434-module--control">
+                <img src="assets/промышленный_контроллер_bb610_water.png" alt="CONTROL — модуль керування системою BB610 WATER" loading="eager" decoding="async">
+              </figure>
+              <figure class="architecture2434-module architecture2434-module--hydraulic">
+                <img src="assets/промышленный_блок_гидравлического_фертигационного.png" alt="HYDRAULIC — гідравлічний модуль BB610 WATER" loading="eager" decoding="async">
+              </figure>
+              <figure class="architecture2434-module architecture2434-module--zone">
+                <img src="assets/промышленный_коллектор_управления_поливом.png" alt="ZONE — модуль керування зонами BB610 WATER" loading="eager" decoding="async">
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="architecture2434-software" aria-label="Програмне керування BB610 WATER">
+          <article class="architecture2434-soft">
+            <div class="architecture2434-soft-logo"><img src="assets/bb610-puls-horizontal.svg" alt="BB610 PULS" loading="eager" decoding="async"></div>
+            <p>Windows · налаштування · програмування · контроль у реальному часі</p>
+          </article>
+          <article class="architecture2434-soft architecture2434-soft--right">
+            <div class="architecture2434-soft-logo"><img src="assets/bb610-puls-mobile-horizontal.svg" alt="BB610 PULS MOBILE" loading="eager" decoding="async"></div>
+            <p>Керування поливом і внесенням добрив з будь-якого місця</p>
+          </article>
+        </div>
+        <div class="architecture2434-boundary" aria-label="Межі системи BB610 WATER">
+          <p><strong>Поза системою:</strong> джерело води, насос подачі та первинна фільтрація.</p>
+        </div>
+      </div>`;
   };
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',render);
   else render();
 })();
