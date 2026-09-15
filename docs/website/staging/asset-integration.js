@@ -26,7 +26,7 @@
     fert.async=false;
     fert.onload=()=>{
       const polish=document.createElement('script');
-      polish.src='task24-6-1-polish.js?v=20260915-2464';
+      polish.src='task24-6-1-polish.js?v=20260915-2465';
       polish.async=false;
       document.head.appendChild(polish);
     };
