@@ -30,6 +30,12 @@
     const fert=document.createElement('script');
     fert.src='task24-6-fertigation.js?v=20260915-2461';
     fert.async=false;
+    fert.onload=()=>{
+      const polish=document.createElement('script');
+      polish.src='task24-6-1-polish.js?v=20260915-2461';
+      polish.async=false;
+      document.head.appendChild(polish);
+    };
     document.head.appendChild(fert);
   };
   document.head.appendChild(modes);
