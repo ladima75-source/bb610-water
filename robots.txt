@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://water.bb610.com.ua/sitemap.xml
