@@ -14,38 +14,8 @@
   how.async=false;
   document.head.appendChild(how);
 
-  const patchPuls=()=>{
-    const imgs=document.querySelectorAll('#actual.task245 .task245-shot img');
-    if(imgs[0]&&window.TASK245_VOL){
-      imgs[0].src=window.TASK245_VOL;
-      imgs[0].removeAttribute('srcset');
-    }
-    if(imgs[1]&&window.TASK245_TIME){
-      imgs[1].src=window.TASK245_TIME;
-      imgs[1].removeAttribute('srcset');
-    }
-  };
-
-  const vol=document.createElement('script');
-  vol.src='task24-5-volume-data.js?v=20260915-1405';
-  vol.async=false;
-  vol.onload=()=>{
-    const time=document.createElement('script');
-    time.src='task24-5-time-data.js?v=20260915-1405';
-    time.async=false;
-    time.onload=()=>{
-      const modes=document.createElement('script');
-      modes.src='task24-5-irrigation-modes.js?v=20260915-1405';
-      modes.async=false;
-      modes.onload=()=>{
-        patchPuls();
-        requestAnimationFrame(()=>requestAnimationFrame(patchPuls));
-        setTimeout(patchPuls,80);
-        setTimeout(patchPuls,300);
-      };
-      document.head.appendChild(modes);
-    };
-    document.head.appendChild(time);
-  };
-  document.head.appendChild(vol);
+  const modes=document.createElement('script');
+  modes.src='task24-5-irrigation-modes.js?v=20260915-1418';
+  modes.async=false;
+  document.head.appendChild(modes);
 })();
