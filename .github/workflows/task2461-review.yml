@@ -1,0 +1,35 @@
+name: TASK 24.6.1 Visual Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/website/staging/**'
+      - '.github/scripts/task2461-review.mjs'
+      - '.github/workflows/task2461-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Allow Pages propagation
+        run: sleep 65
+      - name: Capture TASK 24.6.1
+        run: node .github/scripts/task2461-review.mjs
+      - name: Upload review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TASK2461_REVIEW_SCREENSHOTS
+          path: artifacts/task2461/*
+          if-no-files-found: error
+          retention-days: 30
