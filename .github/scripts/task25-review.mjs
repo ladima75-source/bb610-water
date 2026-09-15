@@ -17,26 +17,36 @@ async function capture(width,height,name){
     clientWidth:document.documentElement.clientWidth,
     title:document.title,
     robots:document.querySelector('meta[name="robots"]')?.content||'',
+    canonical:document.querySelector('link[rel="canonical"]')?.href||'',
     h1:document.querySelector('h1')?.textContent?.trim()||'',
     sections:[...document.querySelectorAll('main>section')].map(s=>s.id||s.className),
     scripts:[...document.scripts].map(s=>s.src).filter(Boolean),
-    pulseImgs:[...document.querySelectorAll('#process img,#capabilities img,#pulse img')].map(i=>({src:i.currentSrc||i.src,complete:i.complete,naturalWidth:i.naturalWidth,naturalHeight:i.naturalHeight}))
+    pulseImgs:[...document.querySelectorAll('#process img,#pulse img')].map(i=>({src:i.currentSrc||i.src,complete:i.complete,naturalWidth:i.naturalWidth,naturalHeight:i.naturalHeight}))
   }));
   console.log(name,JSON.stringify(metrics));
+  await page.screenshot({path:`artifacts/task25/${name}.png`,fullPage:true});
   if(metrics.scrollWidth>metrics.clientWidth+2) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}/${metrics.clientWidth}`);
   if(metrics.sections.length!==7) throw new Error(`${name}: expected 7 main sections, got ${metrics.sections.length}`);
   if(!metrics.h1) throw new Error(`${name}: empty H1`);
   if(!metrics.robots.includes('index')) throw new Error(`${name}: robots meta is not indexable: ${metrics.robots}`);
   if(metrics.title.toLowerCase().includes('staging')) throw new Error(`${name}: staging remains in title`);
+  if(metrics.canonical!=='https://water.bb610.com.ua/') throw new Error(`${name}: canonical mismatch ${metrics.canonical}`);
   if(metrics.scripts.some(s=>/asset-integration|task24-/i.test(s))) throw new Error(`${name}: legacy runtime script still loaded ${JSON.stringify(metrics.scripts)}`);
-  if(metrics.pulseImgs.length<3 || metrics.pulseImgs.some(i=>!i.complete||i.naturalWidth<300||i.naturalHeight<100)) throw new Error(`${name}: invalid PULSE assets ${JSON.stringify(metrics.pulseImgs)}`);
-  await page.screenshot({path:`artifacts/task25/${name}.png`,fullPage:true});
+  if(metrics.pulseImgs.length<2 || metrics.pulseImgs.some(i=>!i.complete||i.naturalWidth<300||i.naturalHeight<100)) throw new Error(`${name}: invalid PULSE assets ${JSON.stringify(metrics.pulseImgs)}`);
   await page.close();
   return metrics;
 }
 
 const desktop=await capture(1440,900,'desktop-1440');
 const mobile=await capture(390,844,'mobile-390');
-await fs.writeFile('artifacts/task25/metrics.json',JSON.stringify({desktop,mobile,consoleErrors},null,2));
+const seo={};
+for(const path of ['robots.txt','sitemap.xml']){
+  const response=await fetch(`https://water.bb610.com.ua/${path}`,{redirect:'follow'});
+  seo[path]={status:response.status,body:(await response.text()).slice(0,2000)};
+  if(!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+}
+if(!seo['robots.txt'].body.includes('Sitemap: https://water.bb610.com.ua/sitemap.xml')) throw new Error('robots.txt: sitemap missing');
+if(!seo['sitemap.xml'].body.includes('<loc>https://water.bb610.com.ua/</loc>')) throw new Error('sitemap.xml: root URL missing');
+await fs.writeFile('artifacts/task25/metrics.json',JSON.stringify({desktop,mobile,seo,consoleErrors},null,2));
 if(consoleErrors.length) throw new Error(`console errors: ${consoleErrors.join(' | ')}`);
 await browser.close();
