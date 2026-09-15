@@ -70,14 +70,12 @@
     section.innerHTML=`<div class="container">
       <div class="t246-top">
         <div class="t246-copy"><p class="eyebrow">06 / ФЕРТИГАЦІЯ</p><h2>ПІДЖИВЛЕННЯ<br>СТАЄ ЧАСТИНОЮ<span class="accent">ПОЛИВНОЇ<br>ПРОГРАМИ</span></h2><p class="t246-lead">Маточний розчин готується та підключається відповідно до технології господарства. Далі BB610 WATER може автоматично виконувати передбачене перемішування, рециркуляцію та дозування протягом поливного циклу.</p><div class="t246-specs"><div class="t246-spec"><b>F1</b><span>1 канал<br>фертигації</span></div><div class="t246-spec"><b>F2</b><span>2 канали<br>фертигації</span></div></div></div>
-        <figure class="t246-shot recipe"><img src="task24-6-recipe-hq.webp?v=2461" alt="BB610 PULSE — редактор рецепта фертигації" loading="eager" decoding="sync"></figure>
-        <figure class="t246-shot task"><img src="task24-6-task-hq.webp?v=2461" alt="BB610 PULSE — нове завдання з вибором рецепта" loading="eager" decoding="sync"></figure>
+        <figure class="t246-shot recipe"><img src="task24-6-recipe-hq.jpg?v=2462" alt="BB610 PULSE — редактор рецепта фертигації" loading="eager" decoding="sync"></figure>
+        <figure class="t246-shot task"><img src="task24-6-task-hq.webp?v=2462" alt="BB610 PULSE — нове завдання з вибором рецепта" loading="eager" decoding="sync"></figure>
       </div>
-      <div class="t246-lower"><div class="t246-flow"><div class="t246-flow-title">ЯК ЦЕ ПРАЦЮЄ</div><div class="t246-flow-row">${step(DROP,'01','ПЕРЕДПОЛИВ','Вода · підготовка зони')}<div class="t246-arrow">→</div>${step(FLASK,'02','ЖИВЛЕННЯ','Вода + добрива A/B + контроль pH / EC')}<div class="t246-arrow">→</div>${step(DROP,'03','ПРОМИВКА','Чиста вода')}<div class="t246-arrow">→</div>${step(CHECK,'04','РЕЗУЛЬТАТ','Стабільне живлення та контроль параметрів')}</div></div>
-        <div class="t246-benefits"><div class="t246-benefit"><div class="t246-benefit-ico">${GEAR}</div><div><b>ГНУЧКІ СЦЕНАРІЇ</b><span>Власні рецепти під культури та фази розвитку</span></div></div><div class="t246-benefit"><div class="t246-benefit-ico">${BARS}</div><div><b>КОНТРОЛЬ ПАРАМЕТРІВ</b><span>pH, EC та об’єми подачі</span></div></div></div>
-      </div>
-      <div class="t246-end"><div class="t246-end-ico">${LEAF}</div><div><strong><b>BB610 WATER</b> об’єднує полив і живлення в одну керовану систему.</strong><p>Правильне живлення, у правильний час, у потрібній кількості.</p></div><div class="t246-mark"><b>BB610 WATER</b>Надійний полив. Стабільний результат.</div></div>
+      <div class="t246-lower"><div class="t246-flow"><div class="t246-flow-title">ЯК ЦЕ ПРАЦЮЄ</div><div class="t246-flow-row">${step(DROP,'01','ПЕРЕДПОЛИВ','Вода · підготовка зони')}<div class="t246-arrow">→</div>${step(FLASK,'02','ЖИВЛЕННЯ','Вода + добрива A/B + контроль pH / EC')}<div class="t246-arrow">→</div>${step(DROP,'03','ПРОМИВКА','Чиста вода')}<div class="t246-arrow">→</div>${step(CHECK,'04','РЕЗУЛЬТАТ','Стабільне живлення та контроль параметрів')}</div></div><div class="t246-benefits"><div class="t246-benefit"><div class="t246-benefit-ico">${GEAR}</div><div><b>ГНУЧКІ СЦЕНАРІЇ</b><span>Власні рецепти під культури та фази розвитку</span></div></div><div class="t246-benefit"><div class="t246-benefit-ico">${BARS}</div><div><b>КОНТРОЛЬ ПАРАМЕТРІВ</b><span>pH, EC та об’єми подачі</span></div></div></div></div>
+      <div class="t246-end"><div class="t246-end-ico">${LEAF}</div><div><strong><b>BB610 WATER</b> об’єднує полив і живлення в одну керовану систему.</strong><p>Правильне живлення, у правильний час, у потрібній кількості.</p></div><div class="t246-mark"><b>BB610 WATER</b>НАДІЙНИЙ ПОЛИВ. СТАБІЛЬНИЙ РЕЗУЛЬТАТ.</div></div>
     </div>`;
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true}); else render();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',render); else render();
 })();
