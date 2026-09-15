@@ -27,15 +27,15 @@
   };
 
   const vol=document.createElement('script');
-  vol.src='task24-5-volume-data.js?v=20260915-0955';
+  vol.src='task24-5-volume-data.js?v=20260915-1140';
   vol.async=false;
   vol.onload=()=>{
     const time=document.createElement('script');
-    time.src='task24-5-time-data.js?v=20260915-0955';
+    time.src='task24-5-time-data.js?v=20260915-1140';
     time.async=false;
     time.onload=()=>{
       const modes=document.createElement('script');
-      modes.src='task24-5-irrigation-modes.js?v=20260915-0955';
+      modes.src='task24-5-irrigation-modes.js?v=20260915-1140';
       modes.async=false;
       modes.onload=()=>{
         patchPuls();
