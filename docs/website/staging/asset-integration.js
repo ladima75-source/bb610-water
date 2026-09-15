@@ -27,6 +27,10 @@
       imgs[1].src='task24-5-time.webp?v=20260915-1657';
       imgs[1].removeAttribute('srcset');
     }
+    const fert=document.createElement('script');
+    fert.src='task24-6-fertigation.js?v=20260915-1911';
+    fert.async=false;
+    document.head.appendChild(fert);
   };
   document.head.appendChild(modes);
 })();
