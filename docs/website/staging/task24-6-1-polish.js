@@ -27,28 +27,12 @@
 #fertigation.task246 .t246-end{grid-template-columns:76px minmax(0,1fr) 245px!important;margin-top:16px!important;padding-top:17px!important}
 #fertigation.task246 .t246-end strong{font-size:25px!important}
 #fertigation.task246 .t246-end p{font-size:14px!important}
-@media(max-width:1320px){
- #fertigation.task246>.container{width:calc(100% - 38px)!important}
- #fertigation.task246 .t246-top{grid-template-columns:minmax(310px,26fr) minmax(0,39fr) minmax(0,33fr)!important}
- #fertigation.task246 h2{font-size:41px!important}
- #fertigation.task246 .t246-lead{font-size:15px!important}
-}
-@media(max-width:980px){
- #fertigation.task246 .t246-top{grid-template-columns:1fr 1fr!important}
- #fertigation.task246 .t246-copy{grid-column:1/-1!important}
- #fertigation.task246 .t246-lower{grid-template-columns:1fr!important}
-}
-@media(max-width:600px){
- #fertigation.task246>.container{width:calc(100% - 28px)!important}
- #fertigation.task246 .t246-top{grid-template-columns:1fr!important;gap:14px!important}
- #fertigation.task246 h2{font-size:34px!important}
- #fertigation.task246 .t246-lower{margin-top:16px!important}
- #fertigation.task246 .t246-flow-row{grid-template-columns:1fr!important}
- #fertigation.task246 .t246-end{grid-template-columns:52px 1fr!important}
-}
+@media(max-width:1320px){#fertigation.task246>.container{width:calc(100% - 38px)!important}#fertigation.task246 .t246-top{grid-template-columns:minmax(310px,26fr) minmax(0,39fr) minmax(0,33fr)!important}#fertigation.task246 h2{font-size:41px!important}#fertigation.task246 .t246-lead{font-size:15px!important}}
+@media(max-width:980px){#fertigation.task246 .t246-top{grid-template-columns:1fr 1fr!important}#fertigation.task246 .t246-copy{grid-column:1/-1!important}#fertigation.task246 .t246-lower{grid-template-columns:1fr!important}}
+@media(max-width:600px){#fertigation.task246>.container{width:calc(100% - 28px)!important}#fertigation.task246 .t246-top{grid-template-columns:1fr!important;gap:14px!important}#fertigation.task246 h2{font-size:34px!important}#fertigation.task246 .t246-lower{margin-top:16px!important}#fertigation.task246 .t246-flow-row{grid-template-columns:1fr!important}#fertigation.task246 .t246-end{grid-template-columns:52px 1fr!important}}
 `;
   document.head.appendChild(s);
   const imgs=document.querySelectorAll('#fertigation.task246 .t246-shot img');
-  if(imgs[0]){imgs[0].src='task24-6-recipe-hq.jpg?v=2462';imgs[0].removeAttribute('srcset');}
-  if(imgs[1]){imgs[1].src='task24-6-task-hq.webp?v=2462';imgs[1].removeAttribute('srcset');}
+  if(imgs[0]){imgs[0].src='task24-6-recipe.webp?v=2463';imgs[0].removeAttribute('srcset');}
+  if(imgs[1]){imgs[1].src='task24-6-task-hq.webp?v=2463';imgs[1].removeAttribute('srcset');}
 })();
