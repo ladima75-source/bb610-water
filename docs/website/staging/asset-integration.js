@@ -15,7 +15,18 @@
   document.head.appendChild(how);
 
   const modes=document.createElement('script');
-  modes.src='task24-5-irrigation-modes.js?v=20260915-1418';
+  modes.src='task24-5-irrigation-modes.js?v=20260915-1657';
   modes.async=false;
+  modes.onload=()=>{
+    const imgs=document.querySelectorAll('#actual.task245 .task245-shot img');
+    if(imgs[0]){
+      imgs[0].src='task24-5-volume.webp?v=20260915-1657';
+      imgs[0].removeAttribute('srcset');
+    }
+    if(imgs[1]){
+      imgs[1].src='task24-5-time.webp?v=20260915-1657';
+      imgs[1].removeAttribute('srcset');
+    }
+  };
   document.head.appendChild(modes);
 })();
