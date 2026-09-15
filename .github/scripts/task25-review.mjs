@@ -11,7 +11,16 @@ async function capture(width,height,name){
   page.on('console',m=>{if(m.type()==='error') consoleErrors.push(`${name}: ${m.text()}`)});
   page.on('pageerror',e=>consoleErrors.push(`${name}: pageerror ${e.message}`));
   await page.goto(url,{waitUntil:'networkidle',timeout:120000});
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(800);
+  await page.evaluate(async()=>{
+    const imgs=[...document.querySelectorAll('#process img,#pulse img')];
+    imgs.forEach(i=>i.loading='eager');
+    const step=Math.max(300,Math.floor(innerHeight*.75));
+    for(let y=0;y<document.documentElement.scrollHeight;y+=step){scrollTo(0,y);await new Promise(r=>setTimeout(r,70));}
+    scrollTo(0,0);
+    await Promise.all(imgs.map(i=>i.complete&&i.naturalWidth?Promise.resolve():new Promise(resolve=>{i.addEventListener('load',resolve,{once:true});i.addEventListener('error',resolve,{once:true});})));
+  });
+  await page.waitForTimeout(500);
   const metrics=await page.evaluate(()=>({
     scrollWidth:document.documentElement.scrollWidth,
     clientWidth:document.documentElement.clientWidth,
