@@ -28,7 +28,7 @@
       imgs[1].removeAttribute('srcset');
     }
     const fert=document.createElement('script');
-    fert.src='task24-6-fertigation.js?v=20260915-1916';
+    fert.src='task24-6-fertigation.js?v=20260915-2461';
     fert.async=false;
     document.head.appendChild(fert);
   };
