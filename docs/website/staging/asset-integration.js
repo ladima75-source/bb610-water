@@ -31,11 +31,11 @@
   vol.async=false;
   vol.onload=()=>{
     const time=document.createElement('script');
-    time.src='task24-5-time-data.js?v=20260915-1140';
+    time.src='task24-5-time-data.js?v=20260915-1257';
     time.async=false;
     time.onload=()=>{
       const modes=document.createElement('script');
-      modes.src='task24-5-irrigation-modes.js?v=20260915-1140';
+      modes.src='task24-5-irrigation-modes.js?v=20260915-1257';
       modes.async=false;
       modes.onload=()=>{
         patchPuls();
