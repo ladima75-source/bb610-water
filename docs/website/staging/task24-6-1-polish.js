@@ -49,6 +49,6 @@
 `;
   document.head.appendChild(s);
   const imgs=document.querySelectorAll('#fertigation.task246 .t246-shot img');
-  if(imgs[0]){imgs[0].src='task24-6-recipe-hq.webp?v=2461';imgs[0].removeAttribute('srcset');}
-  if(imgs[1]){imgs[1].src='task24-6-task-hq.webp?v=2461';imgs[1].removeAttribute('srcset');}
+  if(imgs[0]){imgs[0].src='task24-6-recipe-hq.jpg?v=2462';imgs[0].removeAttribute('srcset');}
+  if(imgs[1]){imgs[1].src='task24-6-task-hq.webp?v=2462';imgs[1].removeAttribute('srcset');}
 })();
