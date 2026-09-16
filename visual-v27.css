@@ -1,0 +1,28 @@
+/* BB610 WATER — TASK 26.3 visual background pass */
+html{background:#02101a}
+body::before{background-position:76% 50%;background-size:cover;filter:saturate(1.08) contrast(1.04) brightness(.98);transform:none}
+body::after{background:linear-gradient(90deg,rgba(2,11,18,.96) 0%,rgba(2,11,18,.88) 28%,rgba(2,11,18,.68) 44%,rgba(2,11,18,.34) 61%,rgba(2,11,18,.10) 78%,rgba(2,11,18,.24) 100%),linear-gradient(180deg,rgba(2,10,16,.04),rgba(2,10,16,.22));}
+.hero{background:linear-gradient(90deg,rgba(2,13,21,.78) 0%,rgba(2,13,21,.62) 38%,rgba(2,13,21,.18) 66%,rgba(2,13,21,.03) 100%)}
+.hero::after{background:linear-gradient(180deg,transparent 70%,rgba(2,12,18,.30) 100%)}
+.hero-proof{max-width:410px}
+.proof-main{background:linear-gradient(145deg,rgba(4,25,36,.62),rgba(3,17,25,.44));backdrop-filter:blur(11px)}
+.proof-strip div{background:rgba(3,18,27,.40)}
+.section{padding:46px 0}
+.section>.shell{width:min(1190px,calc(100% - 80px));padding:62px 58px;background:linear-gradient(135deg,rgba(3,17,26,.76),rgba(4,23,34,.56) 62%,rgba(3,18,27,.40));border-color:rgba(80,202,237,.18);box-shadow:0 28px 86px rgba(0,0,0,.20);backdrop-filter:blur(12px) saturate(112%)}
+.flow-node,.choice,.version-chip{background:rgba(5,25,35,.42)}
+.config-result{background:linear-gradient(180deg,rgba(5,35,48,.72),rgba(3,22,31,.60));backdrop-filter:blur(12px)}
+.lead-form{background:rgba(4,24,34,.58);backdrop-filter:blur(12px)}
+.pulse-shot,.pulse-main{background:rgba(2,15,23,.62)}
+.footer{background:rgba(2,10,16,.72);backdrop-filter:blur(12px)}
+@media(max-width:1080px){
+  body::before{background-position:70% 50%}
+  body::after{background:linear-gradient(90deg,rgba(2,11,18,.94),rgba(2,11,18,.64) 52%,rgba(2,11,18,.30)),linear-gradient(180deg,rgba(2,10,16,.10),rgba(2,10,16,.30))}
+  .section>.shell{width:min(100% - 44px,1190px)}
+}
+@media(max-width:720px){
+  body::before{background-position:68% 50%;filter:saturate(1.02) contrast(1.02) brightness(.78)}
+  body::after{background:linear-gradient(180deg,rgba(2,11,18,.72),rgba(2,11,18,.60)),linear-gradient(90deg,rgba(2,11,18,.80),rgba(2,11,18,.44))}
+  .hero{background:linear-gradient(180deg,rgba(2,13,21,.60),rgba(2,13,21,.42))}
+  .section{padding:28px 0}
+  .section>.shell{width:min(100% - 24px,1190px);padding:34px 24px;background:linear-gradient(145deg,rgba(3,17,26,.82),rgba(4,23,34,.62));backdrop-filter:blur(10px)}
+}
