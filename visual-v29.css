@@ -1,22 +1,39 @@
 /* BB610 WATER — TASK 29 / breathing background + restrained motion */
 
-/* The same fixed macro image stays continuous; each scene changes only the veil above it. */
+/* The same fixed macro image stays continuous. Baseline veil is deliberately lighter than v28;
+   individual sections add darkness only where technical concentration is useful. */
+body::after{background:
+  radial-gradient(circle at 73% 30%,rgba(41,204,241,.075),transparent 27%),
+  linear-gradient(90deg,rgba(2,10,16,.82) 0%,rgba(2,10,16,.70) 25%,rgba(2,10,16,.48) 45%,rgba(2,10,16,.16) 69%,rgba(2,10,16,.05) 83%,rgba(2,10,16,.14) 100%),
+  linear-gradient(180deg,rgba(2,10,16,.02),rgba(2,10,16,.16) 78%,rgba(2,10,16,.34))}
 .section{position:relative;isolation:isolate;padding-top:70px;padding-bottom:70px}
-#architecture{background:linear-gradient(180deg,rgba(2,12,19,.08),rgba(2,12,19,.02) 58%,rgba(2,12,19,.14))}
-#architecture>.shell{background:linear-gradient(135deg,rgba(3,17,26,.56),rgba(4,23,34,.34) 64%,rgba(3,18,27,.20));backdrop-filter:blur(9px) saturate(108%)}
-#process{background:linear-gradient(180deg,rgba(2,11,18,.28),rgba(2,11,18,.46) 52%,rgba(2,11,18,.32))}
+
+/* OPEN SCENE — photo is allowed to participate in the composition. */
+#architecture{background:linear-gradient(180deg,rgba(2,12,19,.04),rgba(2,12,19,.01) 58%,rgba(2,12,19,.09))}
+#architecture>.shell{background:linear-gradient(135deg,rgba(3,17,26,.42),rgba(4,23,34,.24) 64%,rgba(3,18,27,.13));backdrop-filter:blur(7px) saturate(106%)}
+
+/* FOCUS SCENE — process reading gets a calmer, darker veil. */
+#process{background:linear-gradient(180deg,rgba(2,11,18,.30),rgba(2,11,18,.48) 52%,rgba(2,11,18,.34))}
 #process>.shell{background:linear-gradient(135deg,rgba(3,17,26,.82),rgba(4,23,34,.64) 68%,rgba(3,18,27,.48));backdrop-filter:blur(14px) saturate(110%)}
-#capabilities{background:linear-gradient(180deg,rgba(2,12,19,.05),rgba(2,12,19,.13) 48%,rgba(2,12,19,.04))}
-#capabilities>.shell{background:linear-gradient(132deg,rgba(3,17,26,.50),rgba(3,18,27,.27) 68%,rgba(3,18,27,.18));backdrop-filter:blur(8px) saturate(108%)}
-#pulse{background:linear-gradient(180deg,rgba(2,11,18,.40),rgba(2,11,18,.58) 52%,rgba(2,11,18,.44))}
+
+/* OPEN SCENE — background returns as atmosphere. */
+#capabilities{background:linear-gradient(180deg,rgba(2,12,19,.02),rgba(2,12,19,.08) 48%,rgba(2,12,19,.02))}
+#capabilities>.shell{background:linear-gradient(132deg,rgba(3,17,26,.38),rgba(3,18,27,.20) 68%,rgba(3,18,27,.12));backdrop-filter:blur(7px) saturate(106%)}
+
+/* FOCUS SCENE — PULSE is the evidence, so the interface receives visual priority. */
+#pulse{background:linear-gradient(180deg,rgba(2,11,18,.43),rgba(2,11,18,.60) 52%,rgba(2,11,18,.46))}
 #pulse>.shell{background:linear-gradient(135deg,rgba(3,17,26,.84),rgba(4,23,34,.66) 70%,rgba(3,18,27,.52));backdrop-filter:blur(14px) saturate(112%)}
-#configurator{background:linear-gradient(180deg,rgba(2,11,18,.62),rgba(2,11,18,.70) 52%,rgba(2,11,18,.58))}
+
+/* DEEPEST FOCUS — configurator must be quiet and highly legible. */
+#configurator{background:linear-gradient(180deg,rgba(2,11,18,.64),rgba(2,11,18,.72) 52%,rgba(2,11,18,.60))}
 #configurator>.shell{background:linear-gradient(135deg,rgba(3,17,26,.88),rgba(5,24,35,.70));backdrop-filter:blur(15px) saturate(110%)}
-#contact{background:linear-gradient(180deg,rgba(2,12,19,.16),rgba(2,12,19,.05) 58%,rgba(2,12,19,.24))}
-#contact>.shell{background:linear-gradient(135deg,rgba(3,17,26,.54),rgba(4,23,34,.31) 70%,rgba(3,18,27,.22));backdrop-filter:blur(9px) saturate(108%)}
+
+/* OPEN FINALE — photo comes back before the CTA. */
+#contact{background:linear-gradient(180deg,rgba(2,12,19,.10),rgba(2,12,19,.025) 58%,rgba(2,12,19,.16))}
+#contact>.shell{background:linear-gradient(135deg,rgba(3,17,26,.42),rgba(4,23,34,.22) 70%,rgba(3,18,27,.16));backdrop-filter:blur(7px) saturate(106%)}
 
 /* Breathing rhythm: open image → technical focus → open image → software focus → configuration focus → open image. */
-#architecture>.shell,#capabilities>.shell,#contact>.shell{border-color:rgba(91,216,247,.13);box-shadow:0 24px 76px rgba(0,0,0,.16)}
+#architecture>.shell,#capabilities>.shell,#contact>.shell{border-color:rgba(91,216,247,.10);box-shadow:0 22px 70px rgba(0,0,0,.13)}
 #process>.shell,#pulse>.shell,#configurator>.shell{border-color:rgba(91,216,247,.22);box-shadow:0 30px 92px rgba(0,0,0,.27)}
 
 /* Only two deliberate motion devices: architecture sequence and process-line draw. */
@@ -57,12 +74,13 @@
 @keyframes bb610-process-draw{0%{transform:scaleX(0);opacity:.22}100%{transform:scaleX(1);opacity:1}}
 @keyframes bb610-step-settle{0%{opacity:.38;transform:translateY(12px)}100%{opacity:1;transform:none}}
 
-/* Prevent the added motion layer from changing mobile geometry. */
+/* Mobile keeps the same principle but raises contrast and removes motion. */
 @media(max-width:720px){
+  body::after{background:linear-gradient(180deg,rgba(2,10,16,.74),rgba(2,10,16,.60)),linear-gradient(90deg,rgba(2,10,16,.78),rgba(2,10,16,.40))}
   .section{padding-top:30px;padding-bottom:30px}
-  #architecture,#capabilities,#contact{background:rgba(2,11,18,.10)}
+  #architecture,#capabilities,#contact{background:rgba(2,11,18,.08)}
   #process,#pulse,#configurator{background:rgba(2,11,18,.34)}
-  #architecture>.shell,#capabilities>.shell,#contact>.shell{background:linear-gradient(145deg,rgba(3,17,26,.76),rgba(4,23,34,.52))}
+  #architecture>.shell,#capabilities>.shell,#contact>.shell{background:linear-gradient(145deg,rgba(3,17,26,.72),rgba(4,23,34,.48))}
   #process>.shell,#pulse>.shell,#configurator>.shell{background:linear-gradient(145deg,rgba(3,17,26,.88),rgba(4,23,34,.69))}
   #process .process-line:after{display:none}
   #architecture .flow-node,#architecture .architecture-flow>i,#process .process-line article{animation:none!important}
