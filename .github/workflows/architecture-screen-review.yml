@@ -1,0 +1,26 @@
+name: Architecture Screen 3 Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/website/staging/architecture-polish.css'
+      - 'docs/website/staging/asset-integration.js'
+      - 'docs/website/staging/data/content.js'
+      - '.github/scripts/architecture-screen-review.mjs'
+      - '.github/workflows/architecture-screen-review.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve repository root
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/architecture-http.log 2>&1 &
+      - name: Validate architecture screen
+        run: node .github/scripts/architecture-screen-review.mjs

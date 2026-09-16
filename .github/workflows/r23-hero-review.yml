@@ -1,0 +1,20 @@
+name: R23 Hero Review
+on:
+  push:
+    branches: [review/r23-hero-header-correction, review/r23-1-hero-wordmark-fix, review/r23-2-hero-horizontal-logo, review/r23-3-hero-approved-horizontal-logo, review/task23-hero-refinement-r1, review/task23-r2-hero-inline-fix, review/task23-logo-optical-height]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve repository root
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/r23-http.log 2>&1 &
+      - name: Validate desktop/laptop/mobile HERO
+        run: node .github/scripts/r23-hero-review.mjs

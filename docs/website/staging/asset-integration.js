@@ -1,1 +1,36 @@
-(()=>{const $=(s,r=document)=>r.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function media(slot){if(slot.src)return`<img src="${slot.src}" alt="${esc(slot.alt)}" loading="lazy" decoding="async" style="object-position:${esc(slot.objectPosition||'center')}">`;return`<span class="puls-wordmark">BB610 PULS</span><strong>${esc(slot.label||'Інтерфейс')}</strong><small>${esc(slot.fallback)}</small>`}document.addEventListener('DOMContentLoaded',()=>{const A=window.BB610_ASSETS,D=window.R121_DATA;if(!A||!D)return;document.querySelectorAll('.brand-asset img,.footer img').forEach(img=>{img.src=A.logo.src;img.alt=A.logo.alt;img.width=A.logo.width;img.height=A.logo.height});const arch=$('#arch-items');if(arch)arch.innerHTML=D.architecture.items.map(x=>{const a=A.engineering[x[0]];return`<article><div><strong>${esc(x[0])}</strong><span>${esc(x[1])}</span></div><figure class="module-media"><img src="${a.src}" alt="${esc(a.alt)}" width="${a.width}" height="${a.height}" loading="lazy" decoding="async" style="object-position:${esc(a.objectPosition||'center')}"><figcaption>${esc(x[0])} · модуль системи BB610 WATER</figcaption></figure></article>`}).join('');const slots=[A.pulsNewTask,A.pulsSchedule,A.pulsMain];document.querySelectorAll('#puls-steps .asset-slot').forEach((el,i)=>{const s=slots[i];el.setAttribute('aria-label',s.alt);el.classList.toggle('has-media',!!s.src);el.innerHTML=media(s)})})})();
+(()=>{
+  const x=new XMLHttpRequest();
+  x.open('GET','asset-integration-base.js',false);
+  x.send(null);
+  if(x.status>=200&&x.status<300)(0,eval)(x.responseText);
+
+  const task=document.createElement('script');
+  task.src='task24-3-product-modules.js?v=20260914-2444';
+  task.async=false;
+  document.head.appendChild(task);
+
+  const how=document.createElement('script');
+  how.src='task24-4-how-it-works.js?v=20260914-2450';
+  how.async=false;
+  document.head.appendChild(how);
+
+  const modes=document.createElement('script');
+  modes.src='task24-5-irrigation-modes.js?v=20260915-1657';
+  modes.async=false;
+  modes.onload=()=>{
+    const imgs=document.querySelectorAll('#actual.task245 .task245-shot img');
+    if(imgs[0]){imgs[0].src='task24-5-volume.webp?v=20260915-1657';imgs[0].removeAttribute('srcset');}
+    if(imgs[1]){imgs[1].src='task24-5-time.webp?v=20260915-1657';imgs[1].removeAttribute('srcset');}
+    const fert=document.createElement('script');
+    fert.src='task24-6-fertigation.js?v=20260915-2462';
+    fert.async=false;
+    fert.onload=()=>{
+      const polish=document.createElement('script');
+      polish.src='task24-6-1-polish.js?v=20260916-001';
+      polish.async=false;
+      document.head.appendChild(polish);
+    };
+    document.head.appendChild(fert);
+  };
+  document.head.appendChild(modes);
+})();

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 381" role="img" aria-label="BB610 PULS MOBILE">
+  <defs>
+    <linearGradient id="cyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2cf6ff"/><stop offset="1" stop-color="#0aa8ff"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9ff00"/><stop offset="1" stop-color="#55b900"/></linearGradient>
+    <filter id="glow" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow)" font-family="Arial, Helvetica, sans-serif" font-style="italic" font-weight="900">
+    <text x="20" y="210" font-size="180" fill="url(#cyan)">BB</text>
+    <path d="M250 166c38-96 112-124 181-122-24 80-82 138-168 152 29-18 58-47 83-82-41 25-70 52-96 88z" fill="url(#green)"/>
+    <path d="M306 184c31-63 83-89 126-92-17 58-60 101-124 117 19-13 41-31 58-52-24 11-42 23-60 42z" fill="url(#cyan)"/>
+    <text x="425" y="210" font-size="180" fill="url(#green)">610</text>
+    <path d="M720 188h85l18-34 23 92 29-147 31 183 25-94h82" fill="none" stroke="url(#cyan)" stroke-width="17" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="965" y="205" font-size="165" fill="url(#cyan)">PULSE</text>
+    <path d="M975 243h278l-50 28H945zM965 280h244l-58 28H932zM955 317h208l-65 28H920z" fill="url(#cyan)"/>
+    <text x="1025" y="344" font-size="94" fill="url(#cyan)">MOBILE</text>
+  </g>
+</svg>

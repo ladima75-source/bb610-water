@@ -1,0 +1,40 @@
+name: TASK 25 Global Website Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'styles.css'
+      - 'app.js'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'docs/website/staging/index.html'
+      - '.github/scripts/task25-review.mjs'
+      - '.github/workflows/task25-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Allow Pages propagation
+        run: sleep 70
+      - name: Review unified public website
+        run: node .github/scripts/task25-review.mjs
+      - name: Upload review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TASK25_REVIEW_SCREENSHOTS
+          path: artifacts/task25/*
+          if-no-files-found: error
+          retention-days: 30
