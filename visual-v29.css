@@ -1,0 +1,75 @@
+/* BB610 WATER — TASK 29 / breathing background + restrained motion */
+
+/* The same fixed macro image stays continuous; each scene changes only the veil above it. */
+.section{position:relative;isolation:isolate;padding-top:70px;padding-bottom:70px}
+#architecture{background:linear-gradient(180deg,rgba(2,12,19,.08),rgba(2,12,19,.02) 58%,rgba(2,12,19,.14))}
+#architecture>.shell{background:linear-gradient(135deg,rgba(3,17,26,.56),rgba(4,23,34,.34) 64%,rgba(3,18,27,.20));backdrop-filter:blur(9px) saturate(108%)}
+#process{background:linear-gradient(180deg,rgba(2,11,18,.28),rgba(2,11,18,.46) 52%,rgba(2,11,18,.32))}
+#process>.shell{background:linear-gradient(135deg,rgba(3,17,26,.82),rgba(4,23,34,.64) 68%,rgba(3,18,27,.48));backdrop-filter:blur(14px) saturate(110%)}
+#capabilities{background:linear-gradient(180deg,rgba(2,12,19,.05),rgba(2,12,19,.13) 48%,rgba(2,12,19,.04))}
+#capabilities>.shell{background:linear-gradient(132deg,rgba(3,17,26,.50),rgba(3,18,27,.27) 68%,rgba(3,18,27,.18));backdrop-filter:blur(8px) saturate(108%)}
+#pulse{background:linear-gradient(180deg,rgba(2,11,18,.40),rgba(2,11,18,.58) 52%,rgba(2,11,18,.44))}
+#pulse>.shell{background:linear-gradient(135deg,rgba(3,17,26,.84),rgba(4,23,34,.66) 70%,rgba(3,18,27,.52));backdrop-filter:blur(14px) saturate(112%)}
+#configurator{background:linear-gradient(180deg,rgba(2,11,18,.62),rgba(2,11,18,.70) 52%,rgba(2,11,18,.58))}
+#configurator>.shell{background:linear-gradient(135deg,rgba(3,17,26,.88),rgba(5,24,35,.70));backdrop-filter:blur(15px) saturate(110%)}
+#contact{background:linear-gradient(180deg,rgba(2,12,19,.16),rgba(2,12,19,.05) 58%,rgba(2,12,19,.24))}
+#contact>.shell{background:linear-gradient(135deg,rgba(3,17,26,.54),rgba(4,23,34,.31) 70%,rgba(3,18,27,.22));backdrop-filter:blur(9px) saturate(108%)}
+
+/* Breathing rhythm: open image → technical focus → open image → software focus → configuration focus → open image. */
+#architecture>.shell,#capabilities>.shell,#contact>.shell{border-color:rgba(91,216,247,.13);box-shadow:0 24px 76px rgba(0,0,0,.16)}
+#process>.shell,#pulse>.shell,#configurator>.shell{border-color:rgba(91,216,247,.22);box-shadow:0 30px 92px rgba(0,0,0,.27)}
+
+/* Only two deliberate motion devices: architecture sequence and process-line draw. */
+@media (prefers-reduced-motion:no-preference){
+  #architecture .flow-node{
+    animation:bb610-module-reveal linear both;
+    animation-timeline:view();
+    animation-range:entry 10% cover 34%;
+  }
+  #architecture .flow-node:nth-of-type(2){animation-range:entry 15% cover 39%}
+  #architecture .flow-node:nth-of-type(3){animation-range:entry 20% cover 44%}
+  #architecture .flow-node:nth-of-type(4){animation-range:entry 25% cover 49%}
+  #architecture .architecture-flow>i{
+    animation:bb610-arrow-reveal linear both;
+    animation-timeline:view();
+    animation-range:entry 18% cover 42%;
+  }
+  #process .process-line:after{
+    content:"";
+    position:absolute;
+    left:7%;right:7%;top:46px;height:1px;
+    background:linear-gradient(90deg,transparent 0%,rgba(43,209,243,.96) 14%,rgba(43,209,243,.96) 86%,transparent 100%);
+    box-shadow:0 0 14px rgba(43,209,243,.45);
+    transform-origin:left center;
+    animation:bb610-process-draw linear both;
+    animation-timeline:view();
+    animation-range:entry 8% cover 44%;
+    pointer-events:none;
+  }
+  #process .process-line article{
+    animation:bb610-step-settle linear both;
+    animation-timeline:view();
+    animation-range:entry 6% cover 33%;
+  }
+}
+@keyframes bb610-module-reveal{0%{opacity:.20;transform:translateY(22px) scale(.985);filter:saturate(.72)}55%{opacity:.74}100%{opacity:1;transform:none;filter:none}}
+@keyframes bb610-arrow-reveal{0%{opacity:.12;transform:translateX(-8px)}100%{opacity:1;transform:none}}
+@keyframes bb610-process-draw{0%{transform:scaleX(0);opacity:.22}100%{transform:scaleX(1);opacity:1}}
+@keyframes bb610-step-settle{0%{opacity:.38;transform:translateY(12px)}100%{opacity:1;transform:none}}
+
+/* Prevent the added motion layer from changing mobile geometry. */
+@media(max-width:720px){
+  .section{padding-top:30px;padding-bottom:30px}
+  #architecture,#capabilities,#contact{background:rgba(2,11,18,.10)}
+  #process,#pulse,#configurator{background:rgba(2,11,18,.34)}
+  #architecture>.shell,#capabilities>.shell,#contact>.shell{background:linear-gradient(145deg,rgba(3,17,26,.76),rgba(4,23,34,.52))}
+  #process>.shell,#pulse>.shell,#configurator>.shell{background:linear-gradient(145deg,rgba(3,17,26,.88),rgba(4,23,34,.69))}
+  #process .process-line:after{display:none}
+  #architecture .flow-node,#architecture .architecture-flow>i,#process .process-line article{animation:none!important}
+}
+
+/* Fallback: browsers without scroll-driven animation keep everything fully visible. */
+@supports not (animation-timeline:view()){
+  #architecture .flow-node,#architecture .architecture-flow>i,#process .process-line article{opacity:1;transform:none;filter:none}
+  #process .process-line:after{display:none}
+}
